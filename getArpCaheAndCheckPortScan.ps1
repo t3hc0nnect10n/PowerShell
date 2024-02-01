@@ -1,4 +1,4 @@
-﻿# Создаем функцию для получения IP адресов из ARP таблицы
+# Создаем функцию для получения IP адресов из ARP таблицы
 function Get-ARPCache
 {
     [CmdletBinding()]
@@ -51,7 +51,7 @@ function Get-ARPCache
                     Interface = $InterfaceIPv4
                     IPv4Address = $IPv4Address
                     MACAddress = $MACAddress
-                    Type = $Type
+                    #Type = $Type
                 }
             }
         }
@@ -61,6 +61,12 @@ function Get-ARPCache
 
     }
 }
+
+Get-ARPCache
+sleep 5
+echo ""
+echo "Scan Ports"
+echo "----------"
 
 # "20/TCP"       (FTP)                  FTP-DATA — для передачи данных FTP
 # "21/TCP"       (FTP)                  Для передачи команд FTP
