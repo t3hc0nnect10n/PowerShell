@@ -23,7 +23,7 @@
 $Ports  = "20", "21", "22", "23", "25", "53", "80", "81", "88", "135", "389", "443", "445", "636", "993", "3268", "3269", "3389", "8080"
 
 # Переменной  "$AllHosts" задано брать список IP адресов из файла
-$AllHosts = Get-Content -Path "С:\Users\Ivan\Desktop\ipListHosts.txt" # Указываем путь к фалу, в котором указан список ip адресов, напимер: "С:\Users\Ivan\Desktop\ipListHosts.txt"
+$AllHosts = Get-Content -Path "С:\Users\Ivan\Desktop\ipListHosts.txt" # Указываем путь к файлу, в котором указан список ip адресов, напимер: "С:\Users\Ivan\Desktop\ipListHosts.txt"
 
 # Запуск цикла по кажлому IP адресу "$Hosts" из списка "$AllHosts"
 ForEach($Hosts in $AllHosts)
@@ -38,7 +38,7 @@ ForEach($Hosts in $AllHosts)
         If ($check.tcpTestSucceeded -eq $true)
             {Write-Host $Hosts.name  $P -ForegroundColor Green -Separator " => "}
         else 
-            {Write-Host $Hosts.name  $P -Separator " => " -ForegroundColor Red}
+            {Write-Host $Hosts.name  $P -ForegroundColor Red -Separator " => "}
     }
 }
 
