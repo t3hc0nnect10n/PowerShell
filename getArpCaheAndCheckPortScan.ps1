@@ -110,7 +110,7 @@ $IPInterface = Get-Content $Path$Name
 $getIP = Get-ARPCache | Where-Object Interface -eq $IPInterface | Select-Object IPv4Address | Format-Table -HideTableHeaders | Out-File $Path$Name 
 
 # Перезаписываем полученное значение убирая лишние пробелы и пустые строки
-$getIP = ((Get-Content $Path$Name) -join [environment]::NewLine).trim() | Set-Content -Path $Path$Name
+$getIP = ((Get-Content $Path$Name) -join [environment]::NewLine).Trim() | Set-Content -Path $Path$Name
 
 # В переменной "$Ports" указаны порты через запятую, который мы хотим ппросканировать 
 $Ports  = "20", "21", "22", "23", "25", "53", "80", "81", "88", "135", "389", "443", "445", "636", "993", "3268", "3269", "3389", "5985", "5986", "8080"
