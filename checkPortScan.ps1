@@ -17,10 +17,12 @@
 # "3268/TCP,UDP" (MSFT-GC)              Microsoft Global Catalog (LDAP service which contains data from Active Directory forests)
 # "3269/TCP,UDP" (MSFT-GC-SSL)          Microsoft Global Catalog over SSL (similar to port 3268, LDAP over SSL)
 # "3389/TCP"     (RDP)                  Microsoft Terminal Server официально зарегистрировано как Windows Based Terminal (WBT)
+# "5985/TCP"     (WinRM HTTP)           По умолчанию в Windows 7 и более поздних версиях WinRM HTTP. В более ранних версиях Windows в WinRM HTTP используется порт 80
+# "5986/TCP"     (WinRM HTTPS)          По умолчанию в Windows 7 и более поздних версиях WinRM HTTPS. В более ранних версиях Windows в WinRM HTTPS используется порт 443
 # "8080/TCP"     (HTTP-ALT              Альтернативный порт HTTP (http_alt) — обычно используется для организации веб-прокси и кэширующих серверов, запуска веб-сервера от имени не-root пользователя
 
 # В переменной "$Ports" указаны порты через запятую, который мы хотим ппросканировать 
-$Ports  = "20", "21", "22", "23", "25", "53", "80", "81", "88", "135", "389", "443", "445", "636", "993", "3268", "3269", "3389", "8080"
+$Ports  = "20", "21", "22", "23", "25", "53", "80", "81", "88", "135", "389", "443", "445", "636", "993", "3268", "3269", "3389", "5985", "5986", "8080"
 
 # Переменной  "$AllHosts" задано брать список IP адресов из файла
 $AllHosts = Get-Content -Path "С:\Users\Ivan\Desktop\ipListHosts.txt" # Указываем путь к файлу, в котором указан список ip адресов, напимер: "С:\Users\Ivan\Desktop\ipListHosts.txt"
