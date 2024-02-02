@@ -98,7 +98,7 @@ $Name = "ip.txt"
 $Path = "$env:USERPROFILE\Documents\"
 
 # Определение IP интерфейса в локальной сети
-$Interface = Get-NetIPAddress -AddressFamily IPv4 | Where-Object -Property PrefixOrigin -EQ "DHCP" | Select-Object IPAddress | Format-Table -HideTableHeaders | Out-File $Path$Name
+$Interface = Get-NetIPAddress -AddressFamily IPv4 | Where-Object -Property PrefixOrigin -eq "DHCP" | Select-Object IPAddress | Format-Table -HideTableHeaders | Out-File $Path$Name
 
 # Перезаписываем полученное значение убирая лишние пробелы и пустые строки
 $Interface = ((Get-Content $Path$Name) -join [environment]::NewLine).Trim() | Set-Content -Path $Path$Name
