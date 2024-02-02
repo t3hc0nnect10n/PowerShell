@@ -104,10 +104,10 @@ $Interface = Get-NetIPAddress -AddressFamily IPv4 | Where-Object -Property Prefi
 $Interface = ((Get-Content $Path$Name) -join [environment]::NewLine).Trim() | Set-Content -Path $Path$Name
 
 # Получаем IP интерфейса из файла для последующего применения 
-$IPInterface = Get-Content $Path$Name
+$Interface = Get-Content $Path$Name
 
 # Получаем список IP адресов
-$getIP = Get-ARPCache | Where-Object Interface -eq $IPInterface | Select-Object IPv4Address | Format-Table -HideTableHeaders | Out-File $Path$Name 
+$getIP = Get-ARPCache | Where-Object Interface -eq $Interface | Select-Object IPv4Address | Format-Table -HideTableHeaders | Out-File $Path$Name 
 
 # Перезаписываем полученное значение убирая лишние пробелы и пустые строки
 $getIP = ((Get-Content $Path$Name) -join [environment]::NewLine).Trim() | Set-Content -Path $Path$Name
@@ -129,8 +129,11 @@ ForEach($Hosts in $AllHosts)
        
         # Если результат положитеьный то вывод в зеленом цвете, либо в красном если отрицательный
         If ($check.tcpTestSucceeded -eq $true)
+           
             {Write-Host $Hosts.name  -Separator " => " $P -ForegroundColor Green }
+       
         else 
+            
             {Write-Host $Hosts.name  -Separator " => "$P -ForegroundColor Red }
     }
 }
