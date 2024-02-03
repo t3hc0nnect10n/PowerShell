@@ -27,7 +27,7 @@ $Sheet.Columns.Item(7).columnWidth=25
 $Sheet.Cells.Item(1,8)="Network"
 $Sheet.Columns.Item(8).columnWidth=45
 
-#Задаём красивый стиль 
+# Задаём красивый стиль 
 $Sheet.UsedRange.Interior.ColorIndex=5
 $Sheet.UsedRange.Font.ColorIndex=20
 $Sheet.UsedRange.Font.Bold=$True
