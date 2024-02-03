@@ -67,6 +67,7 @@ sleep 2
 echo ""
 echo "Scan Ports"
 echo "----------"
+
 # Скнируем порты из полученного списка ip адресов
 #
 # "20/TCP"       (FTP)                  FTP-DATA — для передачи данных FTP
