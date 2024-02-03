@@ -1,4 +1,6 @@
-﻿#Main function
+(Get-WmiObject SoftwareLicensingService).OA3xOriginalProductKey
+
+# Главная функция
 Function GetWin10Key
 {
 	$Hklm = 2147483650
@@ -6,16 +8,19 @@ Function GetWin10Key
 	$regPath = "Software\Microsoft\Windows NT\CurrentVersion"
 	$DigitalID = "DigitalProductId"
 	$wmi = [WMIClass]"\\$Target\root\default:stdRegProv"
-	#Get registry value 
+	
+    # Получаем знаячение реестра 
 	$Object = $wmi.GetBinaryValue($hklm,$regPath,$DigitalID)
 	[Array]$DigitalIDvalue = $Object.uValue 
-	#If get successed
+	
+    # Если получен успех
 	If($DigitalIDvalue)
 	{
-		#Get producnt name and product ID
+		# Получаем название и идентификатор продукта
 		$ProductName = (Get-itemproperty -Path "HKLM:Software\Microsoft\Windows NT\CurrentVersion" -Name "ProductName").ProductName 
 		$ProductID =  (Get-itemproperty -Path "HKLM:Software\Microsoft\Windows NT\CurrentVersion" -Name "ProductId").ProductId
-		#Convert binary value to serial number 
+		
+        # Преобразование двоичного значения в серийный номер
 		$Result = ConvertTokey $DigitalIDvalue
 		$OSInfo = (Get-WmiObject "Win32_OperatingSystem"  | select Caption).Caption
 		If($OSInfo -match "Windows 10")
@@ -27,11 +32,12 @@ Function GetWin10Key
 				+ "ProductID    : $ProductID `r`n" `
 				+ "Installed Key: $Result"
 				$value 
-				#Save Windows info to a file 
+				
+                # Сохраняем информацию о Windows в файл
 				$Choice = GetChoice
 				If( $Choice -eq 0 )
 				{	
-					$txtpath = "C:\Users\"+$env:USERNAME+"\Desktop"
+					$txtpath = "C:\Users\"+$env:USERNAME+"\Documents"
 					New-Item -Path $txtpath -Name "WindowsKeyInfo.txt" -Value $value   -ItemType File  -Force | Out-Null 
 				}
 				Elseif($Choice -eq 1)
@@ -56,7 +62,8 @@ Function GetWin10Key
 	}
 
 }
-#Get user choice 
+
+# Запрос пользователя на сохранения файла
 Function GetChoice
 {
     $yes = New-Object System.Management.Automation.Host.ChoiceDescription "&Yes",""
@@ -67,7 +74,8 @@ Function GetChoice
     $result = $Host.UI.PromptForChoice($caption,$message,$choices,0)
     $result
 }
-#Convert binary to serial number 
+
+# Преобразование двоичного кода в серийный номер
 Function ConvertToKey($Key)
 {
 	$Keyoffset = 52 
