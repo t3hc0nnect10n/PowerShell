@@ -63,7 +63,7 @@ function Get-ARPCache
 }
 
 Get-ARPCache
-sleep 5
+sleep 2
 echo ""
 echo "Scan Ports"
 echo "----------"
