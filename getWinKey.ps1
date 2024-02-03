@@ -9,18 +9,18 @@ Function GetWin10Key
 	$DigitalID = "DigitalProductId"
 	$wmi = [WMIClass]"\\$Target\root\default:stdRegProv"
 	
-    # Получаем знаячение реестра 
+   	# Получаем знаячение реестра 
 	$Object = $wmi.GetBinaryValue($hklm,$regPath,$DigitalID)
 	[Array]$DigitalIDvalue = $Object.uValue 
 	
-    # Если получен успех
+   	# Если получен успех
 	If($DigitalIDvalue)
 	{
 		# Получаем название и идентификатор продукта
 		$ProductName = (Get-itemproperty -Path "HKLM:Software\Microsoft\Windows NT\CurrentVersion" -Name "ProductName").ProductName 
 		$ProductID =  (Get-itemproperty -Path "HKLM:Software\Microsoft\Windows NT\CurrentVersion" -Name "ProductId").ProductId
 		
-        # Преобразование двоичного значения в серийный номер
+        	# Преобразование двоичного значения в серийный номер
 		$Result = ConvertTokey $DigitalIDvalue
 		$OSInfo = (Get-WmiObject "Win32_OperatingSystem"  | select Caption).Caption
 		If($OSInfo -match "Windows 10")
@@ -33,7 +33,7 @@ Function GetWin10Key
 				+ "Installed Key: $Result"
 				$value 
 				
-                # Сохраняем информацию о Windows в файл
+               			# Сохраняем информацию о Windows в файл
 				$Choice = GetChoice
 				If( $Choice -eq 0 )
 				{	
