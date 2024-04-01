@@ -122,3 +122,5 @@ Function ConvertToKey($Key)
   
 }
 GetWin10Key
+$shell = New-Object -ComObject Wscript.Shell
+$shell.popup("Ура все получилось",0,"Результат" , 64)
