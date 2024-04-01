@@ -71,6 +71,8 @@ echo "
 
 
 
+
+
 "
 Write-Host " Список портов" -ForegroundColor Magenta
 echo " -------------"
