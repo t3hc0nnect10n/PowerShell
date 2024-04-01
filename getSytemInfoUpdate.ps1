@@ -1,9 +1,7 @@
-﻿Write-Host ''
-Write-Host ''
 Write-Host 'Имя компьютера' -ForegroundColor Green
-Write-Host ''
+echo ""
 $env:COMPUTERNAME
-Write-Host ''
+echo ""
 #
 Write-Host 'Операционная система' -ForegroundColor Green
 Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" | Select-Object ProductName, EditionID, DisplayVersion, CurrentBuildNumber | Format-Table
