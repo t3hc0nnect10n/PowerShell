@@ -1,4 +1,5 @@
 # Создаем функцию для получения IP адресов из ARP таблицы
+
 function Get-ARPCache
 {
     [CmdletBinding()]
@@ -61,38 +62,46 @@ function Get-ARPCache
 
     }
 }
-
+Write-Host " ARP - Таблица" -ForegroundColor Magenta
+echo " -------------"
 Get-ARPCache
-sleep 2
+sleep 5
+echo "
+
+
+
+
+"
+Write-Host " Список портов" -ForegroundColor Magenta
+echo " -------------"
+Write-Host "
+ 20/TCP       (FTP)                  FTP-DATA — для передачи данных FTP
+ 21/TCP       (FTP)                  Для передачи команд FTP
+ 22/TCP,UDP   (SSH)                  Secure SHell — криптографический сетевой протокол для безопасной передачи данных
+ 23/TCP,UDP   (TELNET)               Telnet — применяется для передачи текстовых сообщений в незашифрованном виде
+ 25/TCP,UDP   (SMTP)                 Simple Mail Transfer Protocol — применяется для пересылки почтовых сообщений в виде незашифрованного текста
+ 53/TCP,UDP   (DOMAIN)               DNS - Domain Name System
+ 80/TCP,UDP   (HTTP)                 HyperText Transfer Protocol (ранее — WWW)
+ 81/TCP,UDP   (HTTP), (HOSTS2-NS)    HyperText Transfer Protocol (используется в приложениях проекта Tor для целей маршрутизации), HOSTS2-NS - Name Server
+ 88/TCP,UDP   (KERBEROS)             Система аутентификации
+ 135/TCP,UDP  (RPC)                  MSRPC (Microsoft RPC[6]) — используется в приложениях «клиент—сервер» Microsoft (например, Exchange)
+ 135/TCP,UDP  (RPC)                  OC-SRV (Locator service) — используется службами удалённого обслуживания (DHCP, DNS, WINS и т. д.)
+ 389/TCP,UDP  (LDAP)                 Lightweight Directory Access Protocol
+ 443/TCP,UDP  (HTTPS)                HyperText Transfer Protocol Secure — HTTP с шифрованием по SSL или TLS 
+ 445/TCP,UDP  (MICROSOFT-DS)         Используется в Microsoft Windows 2000 и поздних версий для прямого TCP/IP-доступа без использования NetBIOS (например, в Active Directory)
+ 993/TCP,UDP  (IMAPS)                Internet Message Access Protocol с шифрованием по SSL или TLS
+ 636/TCP,UDP  (LDAPS)                Lightweight Directory Access Protocol Secure — LDAP с шифрованием по SSL или TLS
+ 3268/TCP,UDP (MSFT-GC)              Microsoft Global Catalog (LDAP service which contains data from Active Directory forests)
+ 3269/TCP,UDP (MSFT-GC-SSL)          Microsoft Global Catalog over SSL (similar to port 3268, LDAP over SSL)
+ 3389/TCP     (RDP)                  Microsoft Terminal Server официально зарегистрировано как Windows Based Terminal (WBT)
+ 5985/TCP     (WinRM HTTP)           По умолчанию в Windows 7 и более поздних версиях WinRM HTTP. В более ранних версиях Windows в WinRM HTTP используется порт 80
+ 5986/TCP     (WinRM HTTPS)          По умолчанию в Windows 7 и более поздних версиях WinRM HTTPS. В более ранних версиях Windows в WinRM HTTPS используется порт 443
+ 8080/TCP     (HTTP-ALT)             Альтернативный порт HTTP (http_alt) — обычно используется для организации веб-прокси и кэширующих серверов, запуска веб-сервера 
+                                     от имени не-root пользователя
+"
 echo ""
-echo "Scan Ports"
-echo "----------"
-
-# Скнируем порты из полученного списка ip адресов
-#
-# "20/TCP"       (FTP)                  FTP-DATA — для передачи данных FTP
-# "21/TCP"       (FTP)                  Для передачи команд FTP
-# "22/TCP,UDP"   (SSH)                  Secure SHell — криптографический сетевой протокол для безопасной передачи данных
-# "23/TCP,UDP"   (TELNET)               Telnet — применяется для передачи текстовых сообщений в незашифрованном виде
-# "25/TCP,UDP"   (SMTP)                 Simple Mail Transfer Protocol — применяется для пересылки почтовых сообщений в виде незашифрованного текста
-# "53/TCP,UDP"   (DOMAIN)               DNS - Domain Name System
-# "80/TCP,UDP"   (HTTP)                 HyperText Transfer Protocol (ранее — WWW)
-# "81/TCP,UDP"   (HTTP), (HOSTS2-NS)    HyperText Transfer Protocol (используется в приложениях проекта Tor для целей маршрутизации), HOSTS2-NS - Name Server
-# "88/TCP,UDP"   (KERBEROS)             Система аутентификации
-# "135/TCP,UDP"  (RPC)                  MSRPC (Microsoft RPC[6]) — используется в приложениях «клиент—сервер» Microsoft (например, Exchange)
-# "135/TCP,UDP"  (RPC)                  OC-SRV (Locator service) — используется службами удалённого обслуживания (DHCP, DNS, WINS и т. д.)
-# "389/TCP,UDP"  (LDAP)                 Lightweight Directory Access Protocol
-# "443/TCP,UDP"	 (HTTPS)                HyperText Transfer Protocol Secure — HTTP с шифрованием по SSL или TLS 
-# "445/TCP,UDP"	 (MICROSOFT-DS)         Используется в Microsoft Windows 2000 и поздних версий для прямого TCP/IP-доступа без использования NetBIOS (например, в Active Directory)
-# "993/TCP,UDP"	 (IMAPS)                Internet Message Access Protocol с шифрованием по SSL или TLS
-# "636/TCP,UDP"  (LDAPS)                Lightweight Directory Access Protocol Secure — LDAP с шифрованием по SSL или TLS
-# "3268/TCP,UDP" (MSFT-GC)              Microsoft Global Catalog (LDAP service which contains data from Active Directory forests)
-# "3269/TCP,UDP" (MSFT-GC-SSL)          Microsoft Global Catalog over SSL (similar to port 3268, LDAP over SSL)
-# "3389/TCP"     (RDP)                  Microsoft Terminal Server официально зарегистрировано как Windows Based Terminal (WBT)
-# "5985/TCP"     (WinRM HTTP)           По умолчанию в Windows 7 и более поздних версиях WinRM HTTP. В более ранних версиях Windows в WinRM HTTP используется порт 80
-# "5986/TCP"     (WinRM HTTPS)          По умолчанию в Windows 7 и более поздних версиях WinRM HTTPS. В более ранних версиях Windows в WinRM HTTPS используется порт 443
-# "8080/TCP"     (HTTP-ALT)             Альтернативный порт HTTP (http_alt) — обычно используется для организации веб-прокси и кэширующих серверов, запуска веб-сервера от имени не-root пользователя
-
+Write-Host " Сканирование портов" -ForegroundColor Magenta
+echo " -------------------"
 # Имя файла 
 $Name = "ip.txt"
 
@@ -112,7 +121,7 @@ $Interface = Get-Content $Path$Name
 $getIP = Get-ARPCache | Where-Object Interface -eq $Interface | Select-Object IPv4Address | Format-Table -HideTableHeaders | Out-File $Path$Name 
 
 # Перезаписываем полученное значение убирая лишние пробелы и пустые строки
-$getIP = ((Get-Content $Path$Name) -join [environment]::NewLine).Trim() | Set-Content -Path $Path$Name
+$getIP = ((Get-Content $Path$Name) -join [environment]::NewLine).trim() | Set-Content -Path $Path$Name
 
 # В переменной "$Ports" указаны порты через запятую, который мы хотим ппросканировать 
 $Ports  = "20", "21", "22", "23", "25", "53", "80", "81", "88", "135", "389", "443", "445", "636", "993", "3268", "3269", "3389", "5985", "5986", "8080"
@@ -131,7 +140,7 @@ ForEach($Hosts in $AllHosts)
        
         # Если результат положитеьный то вывод в зеленом цвете, либо в красном если отрицательный
         If ($check.tcpTestSucceeded -eq $true)
-           
+
             {Write-Host $Hosts.name  -Separator " => " $P -ForegroundColor Green }
        
         else 
@@ -167,3 +176,5 @@ ForEach($Hosts in $AllHosts)
 #
 # 6. Вывести список открытых портов в Windows
 # Get-NetTcpConnection -State Listen | Select-Object LocalAddress,LocalPort| Sort-Object -Property LocalPort | Format-Table
+$shell = New-Object -ComObject Wscript.Shell
+$shell.popup("Ура все получилось",0,"Результат" , 64)
