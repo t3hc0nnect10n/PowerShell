@@ -1,5 +1,4 @@
-(Get-WmiObject SoftwareLicensingService).OA3xOriginalProductKey
-
+# Вариант 1
 # Главная функция
 Function GetWin10Key
 {
@@ -122,3 +121,8 @@ Function ConvertToKey($Key)
   
 }
 GetWin10Key
+
+# Вариант 2
+# Разкоментируйте команду ниже, если Вариант 1 не помог
+#(Get-WmiObject SoftwareLicensingService).OA3xOriginalProductKey
+
