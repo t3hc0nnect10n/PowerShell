@@ -1,19 +1,19 @@
-# Set execution policy if not set
+# Установите политику выполнения, если она не установлена
 $ExecutionPolicy = Get-ExecutionPolicy
 if ($ExecutionPolicy -ne "RemoteSigned") {
     Set-ExecutionPolicy RemoteSigned -Force
 }
 
-# Cleanup logs older than the set of days in numbers
+# Очистка журналов старше заданного количества дней в числах
 $days = 3
 
-# Path of the logs that you like to cleanup
+# Путь к журналам, которые вы хотите очистить
 $IISLogPath = "C:\inetpub\logs\LogFiles\"
 $ExchangeLoggingPath = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\"
 $ETLLoggingPath = "C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Diagnostics\ETLTraces\"
 $ETLLoggingPath2 = "C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Diagnostics\Logs\"
 
-# Clean the logs
+# Очистка логов
 Function CleanLogfiles($TargetFolder) {
     Write-Host -Debug -ForegroundColor Yellow -BackgroundColor Cyan $TargetFolder
 
