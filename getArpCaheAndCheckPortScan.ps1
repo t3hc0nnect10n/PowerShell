@@ -62,6 +62,14 @@ function Get-ARPCache
 
     }
 }
+echo "
+
+
+
+
+
+
+"
 Write-Host " ARP - Таблица" -ForegroundColor Magenta
 echo " -------------"
 Get-ARPCache
