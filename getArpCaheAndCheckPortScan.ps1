@@ -171,7 +171,7 @@ ForEach($Hosts in $AllHosts)
 # 3. Трассировка до хоста yandex.ru 
 # Test-NetConnection yandex.ru -TraceRoute
 #
-# 4. Просканировать порт задав диапазон IP адресов с детальным вывод
+# 4. Просканировать порт задав диапазон IP адресов с детальным выводом
 # Foreach ($ip in 2..150) {Test-NetConnection -Port 80 -InformationLevel "Detailed" 10.3.1.$ip}
 # 
 # 5. Просканировать диапазон TCP портов (от 1 до 1024) на указанном сервере
