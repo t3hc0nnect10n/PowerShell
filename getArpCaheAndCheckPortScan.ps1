@@ -1,3 +1,9 @@
+# Установите политику выполнения, если она не установлена
+$ExecutionPolicy = Get-ExecutionPolicy
+if ($ExecutionPolicy -ne "RemoteSigned") {
+    Set-ExecutionPolicy RemoteSigned -Force
+}
+
 # Создаем функцию для получения IP адресов из ARP таблицы
 
 function Get-ARPCache
