@@ -1,6 +1,12 @@
 # Данный скрипт опрашивает класс win32 и выводит полученный результат в таблицу excel.
 # В связке с доменной инфраструткурой и отконфигурированной службой WinRM, можно выполнить invoke-request опорос списка ПК.
 
+# Установите политику выполнения, если она не установлена
+$ExecutionPolicy = Get-ExecutionPolicy
+if ($ExecutionPolicy -ne "RemoteSigned") {
+    Set-ExecutionPolicy RemoteSigned -Force
+}
+
 # Сохдаём книгу excel,удаляем лишние листы, присваиваем листу имя "Computers". 
 $Excel=New-Object -Com Excel.Application
 $Book=$Excel.Workbooks.Add()
@@ -36,7 +42,7 @@ $Row=2
 
 # Если компьютер в списке включен то выполняется условие
 Get-WmiObject -Class Win32_ComputerSystem -ComputerName . | Select-Object name | foreach {
-if ((Test-connection $_.name -count 2 -quiet) -eq "True"){
+if ((Test-connection $_.name -count 2 -quiet) -eq "True") {
 $Sheet.Cells.Item($Row,1)=$_.name
 
 # Операционная Система
