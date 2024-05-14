@@ -88,7 +88,7 @@ $Sheet.Cells.Item($Row,8)=$net.TrimEnd("`n")
 $Row=$Row + 1
 }}
 
-# Выравниваем полученную информацию в ячейказ таблицы
+# Выравниваем полученную информацию в ячейках таблицы
 $Sheet.UsedRange.WrapText=1
 $Sheet.Rows.Item(1).AutoFilter()
 $Sheet.UsedRange.EntireRow.AutoFit()
