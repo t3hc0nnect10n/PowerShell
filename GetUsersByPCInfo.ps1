@@ -38,7 +38,7 @@ $form.Controls.Add($cancelButton)
 $label = New-Object System.Windows.Forms.Label
 $label.Location = New-Object System.Drawing.Point(10,20)
 $label.Size = New-Object System.Drawing.Size(280,20)
-$label.Text = 'Please enter the SamAccountName:'
+$label.Text = 'Введите учётную запись AD (SamAccountName)'
 $form.Controls.Add($label)
 
 # Создание элемента управления, который позволит пользователям указать сведения, описанные в тексте метки.
