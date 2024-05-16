@@ -43,7 +43,7 @@ $OutputMemberLight = foreach ($Group in $DGroup) {
     Get-DistributionGroup $Group | Select-Object Name
     
     # Получаем сведения участников почтовых групп рассылок: ФИО
-    Get-DistributionGroupMember $Group | Select-Object Name #, PrimarySmtpAddress, @{Name='EmailAddresses'; Expression={$_.EmailAddresses -join ","}}, Title, Department, Company | Sort-Object Name
+    Get-DistributionGroupMember $Group | Select-Object Name
     echo ' '
 }
 
