@@ -4,7 +4,7 @@ Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
 # Задаём переменной '$Name' имя файла 'DistributionGroup' в текстовом формате 'txt'
 $Name = 'DistributionGroup.txt'
 # Задаём переменной '$Path' путь, в котором будет сохраняться полученный файл 'DGroup.txt' 
-$Path = 'C:\Users\leb.adm\Documents\02. Exchange\01. Group\01. Distribution\'
+$Path = '<Указываем полный путь где будет храниться файл>'
 
 # Получаем список почтовых групп рассылок и сохраняем его в файл 'DistributionGroup.txt'
 # Параметр 'HideTableHeader' удаляет заголовок
@@ -51,7 +51,7 @@ Write-Host '<---------------------------------------------FINISH----------------
 
 
 # Full выгрузка сведений почтовых групп рассылк в файл 'CSV_FullDistributionGroupMember.csv'
-$OutputMemberFull | Export-CSV 'C:\Users\leb.adm\Documents\02. Exchange\01. Group\01. Distribution\CSV_FullDistributionGroupMember.csv' -Encoding UTF8
+$OutputMemberFull | Export-CSV '<Указываем полный путь где будет храниться файл>\CSV_FullDistributionGroupMember.csv' -Encoding UTF8
 
 # Light выгрузка сведений почтовых групп рассылк в файл 'CSV_LightDistributionGroupMember.csv'
-$OutputMemberLight | Export-CSV 'C:\Users\leb.adm\Documents\02. Exchange\01. Group\01. Distribution\CSV_LightDistributionGroupMember.csv' -Encoding UTF8
+$OutputMemberLight | Export-CSV '<Указываем полный путь где будет храниться файл>\CSV_LightDistributionGroupMember.csv' -Encoding UTF8
