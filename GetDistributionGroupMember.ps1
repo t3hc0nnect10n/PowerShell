@@ -16,42 +16,25 @@ $DGroup = ((Get-Content $Path$Name) -join [environment]::NewLine).Trim() | Set-C
 # Задаём переменной '$DGroup' получить список почтовых групп рассылок из файла 'DistributionGroup.txt'
 $DGroup = (Get-Content $Path$Name).Trim()
 
-echo ' '
-Write-Host '<---------------------------------------------START--------------------------------------------->' -ForegroundColor Red -BackgroundColor White
-Write-Host '<------------------------ Full выгрузка сведений почтовых групп рассылок ------------------------>' -ForegroundColor Black -BackgroundColor White 
+echo " "
+Write-Host "<---------------------------------------------START--------------------------------------------->" -ForegroundColor Red -BackgroundColor White
+echo " "
 
-# Задаём переменной '$OutputMemberFull' итерацию по списку почтовых групп расссылок
-$OutputMemberFull = foreach ($Group in $DGroup) {
+# Задаём переменной '$Output' итерацию по списку почтовых групп расссылок
+$Output = foreach ($Group in $DGroup) {
 
-    # Вывод в консоль именование почтовой группы рассылки в зеленом цвете
-    Write-Host ''$Group'' -ForegroundColor Green
-    
-    # Получаем сведения участников почтовых групп рассылок: ФИО, Гланый почтовый адрес, Дополнительные почтовые адреса, Должность, Отдел, Компания 
-    Get-DistributionGroupMember $Group | Select-Object Name, PrimarySmtpAddress, @{Name='EmailAddresses'; Expression={$_.EmailAddresses -join ", "}}, Title, Department, Company | Sort-Object Name
-}
-
-echo ' '
-Write-Host '<------------------------ Light выгрузка сведений почтовых групп рассылок ----------------------->' -ForegroundColor Black -BackgroundColor White 
-
-# Задаём переменной '$OutputMemberLight' итерацию по списку почтовых групп расссылок
-$OutputMemberLight = foreach ($Group in $DGroup) {
-    
-    # Вывод в консоль именование почтовой группы рассылки в зеленом цвете
-    Write-Host ''$Group'' -ForegroundColor Green
+    # Вывод в консоль именование почтовой группы рассылки в зеленом цвете                                       
+    Write-Host " $Group" -ForegroundColor Green
     
     # Получаем имя почтовой групы рассылки
-    Get-DistributionGroup $Group | Select-Object Name
+    Get-DistributionGroup $Group | Select-Object Name, DisplayName, PrimarySmtpAddress, @{Name='EmailAddresses'; Expression={$_.EmailAddresses -join ", "}}, Title, Department, Company
     
-    # Получаем сведения участников почтовых групп рассылок: ФИО
-    Get-DistributionGroupMember $Group | Select-Object Name
-    echo ' '
+    # Получаем сведения участников почтовых групп рассылок: ФИО, Гланый почтовый адрес, Дополнительные почтовые адреса, Должность, Отдел, Компания 
+    Get-DistributionGroupMember $Group | Select-Object '$null', DisplayName, PrimarySmtpAddress, @{Name='EmailAddresses'; Expression={$_.EmailAddresses -join ", "}}, Title, Department, Company | Sort-Object DisplayName 
+
 }
+echo " "
+Write-Host "<---------------------------------------------FINISH--------------------------------------------->" -ForegroundColor Red -BackgroundColor White
 
-Write-Host '<---------------------------------------------FINISH--------------------------------------------->' -ForegroundColor Red -BackgroundColor White
-
-
-# Full выгрузка сведений почтовых групп рассылк в файл 'CSV_FullDistributionGroupMember.csv'
-$OutputMemberFull | Export-CSV '<Указываем полный путь где будет храниться файл>\CSV_FullDistributionGroupMember.csv' -Encoding UTF8
-
-# Light выгрузка сведений почтовых групп рассылк в файл 'CSV_LightDistributionGroupMember.csv'
-$OutputMemberLight | Export-CSV '<Указываем полный путь где будет храниться файл>\CSV_LightDistributionGroupMember.csv' -Encoding UTF8
+# Выгрузка сведений почтовых групп рассылк в файл 'CSV_DistributionGroupMember.csv'
+$Output | Export-CSV '<Указываем полный путь где будет храниться файл>\CSV_DistributionGroupMember.csv' -NoTypeInformation -Encoding UTF8
