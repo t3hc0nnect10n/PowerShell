@@ -1,6 +1,6 @@
 # Скрипт запускаем в Exchange Management Shell
 
-# Задаём переменной '$Name' имя файла 'DynamicDistributionGroup' в текстовом формате 'csv' где значения разделены спецсимволами
+# Задаём переменной '$Name' имя файла 'DynamicDistributionGroup' в формате 'csv' где значения разделены спецсимволами
 $Name = 'CSV_DynamicDistributionGroupMember.csv'
 
 # Задаём переменной '$Path' путь, в котором будет сохраняться полученный файл 'CSV_DynamicDistributionGroupMember.csv'
@@ -24,5 +24,5 @@ $Output = Get-DynamicDistributionGroup | ForEach-Object {
     }
 }
 
-# Выгрузка сведений почтовых групп рассылк в файл 'CSV_DynamicDistributionGroupMember.csv'
+# Выгрузка сведений почтовых групп рассылок в файл 'CSV_DynamicDistributionGroupMember.csv'
 $Output | Export-CSV $Path$Name -NoTypeInformation -Encoding UTF8
