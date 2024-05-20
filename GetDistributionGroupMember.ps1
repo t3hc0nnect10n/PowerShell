@@ -3,8 +3,10 @@ Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
 
 # Задаём переменной '$Name' имя файла 'DistributionGroup' в текстовом формате 'txt'
 $Name = 'DistributionGroup.txt'
-# Задаём переменной '$Path' путь, в котором будет сохраняться полученный файл 'DistributionGroup.txt' 
-$Path = '<Указываем полный путь где будет храниться файл>' # Вместо <Указываем полный путь где будет храниться файл> пишем путь, например: C:\Users\Ivan\Documents\
+
+# Задаём переменной '$Path' путь, в котором будет сохраняться полученный файл 'DistributionGroup.txt'
+# Вместо <Указываем полный путь где будет храниться файл> пишем путь, например: C:\Users\Ivan\Documents\
+$Path = '<Указываем полный путь где будет храниться файл>'
 
 # Получаем список почтовых групп рассылок и сохраняем его в файл 'DistributionGroup.txt'
 # Параметр 'HideTableHeader' удаляет заголовок
