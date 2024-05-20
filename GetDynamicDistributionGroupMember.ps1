@@ -3,8 +3,9 @@
 # Задаём переменной '$Name' имя файла 'DynamicDistributionGroup' в текстовом формате 'csv' где значения разделены спецсимволами
 $Name = 'CSV_DynamicDistributionGroupMember.csv'
 
-# Задаём переменной '$Path' путь, в котором будет сохраняться полученный файл 'CSV_DynamicDistributionGroupMember.csv' 
-$Path = '<Указываем полный путь где будет храниться файл>'
+# Задаём переменной '$Path' путь, в котором будет сохраняться полученный файл 'CSV_DynamicDistributionGroupMember.csv'
+# Вместо <Указываем полный путь где будет храниться файл> пишем путь, например: C:\Users\Ivan\Documents\
+$Path = '<Указываем полный путь где будет храниться файл>' 
 
 # Вызываем итерацию по каждой динамической почтоый группе рассылок 
 $Output = Get-DynamicDistributionGroup | ForEach-Object {
