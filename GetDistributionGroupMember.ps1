@@ -31,7 +31,7 @@ $Output = foreach ($Group in $DGroup) {
     # Получаем имя почтовой групы рассылки
     Get-DistributionGroup $Group | Select-Object Name, DisplayName, PrimarySmtpAddress, @{Name='EmailAddresses'; Expression={$_.EmailAddresses -join ", "}}, Title, Department, Company
     
-    # Получаем сведения участников почтовых групп рассылок: ФИО, Гланый почтовый адрес, Дополнительные почтовые адреса, Должность, Отдел, Компания 
+    # Получаем сведения участников почтовых групп рассылок: ФИО, Главный почтовый адрес, Дополнительные почтовые адреса, Должность, Отдел, Компания 
     Get-DistributionGroupMember $Group | Select-Object '$null', DisplayName, PrimarySmtpAddress, @{Name='EmailAddresses'; Expression={$_.EmailAddresses -join ", "}}, Title, Department, Company | Sort-Object DisplayName 
 
 }
