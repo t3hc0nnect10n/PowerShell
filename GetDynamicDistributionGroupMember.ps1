@@ -1,10 +1,15 @@
-﻿# Задаём переменной '$Name' имя файла 'DynamicDistributionGroup' в текстовом формате 'txt'
-$Name_DD = 'DynamicDistributionGroup.txt'
+# Скрипт запускаем в Exchange Management Shell
 
-# Задаём переменной '$Path' путь, в котором будет сохраняться полученный файл 'DynamicDistributionGroup.txt' 
+# Задаём переменной '$Name' имя файла 'DynamicDistributionGroup' в текстовом формате 'csv' где значения разделены спецсимволами
+$Name = 'CSV_DynamicDistributionGroupMember.csv'
+
+# Задаём переменной '$Path' путь, в котором будет сохраняться полученный файл 'CSV_DynamicDistributionGroupMember.csv' 
 $Path = '<Указываем полный путь где будет храниться файл>'
 
-Get-DynamicDistributionGroup | ForEach-Object {
+# Вызываем итерацию по каждой динамической почтоый группе рассылок 
+$Output = Get-DynamicDistributionGroup | ForEach-Object {
+    
+    # Выводим свойства объекта получателя состоящий в динамической почтовой группе рассылки
     foreach ($recipient in Get-Recipient -RecipientPreviewFilter $_.RecipientFilter -ResultSize Unlimited) {
         [pscustomobject]@{
             DistributionGroup  = $_.Name
@@ -16,4 +21,7 @@ Get-DynamicDistributionGroup | ForEach-Object {
             Company            = $recipient.Company
         } 
     }
-} | Export-CSV '<Указываем полный путь где будет храниться файл>\CSV_DynamicDistributionGroupMember.csv' -NoTypeInformation -Encoding UTF8
+}
+
+# Выгрузка сведений почтовых групп рассылк в файл 'CSV_DynamicDistributionGroupMember.csv'
+$Output | Export-CSV $Path$Name -NoTypeInformation -Encoding UTF8
