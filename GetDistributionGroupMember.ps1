@@ -3,7 +3,7 @@ Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
 
 # Задаём переменной '$Name' имя файла 'DistributionGroup' в текстовом формате 'txt'
 $Name = 'DistributionGroup.txt'
-# Задаём переменной '$Path' путь, в котором будет сохраняться полученный файл 'DGroup.txt' 
+# Задаём переменной '$Path' путь, в котором будет сохраняться полученный файл 'DistributionGroup.txt' 
 $Path = '<Указываем полный путь где будет храниться файл>'
 
 # Получаем список почтовых групп рассылок и сохраняем его в файл 'DistributionGroup.txt'
