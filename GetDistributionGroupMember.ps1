@@ -22,13 +22,13 @@ echo " "
 Write-Host "<---------------------------------------------START--------------------------------------------->" -ForegroundColor Red -BackgroundColor White
 echo " "
 
-# Задаём переменной '$Output' итерацию по списку почтовых групп расссылок
+# Задаём переменной '$Output' итерацию по списку почтовых групп рассылок
 $Output = foreach ($Group in $DGroup) {
 
     # Вывод в консоль именование почтовой группы рассылки в зеленом цвете                                       
     Write-Host " $Group" -ForegroundColor Green
     
-    # Получаем имя почтовой групы рассылки
+    # Получаем имя почтовой группы рассылки
     Get-DistributionGroup $Group | Select-Object Name, DisplayName, PrimarySmtpAddress, @{Name='EmailAddresses'; Expression={$_.EmailAddresses -join ", "}}, Title, Department, Company
     
     # Получаем сведения участников почтовых групп рассылок: ФИО, Главный почтовый адрес, Дополнительные почтовые адреса, Должность, Отдел, Компания 
@@ -38,6 +38,6 @@ $Output = foreach ($Group in $DGroup) {
 echo " "
 Write-Host "<---------------------------------------------FINISH--------------------------------------------->" -ForegroundColor Red -BackgroundColor White
 
-# Выгрузка сведений почтовых групп рассылк в файл 'CSV_DistributionGroupMember.csv'
+# Выгрузка сведений почтовых групп рассылок в файл 'CSV_DistributionGroupMember.csv'
 # Вместо <Указываем полный путь где будет храниться файл> пишем путь, например: C:\Users\Ivan\Documents\
 $Output | Export-CSV '<Указываем полный путь где будет храниться файл>\CSV_DistributionGroupMember.csv' -NoTypeInformation -Encoding UTF8 
