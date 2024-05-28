@@ -22,7 +22,7 @@ echo " "
 
         Write-Host " Задаём переменной 'ShawADGroup' название группы как в Active Directory" -ForegroundColor Yellow
         Write-Host " Пример: RO_Департамент ИТ" -ForegroundColor DarkCyan
-        $ShawADGroup = Read-Host " Введите имя группы доступа"
+        $ShawADGroup = Read-Host " Введите имя группы доступа (Security Group)"
 
         Start-Sleep -Milliseconds 500
         Get-ADGroupMember -Identity $ShawADGroup | Select-Object Name, SamAccountName | Sort-Object Name | Format-Table -AutoSize | more
