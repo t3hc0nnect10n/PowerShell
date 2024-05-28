@@ -204,7 +204,7 @@ echo " "
             # Задаём переменной '$ADUsers' получить список пользователей из файла '$Name'
             $ADUsers = (Get-Content $Path$Name).Trim()
         
-            Write-Host " Задаём переменной 'ADGroup' название группы как в Active Directory`n Например: RO_Департамент ИТ" -ForegroundColor Yellow
+            Write-Host " Задаём переменной 'ADGroup' название группы как в Active Directory`n Пример: RO_Департамент ИТ" -ForegroundColor Yellow
             $ADGroup = Read-Host " Введите имя группы доступа (Security Group)"
             sleep 1
             Write-Host " ОК`n" -ForegroundColor Green
