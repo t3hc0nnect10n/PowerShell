@@ -8,11 +8,11 @@ echo " "
 
  while ($true) {
 
-    Write-Host " 1. Проверить пользователей группы доступа (Security Group)`n 2. Проверить пользователей в контейнере (OU)`n 3. Создать список`n 4. Добавить пользователей в группу доступа`n 5. Выход"  -ForegroundColor Yellow
+    Write-Host " 1. Проверить пользователей группы доступа (Security Group)`n 2. Проверить пользователей в контейнере (OU)`n 3. Создать список`n 4. Добавить пользователей в группу доступа (Security Group)`n 5. Выход"  -ForegroundColor Yellow
     $UsrInput1 = Read-Host " Введите номер команды (1)-(2)-(3)-(4)-(5)"
     $UsrInput1 = [int]$UsrInput1
 
-    # 1. Проверить пользователей группы
+    # 1. Проверить пользователей группы доступа (Security Group)
     if ($UsrInput1 -eq 1) {
         echo " "
         Write-Host "<---------------------------------------------START--------------------------------------------->`n" -ForegroundColor Red -BackgroundColor White
@@ -189,7 +189,7 @@ echo " "
         echo " "
     }
 
-    # 4. Добавить пользователей в группу
+    # 4. Добавить пользователей в группу доступа (Security Group)
     elseif ($UsrInput1 -eq 4){
         echo " "
         Write-Host "<---------------------------------------------START--------------------------------------------->`n" -ForegroundColor Red -BackgroundColor White
