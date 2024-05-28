@@ -241,7 +241,7 @@ echo " "
     # 5. Выход
     elseif ($UsrInput1 -eq 5) {
         echo " "
-        Write-Host "########################################`n# GOOD JOB! Good day for you!          #`n########################################`n# PS: Keep Calm and Call t3hc0nnect10n! =) #`n########################################`n" -ForegroundColor Magenta
+        Write-Host "############################################`n# GOOD JOB! Good day for you!              #`n############################################`n# PS: Keep Calm and Call t3hc0nnect10n! =) #`n############################################`n" -ForegroundColor Magenta
         break
     }
 }
