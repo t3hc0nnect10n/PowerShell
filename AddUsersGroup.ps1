@@ -1,5 +1,8 @@
-﻿#Install-Module -Name WindowsCompatibility
-#Import-WinModule -Name ActiveDirectory
+# Made by t3hc0nect10n
+# Скрипт позволяет в интерактивном режиме узнать информацию о пользователях, кто входит в группу доступа, добавить пользователей в группу доступа.
+
+# Install-Module -Name WindowsCompatibility
+# Import-WinModule -Name ActiveDirectory
 
 echo " "
 Write-Host "##################################################`n# Hellow Senior System Administrator, Lets go!!! #`n##################################################" -ForegroundColor Magenta
