@@ -58,11 +58,9 @@ echo " "
             Write-Host "            Логин УЗ       : SamAccountName" -ForegroundColor Cyan
             Write-Host "            Почта          : Mail" -ForegroundColor Cyan
             Write-Host "            Должность      : Title" -ForegroundColor Cyan
-            #Write-Host "            Руководитель   : ManagaerFullName" -ForegroundColor Cyan
             Write-Host "            Отдел          : Department" -ForegroundColor Cyan
             Write-Host "            Компания       : Company" -ForegroundColor Cyan
-            Write-Host "            Активирована   : Enabled" -ForegroundColor Cyan
-            #Write-Host " ВАЖНО! Если требуется вывести на экран руководителя, то свойство 'ManagerFullName' стоит написать в конце!"           
+            Write-Host "            Активирована   : Enabled" -ForegroundColor Cyan 
             Write-Host " Например: Name,SamAccountName,Mail,Title" -ForegroundColor DarkCyan
             $UsrInput2 = Read-Host " Введите свойства"
             $UsrInput2 = $UsrInput2.ToLower()
