@@ -206,7 +206,7 @@ echo " "
         
             Write-Host " Задаём переменной 'ADGroup' название группы как в Active Directory`n Пример: RO_Департамент ИТ" -ForegroundColor Yellow
             $ADGroup = Read-Host " Введите имя группы доступа (Security Group)"
-            sleep 1
+            Start-Sleep -Milliseconds 500
             Write-Host " ОК`n" -ForegroundColor Green
 
             $UsrInput4 = Read-Host " Подтвердите действие (Yes[y]/No[n])"
