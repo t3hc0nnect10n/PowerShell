@@ -212,7 +212,7 @@ echo " "
             $UsrInput4 = Read-Host " Подтвердите действие (Yes[y]/No[n])"
             $UsrInput4 = $UsrInput4.ToLower()
         
-            if (($UserInput4 -like "y") -or ($UserInput4 -like "yes")) {
+            if (($UsrInput4 -like "y") -or ($UsrInput4 -like "yes")) {
 
 				# Задаем итерацию по списку пользователей
                 foreach ($ADUser in $ADUsers) {
@@ -228,9 +228,9 @@ echo " "
                     if ($GetMember) {Write-Host " $ADUser" -ForegroundColor Green} else {Write-Host " $ADUser" -ForegroundColor Red}
                 }
             }
-            elseif (($UserInput4 -like "n") -or ($UserInput4 -like "no")) {
+            elseif (($UsrInput4 -like "n") -or ($UsrInput4 -like "no")) {
 		    Start-Sleep -Milliseconds 500
-	            Write-Host " Добавление пользователей отменено.`n" -ForegroundColor Green
+	            Write-Host " Добавление пользователей отменено." -ForegroundColor Green
 		    break
             }
         }
