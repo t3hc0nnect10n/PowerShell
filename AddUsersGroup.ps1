@@ -47,7 +47,7 @@ echo " "
             }
             else {
                 Start-Sleep -Milliseconds 500
-                Write-Host  " ОШИБКА: Не верно указан distinguishedName`n" -ForegroundColor Red
+                Write-Host  " ОШИБКА: Неверно указан distinguishedName.`n" -ForegroundColor Red
             }
         }
 
@@ -68,7 +68,7 @@ echo " "
             # Условие проверяющее правильность ввода, а именно ", "
             if ($UsrInput2.Contains(", ")) {
                 Start-Sleep -Milliseconds 500 
-                Write-Host  " ОШИБКА: Не верно прописаны свойства. Смотри пример. `n" -ForegroundColor Red
+                Write-Host  " ОШИБКА: Неверно прописаны свойства. Смотри пример. `n" -ForegroundColor Red
             }
             else {
                 Start-Sleep -Milliseconds 500
@@ -108,7 +108,7 @@ echo " "
             }
             else {
                 Start-Sleep -Milliseconds 500
-                Write-Host  " ОШИБКА: Не верно указан формат файла. Требуется указать txt формат, как в примере`n" -ForegroundColor Red
+                Write-Host  " ОШИБКА: Неверно указан формат файла. Требуется указать txt формат. Смотри пример.`n" -ForegroundColor Red
             }
         }
 
@@ -125,7 +125,7 @@ echo " "
             }
             else {
                 Start-Sleep -Milliseconds 500
-                Write-Host  " ОШИБКА: Не верно указан путь, смотри пример`n" -ForegroundColor Red
+                Write-Host  " ОШИБКА: Неверно указан путь. Смотри пример.`n" -ForegroundColor Red
             }
         }
 
@@ -143,7 +143,7 @@ echo " "
             }
             else {
                 Start-Sleep -Milliseconds 500
-                Write-Host  " ОШИБКА: Не верно указан distinguishedName, смотри пример`n" -ForegroundColor Red
+                Write-Host  " ОШИБКА: Неверно указан distinguishedName. Смотри пример.`n" -ForegroundColor Red
             }   
         }
 
@@ -168,7 +168,7 @@ echo " "
 
                 if ($ListUsers -eq $null) {
                     Start-Sleep -Milliseconds 500
-                    Write-Host " Файл $Path$Name ничего не содержит, пустой. Вы указали контейнер не содержащий пользователей`n" -ForegroundColor Red
+                    Write-Host " Файл $Path$Name ничего не содержит.`n" -ForegroundColor Red
                     break
                 }
                 else {
@@ -181,7 +181,7 @@ echo " "
                 break
             }
             else {
-                Write-Host " ОШИБКА: Не верно введена команда`n" -ForegroundColor Red
+                Write-Host " ОШИБКА: Неверно введена команда.`n" -ForegroundColor Red
             }
         }
         echo " "
@@ -195,7 +195,7 @@ echo " "
         Write-Host "<---------------------------------------------START--------------------------------------------->`n" -ForegroundColor Red -BackgroundColor White
 
         if (($Path -eq $null) -or ($Name -eq $null)) {
-            Write-Host " ОШИБКА: Необходимо создать список выбрав пункт 3" -ForegroundColor Red
+            Write-Host " ОШИБКА: Необходимо создать список выбрав пункт 3." -ForegroundColor Red
         }
         else {
             # Задаём переменной '$ADUsers' получить список пользователей из файла '$Name'
@@ -227,7 +227,7 @@ echo " "
             }
             elseif (($UserInput4 -like "n") -or ($UserInput4 -like "no")) {
 				Start-Sleep -Milliseconds 500
-				Write-Host " Добавление пользователей отменено`n" -ForegroundColor Green
+				Write-Host " Добавление пользователей отменено.`n" -ForegroundColor Green
 				break
             }
         }
