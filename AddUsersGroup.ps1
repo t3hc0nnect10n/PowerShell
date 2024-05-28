@@ -21,8 +21,8 @@ echo " "
         Write-Host "<---------------------------------------------START--------------------------------------------->`n" -ForegroundColor Red -BackgroundColor White
 
         Write-Host " Задаём переменной 'ShawADGroup' название группы как в Active Directory" -ForegroundColor Yellow
-        Write-Host " Например: RO_Департамент ИТ" -ForegroundColor DarkCyan
-        $ShawADGroup = Read-Host " Введите имя группы"
+        Write-Host " Пример: RO_Департамент ИТ" -ForegroundColor DarkCyan
+        $ShawADGroup = Read-Host " Введите имя группы доступа"
 
         Start-Sleep -Milliseconds 500
         Get-ADGroupMember -Identity $ShawADGroup | Select-Object Name, SamAccountName | Sort-Object Name | Format-Table -AutoSize | more
@@ -39,8 +39,8 @@ echo " "
         # LDAPdName1
         while ($true) {
             Write-Host " Задаём переменной 'LDAPdName1' название distinguishedName из LDAP каталога Active Directory" -ForegroundColor Yellow
-            Write-Host " Например: OU=Департамет ИТ,OU=Users,DC=example,DC=local" -ForegroundColor DarkCyan
-            $LDAPdName1 = Read-Host " Введите distinguishedName группы"
+            Write-Host " Пример: OU=Департамет ИТ,OU=Users,DC=example,DC=local" -ForegroundColor DarkCyan
+            $LDAPdName1 = Read-Host " Введите distinguishedName контейнера (OU)"
 
             # Условие проверяющее правильность написания distinguishedName
             if (($LDAPdName1.Contains("OU=") -and $LDAPdName1.Contains("DC="))) {
@@ -50,7 +50,7 @@ echo " "
             }
             else {
                 Start-Sleep -Milliseconds 500
-                Write-Host  " ОШИБКА: Неверно указан distinguishedName.`n" -ForegroundColor Red
+                Write-Host  " ОШИБКА: Неверно указан distinguishedName контейнера (OU).`n" -ForegroundColor Red
             }
         }
 
@@ -64,14 +64,14 @@ echo " "
             Write-Host "            Отдел          : Department" -ForegroundColor Cyan
             Write-Host "            Компания       : Company" -ForegroundColor Cyan
             Write-Host "            Активирована   : Enabled" -ForegroundColor Cyan 
-            Write-Host " Например: Name,SamAccountName,Mail,Title" -ForegroundColor DarkCyan
-            $UsrInput2 = Read-Host " Введите свойства"
+            Write-Host " Пример: Name,SamAccountName,Mail,Title" -ForegroundColor DarkCyan
+            $UsrInput2 = Read-Host " Введите свойство учётной записи"
             $UsrInput2 = $UsrInput2.ToLower()
 
             # Условие проверяющее правильность ввода, а именно ", "
             if ($UsrInput2.Contains(", ")) {
                 Start-Sleep -Milliseconds 500 
-                Write-Host  " ОШИБКА: Неверно прописаны свойства. Смотри пример. `n" -ForegroundColor Red
+                Write-Host  " ОШИБКА: Неверно введены свойства учётной записи. Смотри пример. `n" -ForegroundColor Red
             }
             else {
                 Start-Sleep -Milliseconds 500
@@ -101,7 +101,7 @@ echo " "
         # Name
         while ($true) {
             Write-Host " Задаём переменной 'Name' имя файла в текстовом формате txt" -ForegroundColor Yellow
-            Write-Host " Например: Департамет ИТ.txt" -ForegroundColor DarkCyan
+            Write-Host " Пример: Департамет ИТ.txt" -ForegroundColor DarkCyan
             $Name = Read-Host " Введите имя"
 
             if ($Name.EndsWith(".txt")) {
@@ -118,7 +118,7 @@ echo " "
         # Path
         while ($true) {
             Write-Host " Задаём переменной 'Path' путь к месту хранения файла" -ForegroundColor Yellow
-            Write-Host " Например: C:\Users\Ivanov\Documents\" -ForegroundColor DarkCyan
+            Write-Host " Пример: C:\Users\Ivanov\Documents\" -ForegroundColor DarkCyan
             $Path = Read-Host " Введите путь"
 
             if (($Path.Contains(":\")) -and ($Path.EndsWith("\"))) {
@@ -135,7 +135,7 @@ echo " "
         # LDAPdName2
         while ($true) {
             Write-Host " Задаём переменной 'LDAPdName2' distinguishedName из LDAP каталога Active Directory" -ForegroundColor Yellow
-            Write-Host " Например: OU=Департамет ИТ,OU=Users,DC=example,DC=local" -ForegroundColor DarkCyan
+            Write-Host " Пример: OU=Департамет ИТ,OU=Users,DC=example,DC=local" -ForegroundColor DarkCyan
             $LDAPdName2 = Read-Host " Введите distinguishedName контейнера (OU)"
 
             # Условие проверяющее правильность написания distinguishedName
@@ -157,7 +157,7 @@ echo " "
         # Перезаписываем файл '$Name' с параметром 'Trim()',  который удаляет все начальные и конечные пробелы из текущего объекта String
         $ADUsers = ((Get-Content $Path$Name) -join [environment]::NewLine).Trim() | Set-Content -Path $Path$Name
 
-        Write-Host " Файл $Name выгружен в $Path" -ForegroundColor Green
+        Write-Host " Список пользователей выгружен в вайл $Name в директорию $Path" -ForegroundColor Green
 
         while ($true) {
             Write-Host " `n Посмотреть список $Name?"
@@ -184,7 +184,7 @@ echo " "
                 break
             }
             else {
-                Write-Host " ОШИБКА: Неверно введена команда.`n" -ForegroundColor Red
+                Write-Host " ОШИБКА: Неверно введена команда." -ForegroundColor Red
             }
         }
         echo " "
@@ -205,7 +205,7 @@ echo " "
             $ADUsers = (Get-Content $Path$Name).Trim()
         
             Write-Host " Задаём переменной 'ADGroup' название группы как в Active Directory`n Например: RO_Департамент ИТ" -ForegroundColor Yellow
-            $ADGroup = Read-Host " Введите имя группы"
+            $ADGroup = Read-Host " Введите имя группы доступа (Security Group)"
             sleep 1
             Write-Host " ОК`n" -ForegroundColor Green
 
@@ -229,9 +229,9 @@ echo " "
                 }
             }
             elseif (($UserInput4 -like "n") -or ($UserInput4 -like "no")) {
-				Start-Sleep -Milliseconds 500
-				Write-Host " Добавление пользователей отменено.`n" -ForegroundColor Green
-				break
+		    Start-Sleep -Milliseconds 500
+	            Write-Host " Добавление пользователей отменено.`n" -ForegroundColor Green
+		    break
             }
         }
         echo " "
