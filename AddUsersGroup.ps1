@@ -230,8 +230,7 @@ echo " "
             }
             elseif (($UsrInput4 -like "n") -or ($UsrInput4 -like "no")) {
 		    Start-Sleep -Milliseconds 500
-	            Write-Host " Добавление пользователей отменено." -ForegroundColor Green
-		    break
+	            Write-Host " Добавление пользователей отменено.\n" -ForegroundColor Green
             }
         }
         echo " "
