@@ -21,6 +21,15 @@ foreach ($User in $Users) {
     # Отключение учетной записи
     Disable-ADAccount -Identity $User
 
+    # Переменная $Groups получает все группы безопасности пользователя кроме "Пользователи домена"
+    $Groups = Get-ADPrincipalGroupMembership -Identity $User | Where {$_.Name -ne "Пользователи домена"}
+    
+    # Цикл проходит по каждой группе безопасности и удаляет пользователя из неё 
+    foreach ($Group in $Groups) {
+        
+        Remove-ADGroupMember -identity $Group.name -Members $User -Confirm:$false
+    }
+
     # Переменная $Check проверяет на наличие отключенной учетной записи в контейнере OU=Blocked Users 
     $Check = Get-ADUser -Filter * -SearchBase $BlockedUsers -Properties * | Where-Object {$_.Enabled -like $false -and $_.SamAccountName -like $User}
     
