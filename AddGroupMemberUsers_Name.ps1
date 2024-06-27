@@ -72,8 +72,7 @@ function PasteUsersList() {
 	        echo " "
 	        Write-Host " ОК" -ForegroundColor Green
 	        echo " "
-            break
-        
+            break 
         }
         else{
             echo " "
@@ -101,7 +100,6 @@ function PasteUsersList() {
         else {
             Write-Host " Сотрудник '$User' НЕ добавлен в группу '$ADGroup'" -ForegroundColor Red
         }
-
     }
 
     echo " "
@@ -168,9 +166,10 @@ function CreateUsersList() {
     
         Write-Host " ОК" -ForegroundColor Green
         echo " "
-
     }
 
+    Write-Host " Созданный список пользователей:" -ForegroundColor Yellow
+    Write-Host "`t$ListUsers"
 
     echo " "
     Write-Host "<---------------------------------------------START--------------------------------------------->" -ForegroundColor Red -BackgroundColor White
@@ -191,7 +190,6 @@ function CreateUsersList() {
         else {
             Write-Host " Сотрудник '$User' НЕ добавлен в группу '$ADGroup'" -ForegroundColor Red
         }
-
     }
 
     echo " "
@@ -214,7 +212,6 @@ while ($true) {
     if ($UserInput -eq 1) {
         
         PasteUsersList
-
     }
     elseif ($UserInput -eq 2) {
         
