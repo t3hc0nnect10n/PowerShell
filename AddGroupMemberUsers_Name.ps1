@@ -1,4 +1,4 @@
-﻿<#
+<#
     Скрипт обращается к каталогу Active Directory и добавляет в группу безопасности пользователя по атрибуту 'Name' - ФИО
 #>
 
@@ -40,7 +40,7 @@ function PasteUsersList() {
 	            echo " "
 	            Write-Host " ОК" -ForegroundColor Green
 	            echo " "
-                break
+              break
             }
         }
         catch {
@@ -72,7 +72,7 @@ function PasteUsersList() {
 	        echo " "
 	        Write-Host " ОК" -ForegroundColor Green
 	        echo " "
-            break 
+          break 
         }
         else{
             echo " "
@@ -91,7 +91,7 @@ function PasteUsersList() {
         $ADUser = Get-ADUser -Filter * -Properties * | Where-Object {$_.Name -like $User}
 
         # Добавляем пользователя в группу заданной переменной 'Group'.
-        #Add-ADGroupMember -Identity $Group -Members $ADUser
+        Add-ADGroupMember -Identity $Group -Members $ADUser
 
         # Проверка добавления пользователя, если в группе есть, то выводится в зеленом цвете, если нет то в красном.
         if ($ADUser.MemberOf -match $ADGroup) {
@@ -140,7 +140,7 @@ function CreateUsersList() {
 	            echo " "
 	            Write-Host " ОК" -ForegroundColor Green
 	            echo " "
-                break
+              break
             }
         }
         catch {
@@ -181,7 +181,7 @@ function CreateUsersList() {
         $ADUser = Get-ADUser -Filter * -Properties * | Where-Object {$_.Name -like $User}
 
         # Добавляем пользователя в группу заданной переменной 'Group'.
-        #Add-ADGroupMember -Identity $Group -Members $ADUser
+        Add-ADGroupMember -Identity $Group -Members $ADUser
 
         # Проверка добавления пользователя, если в группе есть, то выводится в зеленом цвете, если нет то в красном.
         if ($ADUser.MemberOf -match $ADGroup) {
