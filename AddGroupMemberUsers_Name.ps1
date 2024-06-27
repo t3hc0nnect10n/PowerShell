@@ -153,7 +153,6 @@ function CreateUsersList() {
     }
 
     Write-Host " Переменной 'ListUsers' задаём список из пользователей по ФИО." -ForegroundColor Yellow
-    Write-Host " Пример списка: Иванов Иван Иванович, Сидоров Иван Иванович, Иванова Людмила Викторовна" -ForegroundColor DarkCyan
     $ListUsers = [System.Collections.ArrayList]@()
 
     [int]$UsersNumbers = Read-Host " Введите количество пользователей"
