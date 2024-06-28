@@ -165,7 +165,6 @@ function CreateUsersList() {
 
     Write-Host " Переменной 'ListUsers' задаём список из пользователей по ФИО." -ForegroundColor Yellow
     $ListUsers = [System.Collections.ArrayList]@()
-
     [int]$UsersNumbers = Read-Host " Введите количество пользователей"
     
     echo " "
