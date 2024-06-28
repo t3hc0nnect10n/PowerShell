@@ -37,9 +37,9 @@ function PasteUsersList() {
             # Проверка на существование группы безопасности в Active Directory
             if ($CheckGroup) {
                 Start-Sleep -Milliseconds 500
-	            echo " "
-	            Write-Host " ОК" -ForegroundColor Green
-	            echo " "
+	        echo " "
+	        Write-Host " ОК" -ForegroundColor Green
+	        echo " "
                 break
             }
         }
@@ -69,9 +69,9 @@ function PasteUsersList() {
             }
 
             Start-Sleep -Milliseconds 500
-	        echo " "
-	        Write-Host " ОК" -ForegroundColor Green
-	        echo " "
+	    echo " "
+	    Write-Host " ОК" -ForegroundColor Green
+	    echo " "
             break        
         }
         else{
@@ -93,25 +93,25 @@ function PasteUsersList() {
         if ($ADUser.Name -like $User -and $ADUser.Enabled -like $true) {
 	        
             # Добавляем пользователя в группу заданной переменной 'Group'.
-	        Add-ADGroupMember -Identity $ADGroup -Members $ADUser
+	    Add-ADGroupMember -Identity $ADGroup -Members $ADUser
 
-	        # Проверка добавления пользователя, если в группе есть, то выводится в зеленом цвете, если нет то в красном.
-	        if ($ADUser.MemberOf -match $ADGroup) {
-		        Write-Host " Сотрудник '$User' добавлен в группу безопасности'$ADGroup'" -ForegroundColor Green
-	        } 
-	        else {
-		        Write-Host " Сотрудник '$User' НЕ добавлен в группу безопасности'$ADGroup'" -ForegroundColor Red
-	        }
+	    # Проверка добавления пользователя, если в группе есть, то выводится в зеленом цвете, если нет то в красном.
+	    if ($ADUser.MemberOf -match $ADGroup) {
+     		Write-Host " Сотрудник '$User' добавлен в группу безопасности'$ADGroup'" -ForegroundColor Green
+	    } 
+	    else {
+	        Write-Host " Сотрудник '$User' НЕ добавлен в группу безопасности'$ADGroup'" -ForegroundColor Red
+	    }
         }
         elseif ($ADUser.Name -like $User -and $ADUser.Enabled -like $false){
             echo " "
-	        Write-Host " Учётная запись $User Отключена" -ForegroundColor Magenta
-	        echo " "
+	    Write-Host " Учётная запись $User Отключена" -ForegroundColor Magenta
+	    echo " "
         }
         else {
-	        echo " "
-	        Write-Host " Учётная запись $User НЕ существует" -ForegroundColor Yellow
-	        echo " "
+	    echo " "
+	    Write-Host " Учётная запись $User НЕ существует" -ForegroundColor Yellow
+	    echo " "
         }  
     }
 
@@ -150,9 +150,9 @@ function CreateUsersList() {
             # Проверка на существование группы безопасности в Active Directory
             if ($CheckGroup) {
                 Start-Sleep -Milliseconds 500
-	            echo " "
-	            Write-Host " ОК" -ForegroundColor Green
-	            echo " "
+	        echo " "
+	        Write-Host " ОК" -ForegroundColor Green
+	        echo " "
                 break
             }
         }
@@ -199,7 +199,7 @@ function CreateUsersList() {
 
 	        # Проверка добавления пользователя, если в группе есть, то выводится в зеленом цвете, если нет то в красном.
 	        if ($ADUser.MemberOf -match $ADGroup) {
-		        Write-Host " Сотрудник '$User' добавлен в группу безопасности'$ADGroup'" -ForegroundColor Green
+	 		Write-Host " Сотрудник '$User' добавлен в группу безопасности'$ADGroup'" -ForegroundColor Green
 	        } 
 	        else {
 		        Write-Host " Сотрудник '$User' НЕ добавлен в группу безопасности'$ADGroup'" -ForegroundColor Red
@@ -207,13 +207,13 @@ function CreateUsersList() {
         }
         elseif ($ADUser.Name -like $User -and $ADUser.Enabled -like $false){
             echo " "
-	        Write-Host " Учётная запись $User Отключена" -ForegroundColor Magenta
-	        echo " "
+	    Write-Host " Учётная запись $User Отключена" -ForegroundColor Magenta
+	    echo " "
         }
         else {
-	        echo " "
-	        Write-Host " Учётная запись $User НЕ существует" -ForegroundColor Yellow
-	        echo " "
+	    echo " "
+	    Write-Host " Учётная запись $User НЕ существует" -ForegroundColor Yellow
+	    echo " "
         }  
     }
 
