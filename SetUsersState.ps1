@@ -191,9 +191,9 @@ Write-Host "Учётные записи с описанием '$Description' в 
 Write-Host "Деактивированные учётные записи в количестве:           $CountUsersEnabledFalse" -ForegroundColor Black -BackgroundColor White
 Write-Host "Не существующих учётных записей в количестве:            $CountUsersAdNo" -ForegroundColor Black -BackgroundColor White
 echo " "
-Write-Host " Список деактивированных учётных записей: `n`n`t$ListUsersEnabledFalse"
+Write-Host " Список деактивированных учётных записей: `n`n$ListUsersEnabledFalse"
 echo " "
-Write-Host " Список не существующих учётных записей: `n`n`t$ListUsersAdNo"
+Write-Host " Список не существующих учётных записей: `n`n$ListUsersAdNo"
 
 echo " "
 Write-Host "<---------------------------------------------FINISH--------------------------------------------->" -ForegroundColor Red -BackgroundColor White
