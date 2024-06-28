@@ -36,7 +36,7 @@ function PasteUsersList() {
 
             # Проверка на существование группы безопасности в Active Directory
             if ($CheckGroup) {
-                Start-Sleep -Milliseconds 500
+                    Start-Sleep -Milliseconds 500
 	            echo " "
 	            Write-Host " ОК" -ForegroundColor Green
 	            echo " "
@@ -68,7 +68,7 @@ function PasteUsersList() {
                 }
             }
 
-            Start-Sleep -Milliseconds 500
+            	Start-Sleep -Milliseconds 500
 	        echo " "
 	        Write-Host " ОК" -ForegroundColor Green
 	        echo " "
@@ -136,7 +136,7 @@ function CreateUsersList() {
 
             # Проверка на существование группы безопасности в Active Directory
             if ($CheckGroup) {
-                Start-Sleep -Milliseconds 500
+        	    Start-Sleep -Milliseconds 500
 	            echo " "
 	            Write-Host " ОК" -ForegroundColor Green
 	            echo " "
