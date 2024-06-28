@@ -195,15 +195,15 @@ function CreateUsersList() {
         if ($ADUser.Name -like $User -and $ADUser.Enabled -like $true) {
 	        
             # Добавляем пользователя в группу заданной переменной 'Group'.
-	        #Add-ADGroupMember -Identity $ADGroup -Members $ADUser
+	    Add-ADGroupMember -Identity $ADGroup -Members $ADUser
 
-	        # Проверка добавления пользователя, если в группе есть, то выводится в зеленом цвете, если нет то в красном.
-	        if ($ADUser.MemberOf -match $ADGroup) {
-	 		Write-Host " Сотрудник '$User' добавлен в группу безопасности'$ADGroup'" -ForegroundColor Green
-	        } 
-	        else {
-		        Write-Host " Сотрудник '$User' НЕ добавлен в группу безопасности'$ADGroup'" -ForegroundColor Red
-	        }
+	    # Проверка добавления пользователя, если в группе есть, то выводится в зеленом цвете, если нет то в красном.
+	    if ($ADUser.MemberOf -match $ADGroup) {
+	 	Write-Host " Сотрудник '$User' добавлен в группу безопасности'$ADGroup'" -ForegroundColor Green
+	    } 
+	    else {
+		Write-Host " Сотрудник '$User' НЕ добавлен в группу безопасности'$ADGroup'" -ForegroundColor Red
+	    }
         }
         elseif ($ADUser.Name -like $User -and $ADUser.Enabled -like $false){
             echo " "
