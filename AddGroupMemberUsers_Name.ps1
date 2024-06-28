@@ -36,11 +36,11 @@ function PasteUsersList() {
 
             # Проверка на существование группы безопасности в Active Directory
             if ($CheckGroup) {
-                    Start-Sleep -Milliseconds 500
+                Start-Sleep -Milliseconds 500
 	            echo " "
 	            Write-Host " ОК" -ForegroundColor Green
 	            echo " "
-              break
+                break
             }
         }
         catch {
@@ -68,11 +68,11 @@ function PasteUsersList() {
                 }
             }
 
-            	Start-Sleep -Milliseconds 500
+            Start-Sleep -Milliseconds 500
 	        echo " "
 	        Write-Host " ОК" -ForegroundColor Green
 	        echo " "
-           break 
+            break        
         }
         else{
             echo " "
@@ -90,16 +90,29 @@ function PasteUsersList() {
         # Переменная 'ADUser' получает пользователя по атрибуту 'Name' (ФИО).
         $ADUser = Get-ADUser -Filter * -Properties * | Where-Object {$_.Name -like $User}
 
-        # Добавляем пользователя в группу заданной переменной 'Group'.
-        Add-ADGroupMember -Identity $Group -Members $ADUser
+        if ($ADUser.Name -like $User -and $ADUser.Enabled -like $true) {
+	        
+            # Добавляем пользователя в группу заданной переменной 'Group'.
+	        Add-ADGroupMember -Identity $ADGroup -Members $ADUser
 
-        # Проверка добавления пользователя, если в группе есть, то выводится в зеленом цвете, если нет то в красном.
-        if ($ADUser.MemberOf -match $ADGroup) {
-            Write-Host " Сотрудник '$User' добавлен в группу '$ADGroup'" -ForegroundColor Green
-        } 
-        else {
-            Write-Host " Сотрудник '$User' НЕ добавлен в группу '$ADGroup'" -ForegroundColor Red
+	        # Проверка добавления пользователя, если в группе есть, то выводится в зеленом цвете, если нет то в красном.
+	        if ($ADUser.MemberOf -match $ADGroup) {
+		        Write-Host " Сотрудник '$User' добавлен в группу безопасности'$ADGroup'" -ForegroundColor Green
+	        } 
+	        else {
+		        Write-Host " Сотрудник '$User' НЕ добавлен в группу безопасности'$ADGroup'" -ForegroundColor Red
+	        }
         }
+        elseif ($ADUser.Name -like $User -and $ADUser.Enabled -like $false){
+            echo " "
+	        Write-Host " Учётная запись $User Отключена" -ForegroundColor Magenta
+	        echo " "
+        }
+        else {
+	        echo " "
+	        Write-Host " Учётная запись $User НЕ существует" -ForegroundColor Yellow
+	        echo " "
+        }  
     }
 
     echo " "
@@ -136,11 +149,11 @@ function CreateUsersList() {
 
             # Проверка на существование группы безопасности в Active Directory
             if ($CheckGroup) {
-        	    Start-Sleep -Milliseconds 500
+                Start-Sleep -Milliseconds 500
 	            echo " "
 	            Write-Host " ОК" -ForegroundColor Green
 	            echo " "
-              break
+                break
             }
         }
         catch {
@@ -176,20 +189,33 @@ function CreateUsersList() {
     echo " "
 
     foreach ($User in $ListUsers) {
-    
+
         # Переменная 'ADUser' получает пользователя по атрибуту 'Name' (ФИО).
         $ADUser = Get-ADUser -Filter * -Properties * | Where-Object {$_.Name -like $User}
 
-        # Добавляем пользователя в группу заданной переменной 'Group'.
-        Add-ADGroupMember -Identity $Group -Members $ADUser
+        if ($ADUser.Name -like $User -and $ADUser.Enabled -like $true) {
+	        
+            # Добавляем пользователя в группу заданной переменной 'Group'.
+	        #Add-ADGroupMember -Identity $ADGroup -Members $ADUser
 
-        # Проверка добавления пользователя, если в группе есть, то выводится в зеленом цвете, если нет то в красном.
-        if ($ADUser.MemberOf -match $ADGroup) {
-            Write-Host " Сотрудник '$User' добавлен в группу '$ADGroup'" -ForegroundColor Green
-        } 
-        else {
-            Write-Host " Сотрудник '$User' НЕ добавлен в группу '$ADGroup'" -ForegroundColor Red
+	        # Проверка добавления пользователя, если в группе есть, то выводится в зеленом цвете, если нет то в красном.
+	        if ($ADUser.MemberOf -match $ADGroup) {
+		        Write-Host " Сотрудник '$User' добавлен в группу безопасности'$ADGroup'" -ForegroundColor Green
+	        } 
+	        else {
+		        Write-Host " Сотрудник '$User' НЕ добавлен в группу безопасности'$ADGroup'" -ForegroundColor Red
+	        }
         }
+        elseif ($ADUser.Name -like $User -and $ADUser.Enabled -like $false){
+            echo " "
+	        Write-Host " Учётная запись $User Отключена" -ForegroundColor Magenta
+	        echo " "
+        }
+        else {
+	        echo " "
+	        Write-Host " Учётная запись $User НЕ существует" -ForegroundColor Yellow
+	        echo " "
+        }  
     }
 
     echo " "
@@ -212,6 +238,7 @@ while ($true) {
     if ($UserInput -eq 1) {
         
         PasteUsersList
+
     }
     elseif ($UserInput -eq 2) {
         
