@@ -728,7 +728,7 @@ while ($true) {
     Write-Host " 2. Вводить пользователя по одному" -ForegroundColor Yellow
     Write-Host " 3. Отключенные пользователи"
     Write-Host " 4. Выход" -ForegroundColor Yellow
-    $UserInputMenu = Read-Host " Введите номер команды"
+    [int]$UserInputMenu = Read-Host " Введите номер команды"
     
     # Cписок учётных записей.
     if ($UserInputMenu -eq 1) {
