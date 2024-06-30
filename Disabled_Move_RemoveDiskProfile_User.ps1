@@ -38,11 +38,11 @@ function ListUsers() {
 		if ($CheckPath -like $true) {
 			
 			if (($CheckPath.EndsWith(".txt"))) {
-				Start-Sleep -Milliseconds 500
-				echo " "
-				Write-Host " ОК" -ForegroundColor Green
-				echo " "
-				break
+			Start-Sleep -Milliseconds 500
+			echo " "
+			Write-Host " ОК" -ForegroundColor Green
+			echo " "
+			break
 			}
 			else {
 				Start-Sleep -Milliseconds 500
