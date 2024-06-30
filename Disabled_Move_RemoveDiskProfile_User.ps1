@@ -742,6 +742,7 @@ while ($true) {
         OneUser
     }
 
+    # Удаления дисков профилей отключенных учётных записей. 
     elseif($UserInputMenu -eq 3) {
 
         RemoveProfileDiskDisabledUsers
