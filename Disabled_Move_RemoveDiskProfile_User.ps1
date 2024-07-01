@@ -87,7 +87,7 @@ function ListUsers() {
 		}
 		else {
 			echo " "
-			Write-Host " ОШИБКА: Неверно указан путь. Смотри пример" -ForegroundColor Red
+			Write-Host " ОШИБКА: Неверно указан путь. Смотри пример." -ForegroundColor Red
 			echo " "
 		}
 	}
@@ -121,7 +121,7 @@ function ListUsers() {
 		}
 		catch{
 			echo " "
-			Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует" -ForegroundColor Red
+			Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует." -ForegroundColor Red
 			echo " "
 		}
 	}
@@ -321,7 +321,7 @@ function OneUser() {
 		}
 		catch{
 			echo " "
-			Write-Host " Учётной записи $User НЕ существует" -ForegroundColor Red
+			Write-Host " Учётной записи $User НЕ существует." -ForegroundColor Red
 		}
 	}
 
@@ -353,7 +353,7 @@ function OneUser() {
 		}
 		catch{
 			echo " "
-			Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует" -ForegroundColor Red
+			Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует." -ForegroundColor Red
 			echo " "
 		}
 	}
@@ -388,7 +388,7 @@ function OneUser() {
 			}
 			else {
 				echo " "
-				Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует" -ForegroundColor Magenta
+				Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует." -ForegroundColor Magenta
     				echo " "
 			}
 		}
@@ -502,8 +502,9 @@ function RemoveProfileDiskDisabledUsers() {
 	# В цикле while контроль ввода полного пути места хранения дисков профилей.
 	while ($true) {
 
-		# Переменной $DiskProfilePath задаём полный путь места хранения дисков профилей в папке.
 		echo " "
+		# Переменной $DiskProfilePath задаём полный путь места хранения дисков профилей в папке.
+		# Например: OU=Disabled Users,DC=example,DC=local
 		Write-Host " Задаём переменной 'DiskProfilePath' полный путь места хранения дисков профилей" -ForegroundColor Yellow
 		Write-Host " Пример: \\VM-WIN-SRV\ProfileDisk\" -ForegroundColor Yellow
 		$DiskProfilePath = Read-Host " Введите полный путь к папке"
@@ -527,7 +528,7 @@ function RemoveProfileDiskDisabledUsers() {
 		}
 		else {
 			echo " "
-			Write-Host " ОШИБКА: Неверно указан путь. Смотри пример" -ForegroundColor Red
+			Write-Host " ОШИБКА: Неверно указан путь. Смотри пример." -ForegroundColor Red
 			echo " "
 		}
 	}
@@ -561,7 +562,7 @@ function RemoveProfileDiskDisabledUsers() {
 		}
 		catch{
 			echo " "
-			Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует" -ForegroundColor Red
+			Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует." -ForegroundColor Red
 			echo " "
 		}
 	}
