@@ -89,17 +89,14 @@ function ListUsers() {
 		}
 	}
 
-	# В цикле while контроль ввода организационного подразделения (OU)
-	while($true) {
+	# В цикле while контроль ввода организационного подразделения (OU).
+	while ($true) {
 
 		# Переменной $BlockedUsers присвоен distinguishedName организационного подразделения (OU), в котором хранятся отключенные учетные записи.
 		# Например: OU=Disabled Users,DC=example,DC=local
-		echo " "
 		Write-Host " Задаём переменной 'BlockedUsers' distinguishedName организационного подразделения отключенных учётных записей" -ForegroundColor Yellow
 		Write-Host " Пример: OU=Disabled Users,OU=Users,DC=domain,DC=local" -ForegroundColor DarkCyan
-		$BlockedUsers = Read-Host " Введите distinguishedName"
-
-		$CheckBlockedUsers = Get-ADObject -Identity $BlockedUsers -ErrorAction SilentlyContinue
+		[string]$BlockedUsers = Read-Host " Введите distinguishedName"
 
 		<#
 			Используется try, catch блоки для обработки завершающих ошибок.
@@ -110,22 +107,19 @@ function ListUsers() {
 		# Запускается блок 'try', в котором выполняется проверка существования организационного подразделения (OU).
 		try {
 
-			if ($CheckBlockedUsers) {
-				Start-Sleep -Milliseconds 500
-				echo " "
-				Write-Host " ОК" -ForegroundColor Green
-				break
-			}
-			else {
-				echo " "
-				Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует" -ForegroundColor Magenta
-    				echo " "
-			}
+			$CheckBlockedUsers = Get-ADObject -Identity $BlockedUsers -ErrorAction SilentlyContinue
+
+				if ($CheckBlockedUsers) {
+					Start-Sleep -Milliseconds 500
+					echo " "
+					Write-Host " ОК" -ForegroundColor Green
+					break
+				}
 		}
 		catch{
 			echo " "
 			Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует" -ForegroundColor Magenta
-   			echo " "
+			echo " "
 		}
 	}
 
@@ -297,15 +291,13 @@ function OneUser() {
 
 	# В цикле while контроль ввода учётной записи по атрибуту 'SamAccountName'.
 	while ($true) {
-
+		
 		echo " "
 		Write-Host " Задаём переменной 'User' имя учётной записи по атрибуту SamAccountName " -ForegroundColor Yellow
 		Write-Host " Пример: Ivanov.I" -ForegroundColor DarkCyan
 		[string]$User = Read-Host " Введите имя учётной записи"
-		
-		$CheckUser = Get-ADUser $User -Properties *
 
-		<# 
+		<#
 			Используется try, catch блоки для обработки завершающих ошибок.
 			Полное описание, как использовать try_catch_finally блоки для обработки завершающих ошибок:
 			https://learn.microsoft.com/ru-ru/powershell/module/microsoft.powershell.core/about/about_try_catch_finally?view=powershell-7.3
@@ -314,13 +306,15 @@ function OneUser() {
 		# Запускается блок 'try', в котором выполняется проверка существования учётной записи.
 		try {
 
+            $CheckUser = Get-ADUser $User -Properties *
+
 			if ($CheckUser) {
 				Start-Sleep -Milliseconds 500
 				echo " "
 				Write-Host " ОК" -ForegroundColor Green
 				echo " "
 				break
-				}
+			}
 		}
 		catch{
 			echo " "
@@ -328,35 +322,35 @@ function OneUser() {
 		}
 	}
 
-	# В цикле while контроль ввода полного пути места хранения дисков профилей.
 	while ($true) {
 
-		# Переменной $DiskProfilePath задаём полный путь места хранения дисков профилей в папке.
-		echo " "
-		Write-Host " Задаём переменной 'DiskProfilePath' полный путь места хранения дисков профилей" -ForegroundColor Yellow
-		Write-Host " Пример: \\VM-WIN-SRV\ProfileDisk\" -ForegroundColor DarkCyan
-		[string]$DiskProfilePath = Read-Host " Введите полный путь к папке"
+		# Переменной $BlockedUsers присвоен distinguishedName организационного подразделения (OU), в котором хранятся отключенные учетные записи.
+		# Например: OU=Disabled Users,DC=example,DC=local
+		Write-Host " Задаём переменной 'BlockedUsers' distinguishedName организационного подразделения отключенных учётных записей" -ForegroundColor Yellow
+		Write-Host " Пример: OU=Disabled Users,OU=Users,DC=domain,DC=local" -ForegroundColor DarkCyan
+		$BlockedUsers = Read-Host " Введите distinguishedName"
 
-		if ($DiskProfilePath.Contains("\\") -or $DiskProfilePath.Contains("\") -and $DiskProfilePath.EndsWith("\")) {
+		<#
+			Используется try, catch блоки для обработки завершающих ошибок.
+			Полное описание, как использовать try_catch_finally блоки для обработки завершающих ошибок:
+			https://learn.microsoft.com/ru-ru/powershell/module/microsoft.powershell.core/about/about_try_catch_finally?view=powershell-7.3
+		#>
 
-			$CheckProfilePath = Test-Path -Path $DiskProfilePath
+		# Запускается блок 'try', в котором выполняется проверка существования организационного подразделения (OU).
+		try {
 
-			if ($CheckProfilePath -like $true) {
-				Start-Sleep -Milliseconds 500
-				echo " "
-				Write-Host " ОК" -ForegroundColor Green
-				echo " "
-				break
-			}
-			else{
-				echo " "
-				Write-Host " ОШИБКА: Такой папки НЕ существует." -ForegroundColor Red
-				echo " "
-			}
+			$CheckBlockedUsers = Get-ADObject -Identity $BlockedUsers -ErrorAction SilentlyContinue
+
+				if ($CheckBlockedUsers) {
+					Start-Sleep -Milliseconds 500
+					echo " "
+					Write-Host " ОК" -ForegroundColor Green
+					break
+				}
 		}
-		else {
+		catch{
 			echo " "
-			Write-Host " ОШИБКА: Неверно указан путь. Смотри пример" -ForegroundColor Red
+			Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует" -ForegroundColor Magenta
 			echo " "
 		}
 	}
@@ -537,42 +531,35 @@ function RemoveProfileDiskDisabledUsers() {
 
 	# В цикле while контроль ввода организационного подразделения (OU).
 	while ($true) {
-	
+		
 		# Переменной $BlockedUsers присвоен distinguishedName организационного подразделения (OU), в котором хранятся отключенные учетные записи.
 		# Например: OU=Disabled Users,DC=example,DC=local
-		echo " "
 		Write-Host " Задаём переменной 'BlockedUsers' distinguishedName организационного подразделения отключенных учётных записей" -ForegroundColor Yellow
 		Write-Host " Пример: OU=Disabled Users,OU=Users,DC=domain,DC=local" -ForegroundColor DarkCyan
-		[string]$BlockedUsers = Read-Host " Введите distinguishedName"
-
-		$CheckBlockedUsers = Get-ADObject -Identity $BlockedUsers -ErrorAction SilentlyContinue
-
-		<# 
+		$BlockedUsers = Read-Host " Введите distinguishedName"
+		
+		<#
 			Используется try, catch блоки для обработки завершающих ошибок.
 			Полное описание, как использовать try_catch_finally блоки для обработки завершающих ошибок:
 			https://learn.microsoft.com/ru-ru/powershell/module/microsoft.powershell.core/about/about_try_catch_finally?view=powershell-7.3
 		#>
 
-		# Запускается блок 'try', в котором выполняется проверка существования организационного подразделения (OU).
+		# Запускается блок 'try', в котором выполняется проверка существования организационного подразделения (OU). 
 		try {
 
-			if ($CheckBlockedUsers) {
-				Start-Sleep -Milliseconds 500
-				echo " "
-				Write-Host " ОК" -ForegroundColor Green
-				echo " "
-				break
-			}
-			else {
-				echo " "
-				Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует" -ForegroundColor Magenta
-    				echo " "
-			}
+			$CheckBlockedUsers = Get-ADObject -Identity $BlockedUsers -ErrorAction SilentlyContinue
+
+				if ($CheckBlockedUsers) {
+					Start-Sleep -Milliseconds 500
+					echo " "
+					Write-Host " ОК" -ForegroundColor Green
+					break
+				}
 		}
 		catch{
 			echo " "
 			Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует" -ForegroundColor Magenta
-   			echo " "
+			echo " "
 		}
 	}
 
