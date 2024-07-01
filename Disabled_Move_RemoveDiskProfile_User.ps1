@@ -50,7 +50,7 @@ function ListUsers() {
 			else {
 				Start-Sleep -Milliseconds 500
 				echo " "
-				Write-Host  " ОШИБКА: Файл НЕ формата 'txt'. Смотри пример." -ForegroundColor Red
+				Write-Host  " ОШИБКА: Файл НЕ соответствует формата 'txt'. Смотри пример." -ForegroundColor Red
 			}
 		}
 		else {
