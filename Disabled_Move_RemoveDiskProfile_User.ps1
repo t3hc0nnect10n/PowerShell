@@ -16,11 +16,10 @@
 		- Диск профиля:
 			- удалять диск профиля в заданной директории, если такой имеется
 
-		В функциях ListUsers(), OneUser(), RemoveProfileDiskDisabledUsers() закомментированы команды удаления диска профиля.
+		В функциях ListUsers(), OneUser(), RemoveProfileDiskDisabledUsers() закомментирована команда удаления диска профиля.
 		Для удаление дисков профилей необходимо снять комментарий удалив символ #
 
-		Remove-Item -Path $DiskProfileCheck_1C_APP
-		Remove-Item -Path $DiskProfileCheck_SH_RDP
+		Remove-Item -Path $DiskProfileCheck
 #>
 
 # Функция для списка учётных записей.
