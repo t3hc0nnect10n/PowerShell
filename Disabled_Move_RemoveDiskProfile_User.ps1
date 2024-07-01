@@ -33,7 +33,7 @@ function ListUsers() {
 		# Например: C:\Users\Ivan\Documents\DisabledUsers.txt
 		echo " "
 		Write-Host " Задаём переменной 'ListUsersFile' полный путь места хранения файла" -ForegroundColor Yellow
-		Write-Host " Пример: C:\Users\Ivan\Documents\DisabledUsers.txt" -ForegroundColor DarkCyan
+		Write-Host " Пример: C:\Users\Ivan\Documents\DisabledUsers.txt" -ForegroundColor Yellow
 		$ListUsersFile = Read-Host " Введите полный путь"
 
 		$CheckPath = Test-Path -Path $ListUsersFile
@@ -65,7 +65,7 @@ function ListUsers() {
 		# Переменной $DiskProfilePath задаём полный путь места хранения дисков профилей.
 		echo " "
 		Write-Host " Задаём переменной 'DiskProfilePath' полный путь места хранения дисков профилей" -ForegroundColor Yellow
-		Write-Host " Пример: \\VM-WIN-SRV\ProfileDisk\" -ForegroundColor DarkCyan
+		Write-Host " Пример: \\VM-WIN-SRV\ProfileDisk\" -ForegroundColor Yellow
 		$DiskProfilePath = Read-Host " Введите полный путь к папке"
 
 		if ($DiskProfilePath.Contains("\\") -or $DiskProfilePath.Contains("\") -and $DiskProfilePath.EndsWith("\")) {
@@ -98,7 +98,7 @@ function ListUsers() {
 		# Переменной $BlockedUsers присвоен distinguishedName организационного подразделения (OU), в котором хранятся отключенные учетные записи.
 		# Например: OU=Disabled Users,DC=example,DC=local
 		Write-Host " Задаём переменной 'BlockedUsers' distinguishedName организационного подразделения отключенных учётных записей" -ForegroundColor Yellow
-		Write-Host " Пример: OU=Disabled Users,OU=Users,DC=domain,DC=local" -ForegroundColor DarkCyan
+		Write-Host " Пример: OU=Disabled Users,OU=Users,DC=domain,DC=local" -ForegroundColor Yellow
 		[string]$BlockedUsers = Read-Host " Введите distinguishedName"
 
 		<#
@@ -121,7 +121,7 @@ function ListUsers() {
 		}
 		catch{
 			echo " "
-			Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует" -ForegroundColor Magenta
+			Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует" -ForegroundColor Red
 			echo " "
 		}
 	}
@@ -227,7 +227,7 @@ function ListUsers() {
 					else {
 						# Убираем лишние символы '*'.
 						$SidName = $SidName.Replace("*","")
-						Write-Host " Диск профиля '$UserName': $SidName - Не существует" -ForegroundColor Red
+						Write-Host " Диск профиля '$UserName': $SidName - НЕ существует" -ForegroundColor Red
 						# В переменную $CountNo плюcуется единица для подсчёта.
 						$CountNo += 1
 						# В массив (список) $ListProfileDiskNo добавляется 'SID'.
@@ -252,7 +252,7 @@ function ListUsers() {
 		}
 		catch {
 			echo " "
-			Write-Host " Учётной записи $User НЕ существует" -ForegroundColor Magenta
+			Write-Host " Учётной записи $User НЕ существует" -ForegroundColor Red
 			echo " "
 		}
 	}
@@ -321,7 +321,7 @@ function OneUser() {
 		}
 		catch{
 			echo " "
-			Write-Host " Учётной записи $User НЕ существует" -ForegroundColor Magenta
+			Write-Host " Учётной записи $User НЕ существует" -ForegroundColor Red
 		}
 	}
 
@@ -330,7 +330,7 @@ function OneUser() {
 		# Переменной $BlockedUsers присвоен distinguishedName организационного подразделения (OU), в котором хранятся отключенные учетные записи.
 		# Например: OU=Disabled Users,DC=example,DC=local
 		Write-Host " Задаём переменной 'BlockedUsers' distinguishedName организационного подразделения отключенных учётных записей" -ForegroundColor Yellow
-		Write-Host " Пример: OU=Disabled Users,OU=Users,DC=domain,DC=local" -ForegroundColor DarkCyan
+		Write-Host " Пример: OU=Disabled Users,OU=Users,DC=domain,DC=local" -ForegroundColor Yellow
 		$BlockedUsers = Read-Host " Введите distinguishedName"
 
 		<#
@@ -353,7 +353,7 @@ function OneUser() {
 		}
 		catch{
 			echo " "
-			Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует" -ForegroundColor Magenta
+			Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует" -ForegroundColor Red
 			echo " "
 		}
 	}
@@ -365,7 +365,7 @@ function OneUser() {
 		# Например: OU=Disabled Users,DC=example,DC=local
 		echo " "
 		Write-Host " Задаём переменной 'BlockedUsers' distinguishedName организационного подразделения отключенных учётных записей" -ForegroundColor Yellow
-		Write-Host " Пример: OU=Disabled Users,OU=Users,DC=domain,DC=local" -ForegroundColor DarkCyan
+		Write-Host " Пример: OU=Disabled Users,OU=Users,DC=domain,DC=local" -ForegroundColor Yellow
 		[string]$BlockedUsers = Read-Host " Введите distinguishedName"
 
 		$CheckBlockedUsers = Get-ADObject -Identity $BlockedUsers -ErrorAction SilentlyContinue
@@ -394,7 +394,7 @@ function OneUser() {
 		}
 		catch{
 			echo " "
-			Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует" -ForegroundColor Magenta
+			Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует" -ForegroundColor Red
    			echo " "
 		}
 	}
@@ -466,7 +466,7 @@ function OneUser() {
 		else {
 			# Убираем лишние символы '*'.
 			$SidName = $SidName.Replace("*","")
-			Write-Host " Диск профиля '$UserName': $SidName  - Не существует" -ForegroundColor Red
+			Write-Host " Диск профиля '$UserName': $SidName  - НЕ существует" -ForegroundColor Red
 			# Очистка переменной $UserNameT от полученного значения.
 			Clear-Variable -Name "UserNameT" 
 			# Очистка переменной $SidNameT от полученного значения.
@@ -477,7 +477,7 @@ function OneUser() {
 	}
 	else {
 		echo " "
-		Write-Host " Пользователь '$UserName' -" $User "- не заблокирован. Группы доступа:" $CheckGroupName -ForegroundColor Red
+		Write-Host " Пользователь '$UserName' -" $User "- НЕ заблокирован. Группы доступа:" $CheckGroupName -ForegroundColor Red
 		echo " "
 		# Очистка переменной $UserNameT от полученного значения.
 		Clear-Variable -Name "UserNameT"
@@ -505,7 +505,7 @@ function RemoveProfileDiskDisabledUsers() {
 		# Переменной $DiskProfilePath задаём полный путь места хранения дисков профилей в папке.
 		echo " "
 		Write-Host " Задаём переменной 'DiskProfilePath' полный путь места хранения дисков профилей" -ForegroundColor Yellow
-		Write-Host " Пример: \\VM-WIN-SRV\ProfileDisk\" -ForegroundColor DarkCyan
+		Write-Host " Пример: \\VM-WIN-SRV\ProfileDisk\" -ForegroundColor Yellow
 		$DiskProfilePath = Read-Host " Введите полный путь к папке"
 
 		if ($DiskProfilePath.Contains("\\") -or $DiskProfilePath.Contains("\") -and $DiskProfilePath.EndsWith("\")) {
@@ -538,7 +538,7 @@ function RemoveProfileDiskDisabledUsers() {
 		# Переменной $BlockedUsers присвоен distinguishedName организационного подразделения (OU), в котором хранятся отключенные учетные записи.
 		# Например: OU=Disabled Users,DC=example,DC=local
 		Write-Host " Задаём переменной 'BlockedUsers' distinguishedName организационного подразделения отключенных учётных записей" -ForegroundColor Yellow
-		Write-Host " Пример: OU=Disabled Users,OU=Users,DC=domain,DC=local" -ForegroundColor DarkCyan
+		Write-Host " Пример: OU=Disabled Users,OU=Users,DC=domain,DC=local" -ForegroundColor Yellow
 		$BlockedUsers = Read-Host " Введите distinguishedName"
 		
 		<#
@@ -561,7 +561,7 @@ function RemoveProfileDiskDisabledUsers() {
 		}
 		catch{
 			echo " "
-			Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует" -ForegroundColor Magenta
+			Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует" -ForegroundColor Red
 			echo " "
 		}
 	}
@@ -633,7 +633,7 @@ function RemoveProfileDiskDisabledUsers() {
 		}
 		else {
   			$SidName = $SidName.Replace("*","")
-			Write-Host " Диск профиля '$UserName': $SidName - Не существует" -ForegroundColor Red
+			Write-Host " Диск профиля '$UserName': $SidName - НЕ существует" -ForegroundColor Red
 			# В переменную $CountNo плюcуется единица для подсчёта.
 			$CountNo += 1
 			# В массив (список) $ListProfileDiskNo добавляется 'SID'.
