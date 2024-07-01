@@ -697,7 +697,7 @@ while ($true) {
 		ListUsers
 	}
 
-	# Одина учётная запись.
+	# Одна учётная запись.
 	elseif ($UserInputMenu -eq 2) {
 
 		OneUser
