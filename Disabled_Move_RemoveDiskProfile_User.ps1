@@ -252,7 +252,7 @@ function ListUsers() {
 		}
 		catch {
 			echo " "
-			Write-Host " Учётной записи $User НЕ существует" -ForegroundColor Red
+			Write-Host " ОШИБКА: Учётной записи $User НЕ существует." -ForegroundColor Red
 			echo " "
 		}
 	}
@@ -321,7 +321,7 @@ function OneUser() {
 		}
 		catch{
 			echo " "
-			Write-Host " Учётной записи $User НЕ существует." -ForegroundColor Red
+			Write-Host " ОШИБКА: Учётной записи $User НЕ существует." -ForegroundColor Red
 		}
 	}
 
@@ -394,7 +394,7 @@ function OneUser() {
 		}
 		catch{
 			echo " "
-			Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует" -ForegroundColor Red
+			Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует." -ForegroundColor Red
    			echo " "
 		}
 	}
