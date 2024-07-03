@@ -219,7 +219,7 @@ function ListUsers() {
 						Clear-Variable -Name "UserNameT"
 						# Очистка переменной $SidNameT от полученного значения.
 						Clear-Variable -Name "SidNameT"
-      					# Очистка переменной $CheckGroupNameT от полученного значения.
+						# Очистка переменной $CheckGroupNameT от полученного значения.
 						Clear-Variable -Name "CheckGroupNameT"
 						echo " "
 					}
@@ -281,6 +281,9 @@ function ListUsers() {
 
 	$CountYes = 0
 	$CountNo = 0
+
+	$shell = New-Object -ComObject Wscript.Shell
+	$shell.popup("Ура все получилось",0,"Результат" , 64)
 }
 
 # Функция для одной учётной записи.
@@ -494,6 +497,9 @@ function OneUser() {
 	Clear-Variable -Name "User"
 	# Очистка переменной $BlockedUsers от заданного значения.
 	Clear-Variable -Name "BlockedUsers"
+
+	$shell = New-Object -ComObject Wscript.Shell
+	$shell.popup("Ура все получилось",0,"Результат" , 64)
 }
 
 # Функция удаления дисков профилей отключенных учётных записей.
@@ -675,6 +681,9 @@ function RemoveProfileDiskDisabledUsers() {
 
 	$CountYes = 0
 	$CountNo = 0
+
+	$shell = New-Object -ComObject Wscript.Shell
+	$shell.popup("Ура все получилось",0,"Результат" , 64)
 }
 
 echo " "
