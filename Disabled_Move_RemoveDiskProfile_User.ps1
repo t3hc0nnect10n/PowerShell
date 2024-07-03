@@ -196,7 +196,7 @@ function ListUsers() {
 					Write-Host " Пользователь '$UserName' -" $User "- заблокирован и перемещен в '$BlockedUsers'. Группы доступа:" $CheckGroupName -ForegroundColor Green
 
 					# Переменной $DiskProfileNameSid задаём получить 'SID'.
-					$DiskProfileNameSid =  Get-ADUser $User -Properties *  | Where-Object {$_.Enabled -like $false -and $_.Name -like $UserName}| Select-Object SID
+					$DiskProfileNameSid =  Get-ADUser $User -Properties *  | Where-Object {$_.Enabled -like $false -and $_.Name -like $UserName} | Select-Object SID
 					# Переменной $SidName задаём преобразовать полученный данные из переменной $DiskProfileNameSid в строку.
 					$SidNameT = [string]$DiskProfileNameSid
 					# Убираем лишние символы '@{SID=' и '}', которые получили в виде массива.
