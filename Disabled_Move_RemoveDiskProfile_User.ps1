@@ -1,13 +1,13 @@
 <#
 	Скрипт обращается к каталогу Active Directory.
 	В меню предлагается выбрать действия:
-		
+
 		- по сформированному списку пользователей по атрибуту SamAccountName
 		- по одному пользователю
 		- по организационному подразделению (OU), в которых содержатся отключенные учётные записи
 
 	Производит следующие действия:
-		
+
 		- Учётная запись:
 			- отключать
 			- перемещает в организационное подразделение (OU) с отключенными учётными записями
@@ -177,16 +177,16 @@ function ListUsers() {
 				$UserNameT = [string]$Name
 				# Убираем лишние символы '@{Name=' и '}', которые получили в виде массива.
 				$UserName = $UserNameT.Replace("@{Name=","").Replace("}","")
-    				
+
 				# Переменная $CheckGroup получает список групп, в которые входит пользователь.
 				$CheckGroup = Get-ADPrincipalGroupMembership -Identity $User | Select-Object Name
-                		# Переменной $CheckGroupNameT задаём преобразовать полученный данные из переменной $CheckGroup в строку.
-                		$CheckGroupNameT = [string]$CheckGroup
-                		# Убираем лишние символы '@{Name=' и '}', которые получили в виде массива.
-                		$CheckGroupName =  $CheckGroupNameT.Replace("@{Name=","").Replace("}","")
+						# Переменной $CheckGroupNameT задаём преобразовать полученный данные из переменной $CheckGroup в строку.
+						$CheckGroupNameT = [string]$CheckGroup
+						# Убираем лишние символы '@{Name=' и '}', которые получили в виде массива.
+						$CheckGroupName =  $CheckGroupNameT.Replace("@{Name=","").Replace("}","")
 
 				# Переменная $CheckUserNotEnabled проверяет на наличие отключенной учетной записи в организационном подразделении (OU) в заданной переменной $BlockedUsers.
-				$CheckUserNotEnabled = Get-ADUser $User -Filter * -SearchBase $BlockedUsers -Properties * | Where-Object {$_.Enabled -like $false -and $_.Name -like $UserName}	
+				$CheckUserNotEnabled = Get-ADUser $User -Filter * -SearchBase $BlockedUsers -Properties * | Where-Object {$_.Enabled -like $false -and $_.Name -like $UserName}
 
 				# Условие проверки на выполнение отключения учетной записи, наличие группы безопасности "Пользователи домена" и
 				# перемещение в организационное подразделение (OU) в заданной переменной $BlockedUsers. 
@@ -219,8 +219,8 @@ function ListUsers() {
 						Clear-Variable -Name "UserNameT"
 						# Очистка переменной $SidNameT от полученного значения.
 						Clear-Variable -Name "SidNameT"
-      						# Очистка переменной $CheckGroupNameT от полученного значения.
-                        			Clear-Variable -Name "CheckGroupNameT"
+      					# Очистка переменной $CheckGroupNameT от полученного значения.
+						Clear-Variable -Name "CheckGroupNameT"
 						echo " "
 					}
 					else {
@@ -235,8 +235,8 @@ function ListUsers() {
 						Clear-Variable -Name "UserNameT" 
 						# Очистка переменной $SidNameT от полученного значения.
 						Clear-Variable -Name "SidNameT"
-      						# Очистка переменной $CheckGroupNameT от полученного значения.
-                        			Clear-Variable -Name "CheckGroupNameT"
+						# Очистка переменной $CheckGroupNameT от полученного значения.
+						Clear-Variable -Name "CheckGroupNameT"
 						echo " "
 					}
 				}
@@ -244,8 +244,8 @@ function ListUsers() {
 					Write-Host " Пользователь '$UserName' -" $User "- НЕ заблокирован. Группы доступа:" $CheckGroup -ForegroundColor Red
 					# Очистка переменной $UserNameT от полученного значения.
 					Clear-Variable -Name "UserNameT"
-     					# Очистка переменной $CheckGroupNameT от полученного значения.
-                    			Clear-Variable -Name "CheckGroupNameT"
+					# Очистка переменной $CheckGroupNameT от полученного значения.
+					Clear-Variable -Name "CheckGroupNameT"
 				}
 			}
 		}
@@ -307,7 +307,7 @@ function OneUser() {
 		# Запускается блок 'try', в котором выполняется проверка существования учётной записи.
 		try {
 
-            $CheckUser = Get-ADUser $User -Properties *
+			$CheckUser = Get-ADUser $User -Properties *
 
 			if ($CheckUser) {
 				Start-Sleep -Milliseconds 500
@@ -387,13 +387,13 @@ function OneUser() {
 			else {
 				echo " "
 				Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует." -ForegroundColor Magenta
-    				echo " "
+				echo " "
 			}
 		}
 		catch{
 			echo " "
 			Write-Host " ОШИБКА: Организационного подразделения '$BlockedUsers' - НЕ существует." -ForegroundColor Red
-   			echo " "
+			echo " "
 		}
 	}
 
@@ -426,10 +426,10 @@ function OneUser() {
 
 	# Переменная $CheckGroup получает список групп, в которые входит пользователь.
 	$CheckGroup = Get-ADPrincipalGroupMembership -Identity $GetUserProperties | Select-Object Name
-    	# Переменной $CheckGroupNameT задаём преобразовать полученный данные из переменной $CheckGroup в строку.
-    	$CheckGroupNameT = [string]$CheckGroup
-    	# Убираем лишние символы '@{Name=' и '}', которые получили в виде массива.
-    	$CheckGroupName =  $CheckGroupNameT.Replace("@{Name=","").Replace("}","")
+	# Переменной $CheckGroupNameT задаём преобразовать полученный данные из переменной $CheckGroup в строку.
+	$CheckGroupNameT = [string]$CheckGroup
+	# Убираем лишние символы '@{Name=' и '}', которые получили в виде массива.
+	$CheckGroupName =  $CheckGroupNameT.Replace("@{Name=","").Replace("}","")
 
 	# Переменная $CheckUserNotEnabled проверяет на наличие отключенной учетной записи в организационном подразделение (OU) в заданной переменной $BlockedUsers.
 	$CheckUserNotEnabled = Get-ADUser -Filter * -SearchBase $BlockedUsers -Properties * | Where-Object {$_.Enabled -like $false -and $_.SamAccountName -like $User}
@@ -461,8 +461,8 @@ function OneUser() {
 			Clear-Variable -Name "UserNameT" 
 			# Очистка переменной $SidNameT от полученного значения.
 			Clear-Variable -Name "SidNameT"
-   			# Очистка переменной $CheckGroupNameT от полученного значения.
-            		Clear-Variable -Name "CheckGroupNameT"
+			# Очистка переменной $CheckGroupNameT от полученного значения.
+			Clear-Variable -Name "CheckGroupNameT"
 		}
 		else {
 			# Убираем лишние символы '*'.
@@ -472,8 +472,8 @@ function OneUser() {
 			Clear-Variable -Name "UserNameT" 
 			# Очистка переменной $SidNameT от полученного значения.
 			Clear-Variable -Name "SidNameT"
-   			# Очистка переменной $CheckGroupNameT от полученного значения.
-            		Clear-Variable -Name "CheckGroupNameT"
+			# Очистка переменной $CheckGroupNameT от полученного значения.
+			Clear-Variable -Name "CheckGroupNameT"
 		}
 	}
 	else {
@@ -482,8 +482,8 @@ function OneUser() {
 		echo " "
 		# Очистка переменной $UserNameT от полученного значения.
 		Clear-Variable -Name "UserNameT"
-  		# Очистка переменной $CheckGroupNameT от полученного значения.
-            	Clear-Variable -Name "CheckGroupNameT"
+		# Очистка переменной $CheckGroupNameT от полученного значения.
+		Clear-Variable -Name "CheckGroupNameT"
 	}
 
 	echo " "
@@ -494,7 +494,6 @@ function OneUser() {
 	Clear-Variable -Name "User"
 	# Очистка переменной $BlockedUsers от заданного значения.
 	Clear-Variable -Name "BlockedUsers"
-	
 }
 
 # Функция удаления дисков профилей отключенных учётных записей.
@@ -595,8 +594,8 @@ function RemoveProfileDiskDisabledUsers() {
 	foreach ($SID in $GetSid) {
 
 		Start-Sleep -Milliseconds 100
-  		
-    		# Переменной $SidName задаём преобразовать полученный данные из переменной $SID в строку.
+
+		# Переменной $SidName задаём преобразовать полученный данные из переменной $SID в строку.
 		$SidNameTemp = [string]$SID
 		# Убираем лишние символы '@{SID=' и '}', которые получили в виде массива.
 		$SidNameTemp = $SidNameTemp.Replace("@{SID=","").Replace("}","")
@@ -630,11 +629,11 @@ function RemoveProfileDiskDisabledUsers() {
 			Clear-Variable -Name "UserNameT" 
 			# Очистка переменной $SidNameT от полученного значения.
 			Clear-Variable -Name "SidNameT"
-   			# Очистка переменной $SidNameTemp от полученного значения.
-            		Clear-Variable -Name "SidNameTemp"
+			# Очистка переменной $SidNameTemp от полученного значения.
+			Clear-Variable -Name "SidNameTemp"
 		}
 		else {
-  			$SidName = $SidName.Replace("*","")
+			$SidName = $SidName.Replace("*","")
 			Write-Host " Диск профиля '$UserName': $SidName - НЕ существует" -ForegroundColor Red
 			# В переменную $CountNo плюcуется единица для подсчёта.
 			$CountNo += 1
@@ -644,8 +643,8 @@ function RemoveProfileDiskDisabledUsers() {
 			Clear-Variable -Name "UserNameT" 
 			# Очистка переменной $SidNameT от полученного значения.
 			Clear-Variable -Name "SidNameT"
-   			# Очистка переменной $SidNameTemp от полученного значения.
-            		Clear-Variable -Name "SidNameTemp"
+			# Очистка переменной $SidNameTemp от полученного значения.
+			Clear-Variable -Name "SidNameTemp"
 		}
 	}
 
