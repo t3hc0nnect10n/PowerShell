@@ -283,7 +283,7 @@ function ListUsers() {
 	$CountNo = 0
 
 	$shell = New-Object -ComObject Wscript.Shell
-	$shell.popup("Ура все получилось",0,"Результат" , 64)
+	$shell.popup("Ура все получилось", 0, "Результат",  0 + 64 + 4096)
 }
 
 # Функция для одной учётной записи.
@@ -496,7 +496,7 @@ function OneUser() {
 	Clear-Variable -Name "BlockedUsers"
 
 	$shell = New-Object -ComObject Wscript.Shell
-	$shell.popup("Ура все получилось",0,"Результат" , 64)
+	$shell.popup("Ура все получилось", 0, "Результат",  0 + 64 + 4096)
 }
 
 # Функция удаления дисков профилей отключенных учётных записей.
@@ -680,7 +680,7 @@ function RemoveProfileDiskDisabledUsers() {
 	$CountNo = 0
 
 	$shell = New-Object -ComObject Wscript.Shell
-	$shell.popup("Ура все получилось",0,"Результат" , 64)
+	$shell.popup("Ура все получилось", 0, "Результат",  0 + 64 + 4096)
 }
 
 echo " "
