@@ -406,11 +406,8 @@ function OneUser() {
 	# Отключение учётной записи.
 	Disable-ADAccount -Identity $User
 
-	# Переменной $GetUserProperties задаём получиь все свойства учётной записи.
-	$GetUserProperties = Get-ADUser $User -Properties *
-
 	# Переменная $Groups получает все группы безопасности пользователя кроме "Пользователи домена".
-	$Groups = Get-ADPrincipalGroupMembership -Identity $GetUserProperties | Where-Object {$_.Name -ne "Пользователи домена"}
+	$Groups = Get-ADPrincipalGroupMembership -Identity $User | Where-Object {$_.Name -ne "Пользователи домена"}
 
 	# Цикл проходит по каждой группе безопасности и удаляет пользователя из неё.
 	foreach ($Group in $Groups) {
@@ -428,7 +425,7 @@ function OneUser() {
 	$UserName = $UserNameT.Replace("@{Name=","").Replace("}","")
 
 	# Переменная $CheckGroup получает список групп, в которые входит пользователь.
-	$CheckGroup = Get-ADPrincipalGroupMembership -Identity $GetUserProperties | Select-Object Name
+	$CheckGroup = Get-ADPrincipalGroupMembership -Identity $User | Select-Object Name
 	# Переменной $CheckGroupNameT задаём преобразовать полученный данные из переменной $CheckGroup в строку.
 	$CheckGroupNameT = [string]$CheckGroup
 	# Убираем лишние символы '@{Name=' и '}', которые получили в виде массива.
