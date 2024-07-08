@@ -186,7 +186,7 @@ function ListUsers() {
 						$CheckGroupName =  $CheckGroupNameT.Replace("@{Name=","").Replace("}","")
 
 				# Переменная $CheckUserNotEnabled проверяет на наличие отключенной учетной записи в организационном подразделении (OU) в заданной переменной $BlockedUsers.
-				$CheckUserNotEnabled = Get-ADUser $User -SearchBase $BlockedUsers -Properties * | Where-Object {$_.Enabled -like $false -and $_.Name -like $UserName}
+				$CheckUserNotEnabled = Get-ADUser -Filter * -SearchBase $BlockedUsers -Properties * | Where-Object {$_.Enabled -like $false -and $_.SamAccountName -like $User}
 
 				# Условие проверки на выполнение отключения учетной записи, наличие группы безопасности "Пользователи домена" и
 				# перемещение в организационное подразделение (OU) в заданной переменной $BlockedUsers. 
@@ -434,7 +434,7 @@ function OneUser() {
 	$CheckGroupName =  $CheckGroupNameT.Replace("@{Name=","").Replace("}","")
 
 	# Переменная $CheckUserNotEnabled проверяет на наличие отключенной учетной записи в организационном подразделение (OU) в заданной переменной $BlockedUsers.
-	$CheckUserNotEnabled = Get-ADUser $User -SearchBase $BlockedUsers -Properties * | Where-Object {$_.Enabled -like $false -and $_.Name -like $UserName}
+	$CheckUserNotEnabled = Get-ADUser -Filter * -SearchBase $BlockedUsers -Properties * | Where-Object {$_.Enabled -like $false -and $_.SamAccountName -like $User}
 
 	# Условие проверки на выполнение отключения учетной записи, наличие группы безопасности "Пользователи домена" и
 	# перемещение в организационное подразделение (OU) в заданной переменной $BlockedUsers. 
