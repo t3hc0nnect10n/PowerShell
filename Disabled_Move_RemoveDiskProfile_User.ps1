@@ -207,7 +207,7 @@ function ListUsers() {
 
 					if ($DiskProfileCheck) {
 						# Удаление диска профиля.
-						#Remove-Item -Path $DiskProfileCheck
+						#Remove-Item -Path $DiskProfilePath$DiskProfileCheck
 						# Убираем лишние символы '*'.
 						$SidName = $SidName.Replace("*","")
 						Write-Host " Диск профиля '$UserName': $SidName - Удалён" -ForegroundColor Green
@@ -453,7 +453,7 @@ function OneUser() {
 
 		if ($DiskProfileCheck) {
 			# Удаление диска профиля.
-			#Remove-Item -Path $DiskProfileCheck
+			#Remove-Item -Path $DiskProfilePath$DiskProfileCheck
 			# Убираем лишние символы '*'.
 			$SidName = $SidName.Replace("*","")
 			Write-Host " Диск профиля '$UserName': $SidName  - Удалён" -ForegroundColor Green
@@ -620,7 +620,7 @@ function RemoveProfileDiskDisabledUsers() {
 
 		if ($DiskProfileCheck) {
 			# Удаление диска профиля.
-			#Remove-Item -Path $DiskProfileCheck
+			#Remove-Item -Path $DiskProfilePath$DiskProfileCheck
 			# Убираем лишние символы '*'.
 			$SidName = $SidName.Replace("*","")
 			Write-Host " Диск профиля '$UserName': $SidName - Удалён" -ForegroundColor Green
