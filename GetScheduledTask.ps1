@@ -1,4 +1,4 @@
-﻿<#
+<#
 	Скрипт производит выгрузку в файл формата "CSV" всех заданий в планировщике задач серверов находящиеся в каталое ActiveDirectory.
 	Цель заключается в получении параметров заданий: 
 
@@ -10,7 +10,7 @@
 
 # Переменная $SRV_MSK получакется список имён серверов находящиеся в организационном подразделение "OU=SRV MSK,OU=Servers,DC=example,DC=local" по атрибуту "DistinguishedName".
 $SRV_MSK = (Get-ADComputer -Filter * | Where-Object {$_.Enabled -like $True -and $_.DistinguishedName -match "OU=SRV MSK,OU=Servers,DC=example,DC=local"}).Name
-# Переменная $SRV_SPB получакется список имён серверов находящиеся в организационном подразделение "OU=SRV MSK,OU=Servers,DC=example,DC=local" по атрибуту "DistinguishedName".
+# Переменная $SRV_SPB получакется список имён серверов находящиеся в организационном подразделение "OU=SRV SPB,OU=Servers,DC=example,DC=local" по атрибуту "DistinguishedName".
 $SRV_SPB = (Get-ADComputer -Filter * | Where-Object {$_.Enabled -like $True -and $_.DistinguishedName -match "OU=SRV SPB,OU=Servers,DC=example,DC=local"}).Name
 
 # Переменной $ServersArray задаём массив полученых списков.
