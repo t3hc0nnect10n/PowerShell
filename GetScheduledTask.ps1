@@ -37,7 +37,7 @@ echo " "
 Write-Host " " -NoNewline
 Write-Host "<---------------------------------------------START--------------------------------------------->" -ForegroundColor Red -BackgroundColor White
 echo " "
-# В переменной $Result записывается результат цикла for, в котором производится итерация массивов в переменной $ServersArray.
+# В переменной $Result записывается результат цикла for, в котором производится итерация массива переменной $ServersArray.
 $Result = for ( $i = 0; $i -lt $ServersArray.count; $i++ ) {
 
 	# Переменная $Servers получает массив по индексу.
