@@ -65,12 +65,12 @@ $Result = for ( $i = 0; $i -lt $ServersArray.count; $i++ ) {
 				Invoke-Command -ComputerName $Server -ErrorAction Stop -ScriptBlock {
 					Get-ScheduledTask | Select-Object -Property PSComputerName, TaskName, State,
 					@{
-						Name		= 'GroupId'
+						Name		= 'Arguments'
 						Expression	= {$PSItem.Actions.Arguments}
 					},
 					@{
-						Name		= 'Id'
-						Expression	= {$PSItem.Principal.Id}
+						Name		= 'UserId'
+						Expression	= {$PSItem.Principal.UserId}
 					}
 				}
 			}
