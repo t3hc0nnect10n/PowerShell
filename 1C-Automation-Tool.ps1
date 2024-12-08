@@ -174,16 +174,16 @@ function Get-Cluster1C {
 				$clusterRegPath		= "$clusterPath\reg_$clusterRegPort"
 
 				[PSCustomObject] @{
-					'Name'				= $serviceInfo.Name
+					'Name'			= $serviceInfo.Name
 					'DisplayName'		= $serviceInfo.DisplayName
-					'State'				= $serviceInfo.State
-					'Version'			= $platformVersion
+					'State'			= $serviceInfo.State
+					'Version'		= $platformVersion
 					'ClusterPath'		= $clusterPath
 					'ClusterRegPort'	= $clusterRegPort
 					'ClusterPort'		= $clusterPort
 					'ClusterPortRange'	= $clusterPortRange
 					'ClusterRegPath'	= $clusterRegPath
-					'PathName'			= $serviceInfo.PathName
+					'PathName'		= $serviceInfo.PathName
 				}
 			})
 		}
@@ -239,7 +239,7 @@ function Get-Platform1C() {
 					[PSCustomObject] @{
 						'DisplayName'		= $_.DisplayName
 						'DisplayVersion'	= $_.DisplayVersion
-						'Publisher'			= $_.Publisher
+						'Publisher'		= $_.Publisher
 						'InstallDate'		= $_.InstallDate
 						'InstallLocation'	= $_.InstallLocation
 					}
@@ -254,7 +254,7 @@ function Get-Platform1C() {
 					[PSCustomObject] @{
 						'DisplayName'		= $_.DisplayName
 						'DisplayVersion'	= $_.DisplayVersion
-						'Publisher'			= $_.Publisher
+						'Publisher'		= $_.Publisher
 						'InstallDate'		= $_.InstallDate
 						'InstallLocation'	= $_.InstallLocation
 					}
@@ -285,10 +285,10 @@ function Get-Service1C() {
 			data = @($services1C | % {
 				$serviceInfo = $_
 				[PSCustomObject] @{
-					'Name' = $serviceInfo.Name
-					'State' = $serviceInfo.State
+					'Name'        = $serviceInfo.Name
+					'State'       = $serviceInfo.State
 					'DisplayName' = $serviceInfo.DisplayName
-					'PathName' = $serviceInfo.PathName
+					'PathName'    = $serviceInfo.PathName
 				}
 			})
 		}
@@ -526,9 +526,9 @@ function Job-ComObject1C() {
 				$GetServices1C			= Get-Service -ErrorAction Stop | Where-Object {($_.Name).StartsWith("1C")} | ForEach-Object {$ArrayServices1C.Add($_.Name)}
 				$GetService1C			= ($ArrayServices1C | Measure-Object -Maximum).Maximum
 				$NameService1C			= Get-Service $GetService1C -ErrorAction Stop
-				$Service1C				= Get-WmiObject win32_service | Where-Object {$_.Name -like $NameService1C.Name} | Select Name, DisplayName, State, PathName | Where-Object {$_.PathName -Like "*ragent.exe*"}
+				$Service1C			= Get-WmiObject win32_service | Where-Object {$_.Name -like $NameService1C.Name} | Select Name, DisplayName, State, PathName | Where-Object {$_.PathName -Like "*ragent.exe*"}
 				$ServiceExecPath		= $Service1C.PathName
-				$ServiceExecPathRagent	= $Service1C.PathName.split('"')[1]
+				$ServiceExecPathRagent		= $Service1C.PathName.split('"')[1]
 				$ServiceDirectory		= [System.IO.Path]::GetDirectoryName($ServiceExecPathRagent)
 				$ComCntrPath			= "$ServiceDirectory\comcntr.dll"
 				$PlatformVersion		= [System.Diagnostics.FileVersionInfo]::GetVersionInfo($ServiceExecPathRagent).FileVersion
@@ -1732,13 +1732,13 @@ function Install-Server1C() {
 
 							$SplitPackageSource  = $PackageSource.Split("\")
 							$SplitPackageSource1 = $SplitPackageSource[3].Split(".")
-							$SplitPackageName	 = $PackageName.Split(" ")
+							$SplitPackageName    = $PackageName.Split(" ")
 
 							$HomeCat	 = "$($InputPathJobProcess)\"
 							$PathToBin	 = "$($PackageSource)Bin\ragent.exe"
 							$Name		 = "1C:Enterprise $($SplitPackageSource1[0]).$($SplitPackageSource1[1]) Server Agent ($($InputPort))"
 							$ImagePath	 = "`"$PathToBin`" -srvc -agent -regport $InputRegPort -port $InputPort -range $InputRangePort -debug -d `"$HomeCat`""
-							$Desctiption = "Агент сервера $($SplitPackageName[0]) $($SplitPackageSource1[0]).$($SplitPackageSource1[1]) ($($InputPort))"
+							$Desctiption 	 = "Агент сервера $($SplitPackageName[0]) $($SplitPackageSource1[0]).$($SplitPackageSource1[1]) ($($InputPort))"
 							$Creds		 = New-Object System.Management.Automation.PSCredential -ArgumentList $InputUser, $InputPassword
 
 							echo ""
