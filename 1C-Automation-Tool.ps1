@@ -168,23 +168,23 @@ function Get-Cluster1C {
 						$platformVersion = ""
 					}
 
-					$clusterPath		= $hash.d -replace '"', ''
+					$clusterPath		  = $hash.d -replace '"', ''
 					$clusterRegPort		= $hash.regport
-					$clusterPort		= $hash.port
+					$clusterPort		  = $hash.port
 					$clusterPortRange	= $hash.range
 					$clusterRegPath		= "$clusterPath\reg_$clusterRegPort"
 
 					[PSCustomObject] @{
-						'Name'			= $serviceInfo.Name
-						'DisplayName'		= $serviceInfo.DisplayName
-						'State'			= $serviceInfo.State
-						'Version'		= $platformVersion
-						'ClusterPath'		= $clusterPath
-						'ClusterRegPort'	= $clusterRegPort
-						'ClusterPort'		= $clusterPort
+						'Name'			        = $serviceInfo.Name
+						'DisplayName'		    = $serviceInfo.DisplayName
+						'State'			        = $serviceInfo.State
+						'Version'		        = $platformVersion
+						'ClusterPath'		    = $clusterPath
+						'ClusterRegPort'	  = $clusterRegPort
+						'ClusterPort'		    = $clusterPort
 						'ClusterPortRange'	= $clusterPortRange
-						'ClusterRegPath'	= $clusterRegPath
-						'PathName'		= $serviceInfo.PathName
+						'ClusterRegPath'	  = $clusterRegPath
+						'PathName'		      = $serviceInfo.PathName
 					}
 				})
 			}
