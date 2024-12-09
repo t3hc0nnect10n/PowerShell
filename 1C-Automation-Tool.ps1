@@ -1514,7 +1514,7 @@ function Install-Server1C() {
 									try {
 										[int]$tmp1 = $tmp[0]
 										[int]$tmp2 = $tmp[1]
-										$tmpRange = $tmp1..$tmp2
+										$tmpRange  = $tmp1..$tmp2
 
 										$tmpCount = 0
 										foreach ($i in $tmpRange) {
