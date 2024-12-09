@@ -210,6 +210,18 @@ function Get-ComObject1C() {
 	Invoke-Command -ComputerName $Server -ErrorAction Stop -ScriptBlock {
 
 		try {
+			$v83COMConnector = New-Object -COMObject "V82.COMConnector"
+			echo ""
+			Write-Host " Компонента V82.COMConnector" -NoNewline
+			Write-Host " Зарегистрирована" -ForegroundColor Green
+		}
+		catch {
+			echo ""
+			Write-Host " Компонента V82.COMConnector" -NoNewline
+			Write-Host " Не зарегистрирована" -ForegroundColor Red
+		}
+
+		try {
 			$v83COMConnector = New-Object -COMObject "V83.COMConnector"
 			echo ""
 			Write-Host " Компонента V83.COMConnector" -NoNewline
@@ -217,7 +229,7 @@ function Get-ComObject1C() {
 		}
 		catch {
 			echo ""
-			Write-Host " Компонента "V83.COMConnector"" -NoNewline
+			Write-Host " Компонента V83.COMConnector" -NoNewline
 			Write-Host " Не зарегистрирована" -ForegroundColor Red
 		}
 	}
@@ -300,10 +312,10 @@ function Get-Service1C() {
 				data = @($services1C | % {
 					$serviceInfo = $_
 					[PSCustomObject] @{
-						'Name'        = $serviceInfo.Name
-						'State'       = $serviceInfo.State
-						'DisplayName' = $serviceInfo.DisplayName
-						'PathName'    = $serviceInfo.PathName
+						'Name'		  = $serviceInfo.Name
+						'State'		  = $serviceInfo.State
+						'DisplayName'	  = $serviceInfo.DisplayName
+						'PathName'	  = $serviceInfo.PathName
 					}
 				})
 			}
@@ -1736,7 +1748,7 @@ function Install-Server1C() {
 							$PathToBin	 = "$($PackageSource)Bin\ragent.exe"
 							$Name		 = "1C:Enterprise $($SplitPackageSource1[0]).$($SplitPackageSource1[1]) Server Agent ($($InputPort))"
 							$ImagePath	 = "`"$PathToBin`" -srvc -agent -regport $InputRegPort -port $InputPort -range $InputRangePort -debug -d `"$HomeCat`""
-							$Desctiption	 = "Агент сервера $($SplitPackageName[0]) $($SplitPackageSource1[0]).$($SplitPackageSource1[1]) ($($InputPort))"
+							$Desctiption 	 = "Агент сервера $($SplitPackageName[0]) $($SplitPackageSource1[0]).$($SplitPackageSource1[1]) ($($InputPort))"
 							$Creds		 = New-Object System.Management.Automation.PSCredential -ArgumentList $InputUser, $InputPassword
 
 							echo ""
