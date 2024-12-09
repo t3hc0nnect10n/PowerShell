@@ -1,4 +1,4 @@
-﻿<#
+<#
 Made by t3hc0nnect10n (c) 2024
 Version 1.0
 
@@ -146,48 +146,54 @@ function Get-Cluster1C {
 			Select Name, DisplayName, State, PathName |
 			Where-Object {$_.PathName -Like "*ragent.exe*"}
 
-			$obj = [PSCustomObject] @{
-			data = @($services1C | Where-Object {
-				$serviceInfo	 = $_
-				$serviceExecPath = $serviceInfo.PathName
+			if ($services1C) {
+				$obj = [PSCustomObject] @{
+				data = @($services1C | Where-Object {
+					$serviceInfo	 = $_
+					$serviceExecPath = $serviceInfo.PathName
 
-				$hash = [ordered]@{}
-				$serviceExecPath.Split("-").Trim() | Where-Object {$_.Contains(" ")} | ForEach-Object {
-					$name, $value = $_ -split '\s+', 2
-					$hash[$name]  = $value
-				}
+					$hash = [ordered]@{}
+					$serviceExecPath.Split("-").Trim() | Where-Object {$_.Contains(" ")} | ForEach-Object {
+						$name, $value = $_ -split '\s+', 2
+						$hash[$name]  = $value
+					}
 
-				$parsePathAgentExe = $serviceExecPath.Substring(1, $serviceExecPath.Length -1)
-				$parsePathAgentExe = $parsePathAgentExe.Substring(0, $parsePathAgentExe.IndexOf('"'))
+					$parsePathAgentExe = $serviceExecPath.Substring(1, $serviceExecPath.Length -1)
+					$parsePathAgentExe = $parsePathAgentExe.Substring(0, $parsePathAgentExe.IndexOf('"'))
 
-				if(Test-Path $parsePathAgentExe) {
-					$platformVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($parsePathAgentExe).FileVersion
-				}
-				else {
-					$platformVersion = ""
-				}
+					if(Test-Path $parsePathAgentExe) {
+						$platformVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($parsePathAgentExe).FileVersion
+					}
+					else {
+						$platformVersion = ""
+					}
 
-				$clusterPath		= $hash.d -replace '"', ''
-				$clusterRegPort		= $hash.regport
-				$clusterPort		= $hash.port
-				$clusterPortRange	= $hash.range
-				$clusterRegPath		= "$clusterPath\reg_$clusterRegPort"
+					$clusterPath		= $hash.d -replace '"', ''
+					$clusterRegPort		= $hash.regport
+					$clusterPort		= $hash.port
+					$clusterPortRange	= $hash.range
+					$clusterRegPath		= "$clusterPath\reg_$clusterRegPort"
 
-				[PSCustomObject] @{
-					'Name'			= $serviceInfo.Name
-					'DisplayName'		= $serviceInfo.DisplayName
-					'State'			= $serviceInfo.State
-					'Version'		= $platformVersion
-					'ClusterPath'		= $clusterPath
-					'ClusterRegPort'	= $clusterRegPort
-					'ClusterPort'		= $clusterPort
-					'ClusterPortRange'	= $clusterPortRange
-					'ClusterRegPath'	= $clusterRegPath
-					'PathName'		= $serviceInfo.PathName
-				}
-			})
+					[PSCustomObject] @{
+						'Name'			= $serviceInfo.Name
+						'DisplayName'		= $serviceInfo.DisplayName
+						'State'			= $serviceInfo.State
+						'Version'		= $platformVersion
+						'ClusterPath'		= $clusterPath
+						'ClusterRegPort'	= $clusterRegPort
+						'ClusterPort'		= $clusterPort
+						'ClusterPortRange'	= $clusterPortRange
+						'ClusterRegPath'	= $clusterRegPath
+						'PathName'		= $serviceInfo.PathName
+					}
+				})
+			}
+			$obj.data | Format-List
 		}
-		$obj.data | Format-List
+		else {
+			echo ""
+			Write-Verbose "Не установлен продукт 1С:Предприятие 8" -Verbose
+		}
 	}
 	Clear-Variable -Name "Server"
 }
@@ -230,38 +236,47 @@ function Get-Platform1C() {
 	Invoke-Command -ComputerName $Server -ErrorAction Stop -ScriptBlock {
 
 		$ArrayInstalledPlatform1C = [System.Collections.ArrayList]@()
-
-		Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* |
-			Where-Object {($_.DisplayName -like "*1С:Предприятие*") -or ($_.DisplayName -like "*1С:Enterprise*")} |
-			Select-Object DisplayName, DisplayVersion, Publisher, InstallDate, InstallLocation |
-			ForEach-Object {
-				$ArrayInstalledPlatform1C.Add(
-					[PSCustomObject] @{
-						'DisplayName'		= $_.DisplayName
-						'DisplayVersion'	= $_.DisplayVersion
-						'Publisher'		= $_.Publisher
-						'InstallDate'		= $_.InstallDate
-						'InstallLocation'	= $_.InstallLocation
-					}
-				) | Out-Null
-			}
-
-		Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* |
-			Where-Object {($_.DisplayName -like "*1С:Предприятие*") -or ($_.DisplayName -like "*1С:Enterprise*")} |
-			Select-Object DisplayName, DisplayVersion, Publisher, InstallDate, InstallLocation |
-			ForEach-Object {
-				$ArrayInstalledPlatform1C.Add(
-					[PSCustomObject] @{
-						'DisplayName'		= $_.DisplayName
-						'DisplayVersion'	= $_.DisplayVersion
-						'Publisher'		= $_.Publisher
-						'InstallDate'		= $_.InstallDate
-						'InstallLocation'	= $_.InstallLocation
-					}
-				) | Out-Null
-			}
-		$ArrayInstalledPlatform1C | Format-Table –AutoSize
-		$ArrayInstalledPlatform1C.Clear()
+		
+		if (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object {($_.DisplayName -like "*1С:Предприятие*") -or ($_.DisplayName -like "*1С:Enterprise*")}) {
+			Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* |
+				Where-Object {($_.DisplayName -like "*1С:Предприятие*") -or ($_.DisplayName -like "*1С:Enterprise*")} |
+				Select-Object DisplayName, DisplayVersion, Publisher, InstallDate, InstallLocation |
+				ForEach-Object {
+					$ArrayInstalledPlatform1C.Add(
+						[PSCustomObject] @{
+							'DisplayName'		= $_.DisplayName
+							'DisplayVersion'	= $_.DisplayVersion
+							'Publisher'		= $_.Publisher
+							'InstallDate'		= $_.InstallDate
+							'InstallLocation'	= $_.InstallLocation
+						}
+					) | Out-Null
+				}
+			$ArrayInstalledPlatform1C | Format-Table –AutoSize
+			$ArrayInstalledPlatform1C.Clear()
+		}
+		elseif (Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object {($_.DisplayName -like "*1С:Предприятие*") -or ($_.DisplayName -like "*1С:Enterprise*")}) {
+			Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* |
+				Where-Object {($_.DisplayName -like "*1С:Предприятие*") -or ($_.DisplayName -like "*1С:Enterprise*")} |
+				Select-Object DisplayName, DisplayVersion, Publisher, InstallDate, InstallLocation |
+				ForEach-Object {
+					$ArrayInstalledPlatform1C.Add(
+						[PSCustomObject] @{
+							'DisplayName'		= $_.DisplayName
+							'DisplayVersion'	= $_.DisplayVersion
+							'Publisher'		= $_.Publisher
+							'InstallDate'		= $_.InstallDate
+							'InstallLocation'	= $_.InstallLocation
+						}
+					) | Out-Null
+				}
+			$ArrayInstalledPlatform1C | Format-Table –AutoSize
+			$ArrayInstalledPlatform1C.Clear()
+		}
+		else {
+			echo ""
+			Write-Verbose "Не установлен продукт 1С:Предприятие 8" -Verbose
+		}
 	}
 	Clear-Variable -Name "Server"
 }
@@ -280,19 +295,24 @@ function Get-Service1C() {
 		$services1C = Get-WmiObject win32_service | Where-Object {$_.Name -like '*'} |
 			Select Name, DisplayName, State, PathName |
 			Where-Object {$_.PathName -Like "*ragent.exe*"}
-
-		$obj = [PSCustomObject] @{
-			data = @($services1C | % {
-				$serviceInfo = $_
-				[PSCustomObject] @{
-					'Name'        = $serviceInfo.Name
-					'State'       = $serviceInfo.State
-					'DisplayName' = $serviceInfo.DisplayName
-					'PathName'    = $serviceInfo.PathName
-				}
-			})
+		if ($services1C) {
+			$obj = [PSCustomObject] @{
+				data = @($services1C | % {
+					$serviceInfo = $_
+					[PSCustomObject] @{
+						'Name'        = $serviceInfo.Name
+						'State'       = $serviceInfo.State
+						'DisplayName' = $serviceInfo.DisplayName
+						'PathName'    = $serviceInfo.PathName
+					}
+				})
+			}
+			$obj.data | Format-Table –AutoSize
 		}
-		$obj.data | Format-Table –AutoSize
+		else {
+			echo ""
+			Write-Verbose "Не установлен продукт 1С:Предприятие 8" -Verbose
+		}
 	}
 	Clear-Variable -Name "Server"
 }
@@ -321,189 +341,186 @@ function Job-Service1C() {
 				}
 			}
 		}
-		try {
-			if (Get-Service | Where-Object {($_.Name).StartsWith("1C")}) {
-				$ArrayServices1C = [System.Collections.ArrayList]@()
-				$GetServices1C	 = Get-Service | Where-Object {($_.Name).StartsWith("1C")} | ForEach-Object {$ArrayServices1C.Add($_.Name)}
 
-				while ($true) {
-					echo ""
-					Write-Host " Выберите службу" -ForegroundColor Yellow
-					for ($i = 1; $i -lt $ArrayServices1C.Count + 1; $i ++) {
-						Write-Host " $($i)." -ForegroundColor Cyan -NoNewline
-						Write-Host " $($ArrayServices1C[$i-1])" -ForegroundColor Gray
-					}
-					Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
-					Write-Host " Exit" -ForegroundColor Cyan
-					$UserInputService = (Read-Host " Выбор").ToLower()
+		if (Get-Service | Where-Object {($_.Name).StartsWith("1C")}) {
+			$ArrayServices1C = [System.Collections.ArrayList]@()
+			$GetServices1C	 = Get-Service | Where-Object {($_.Name).StartsWith("1C")} | ForEach-Object {$ArrayServices1C.Add($_.Name)}
 
-					# Если служба 1С.
-					if (($UserInputService -ge 1) -and ($UserInputService -le $ArrayServices1C.Count)) {
-						$NameService1C	= Service-1C -Number $UserInputService
-						$Service1C		= Get-Service -Name $NameService1C -ErrorAction Stop
+			while ($true) {
+				echo ""
+				Write-Host " Выберите службу" -ForegroundColor Yellow
+				for ($i = 1; $i -lt $ArrayServices1C.Count + 1; $i ++) {
+					Write-Host " $($i)." -ForegroundColor Cyan -NoNewline
+					Write-Host " $($ArrayServices1C[$i-1])" -ForegroundColor Gray
+				}
+				Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
+				Write-Host " Exit" -ForegroundColor Cyan
+				$UserInputService = (Read-Host " Выбор").ToLower()
 
-						while ($true) {
-							echo ""
-							Start-Sleep -Milliseconds 500
-							Write-Host " Служба:" -ForegroundColor Cyan -NoNewline
-							Write-Host " $($NameService1C)" -ForegroundColor Gray
-							Write-Host " 1." -ForegroundColor Cyan -NoNewline
-							Write-Host " Запуск службы 1C" -ForegroundColor Yellow
-							Write-Host " 2." -ForegroundColor Cyan -NoNewline
-							Write-Host " Остановка службы 1C" -ForegroundColor Yellow
-							Write-Host " 3." -ForegroundColor Cyan -NoNewline
-							Write-Host " Перезапуск службы 1C" -ForegroundColor Yellow
-							Write-Host " Для выход введите:" -ForegroundColor Yellow -NoNewline
-							Write-Host " Exit" -ForegroundColor Cyan
-							$UserInput = (Read-Host " Выбор").ToLower()
+				# Если служба 1С.
+				if (($UserInputService -ge 1) -and ($UserInputService -le $ArrayServices1C.Count)) {
+					$NameService1C	= Service-1C -Number $UserInputService
+					$Service1C		= Get-Service -Name $NameService1C -ErrorAction Stop
 
-							# Запуск службы 1С.
-							if ($UserInput -eq 1) {
-								$CheckService1C = Get-Service -Name $Service1C.Name -ErrorAction Stop
-								if ($CheckService1C.Status -like 'Stopped') {
-									try {
-										Start-Service $Service1C.Name -ErrorAction Stop
-										Start-Sleep -Seconds 5
-										$GetStatus1C = Get-Service -Name $Service1C.Name -ErrorAction Stop
-										if ($GetStatus1C){
-											echo ""
-											Start-Sleep -Milliseconds 1500
-											Write-Host " Cлужба:" -ForegroundColor Cyan -NoNewline
-											Write-Host " $($Service1C.Name)" -ForegroundColor Gray -NoNewline
-											Write-Host " Запущена" -ForegroundColor Green
-											Clear-Variable -Name "GetStatus1C"
-										}
-										Clear-Variable -Name "CheckService1C"
-									}
-									catch {
+					while ($true) {
+						echo ""
+						Start-Sleep -Milliseconds 500
+						Write-Host " Служба:" -ForegroundColor Cyan -NoNewline
+						Write-Host " $($NameService1C)" -ForegroundColor Gray
+						Write-Host " 1." -ForegroundColor Cyan -NoNewline
+						Write-Host " Запуск службы 1C" -ForegroundColor Yellow
+						Write-Host " 2." -ForegroundColor Cyan -NoNewline
+						Write-Host " Остановка службы 1C" -ForegroundColor Yellow
+						Write-Host " 3." -ForegroundColor Cyan -NoNewline
+						Write-Host " Перезапуск службы 1C" -ForegroundColor Yellow
+						Write-Host " Для выход введите:" -ForegroundColor Yellow -NoNewline
+						Write-Host " Exit" -ForegroundColor Cyan
+						$UserInput = (Read-Host " Выбор").ToLower()
+
+						# Запуск службы 1С.
+						if ($UserInput -eq 1) {
+							$CheckService1C = Get-Service -Name $Service1C.Name -ErrorAction Stop
+							if ($CheckService1C.Status -like 'Stopped') {
+								try {
+									Start-Service $Service1C.Name -ErrorAction Stop
+									Start-Sleep -Seconds 5
+									$GetStatus1C = Get-Service -Name $Service1C.Name -ErrorAction Stop
+									if ($GetStatus1C){
 										echo ""
 										Start-Sleep -Milliseconds 1500
-										Write-Host " Ошибка:" -ForegroundColor Red -NoNewline
-										Write-Host $Error[0]
+										Write-Host " Cлужба:" -ForegroundColor Cyan -NoNewline
+										Write-Host " $($Service1C.Name)" -ForegroundColor Gray -NoNewline
+										Write-Host " Запущена" -ForegroundColor Green
+										Clear-Variable -Name "GetStatus1C"
 									}
+									Clear-Variable -Name "CheckService1C"
+								}
+								catch {
+									echo ""
+									Start-Sleep -Milliseconds 1500
+									Write-Host " Ошибка:" -ForegroundColor Red -NoNewline
+									Write-Host $Error[0]
+								}
 
-								}
-								else {
-									echo ""
-									Start-Sleep -Milliseconds 1500
-									Write-Host " Cлужба:" -ForegroundColor Cyan -NoNewline
-									Write-Host " $($Service1C.Name)" -ForegroundColor Gray -NoNewline
-									Write-Host " Запущена" -ForegroundColor Green
-								}
 							}
-							# Остановка службы 1С.
-							elseif ($UserInput -eq 2) {
-								$CheckService1C = Get-Service -Name $Service1C.Name -ErrorAction Stop
-								if ($CheckService1C.Status -like 'Running') {
-									try {
-										Stop-Service $Service1C.Name -Force -ErrorAction Stop -WarningAction SilentlyContinue
-										Start-Sleep -Seconds 5
-										$GetStatus1C = Get-Service -Name $Service1C.Name -ErrorAction Stop
-										if ($GetStatus1C){
-											echo ""
-											Start-Sleep -Milliseconds 1500
-											Write-Host " Cлужба:" -ForegroundColor Cyan -NoNewline
-											Write-Host " $($Service1C.Name)" -ForegroundColor Gray -NoNewline
-											Write-Host " Остановлена" -ForegroundColor Red
-											Clear-Variable -Name "GetStatus1C"
-										}
-										Clear-Variable -Name "CheckService1C"
-									}
-									catch {
-										echo ""
-										Start-Sleep -Milliseconds 1500
-										Write-Host " Ошибка:" -ForegroundColor Red -NoNewline
-										Write-Host $Error[0]
-									}
-								}
-								else {
-									echo ""
-									Start-Sleep -Milliseconds 1500
-									Write-Host " Cлужба:" -ForegroundColor Cyan -NoNewline
-									Write-Host " $($Service1C.Name)" -ForegroundColor Gray -NoNewline
-									Write-Host " Остановлена" -ForegroundColor Red
-								}
-							}
-							# Перезапуск службы 1С.
-							elseif ($UserInput -eq 3) {
-								$CheckService1C = Get-Service -Name $Service1C.Name -ErrorAction Stop
-								if ($CheckService1C.Status -like 'Running') {
-									try {
-										echo ""
-										Restart-Service $Service1C.Name -Force -ErrorAction Sto
-										Start-Sleep -Seconds 5
-										$GetStatus1C = Get-Service -Name $Service1C.Name -ErrorAction Stop
-										if ($GetStatus1C){
-											echo ""
-											Start-Sleep -Milliseconds 1500
-											Write-Host " Cлужба:" -ForegroundColor Cyan -NoNewline
-											Write-Host " $($Service1C.Name)" -ForegroundColor Gray -NoNewline
-											Write-Host " Перезапущена" -ForegroundColor Green
-											Clear-Variable -Name "GetStatus1C"
-										}
-										Clear-Variable -Name "CheckService1C"
-									}
-									catch {
-										echo ""
-										Start-Sleep -Milliseconds 1500
-										Write-Host " Ошибка:" -ForegroundColor Red -NoNewline
-										Write-Host $Error[0]
-									}
-								}
-								else {
-									echo ""
-									Start-Sleep -Milliseconds 1500
-									Write-Host " Cлужба:" -ForegroundColor Cyan -NoNewline
-									Write-Host " $($Service1C.Name)" -ForegroundColor Gray -NoNewline
-									Write-Host " Перезапущена" -ForegroundColor Green
-								}
-							}
-							# Выход.
-							elseif ($UserInput -eq "exit") {
-								break
-							}
-							# Ошибка.
-							elseif ($UserInput -like $null){
-								echo ""
-								Start-Sleep -Milliseconds 500
-								Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-								Write-Host " Введено пустое значение."
-							}
-							# Ошибка.
 							else {
 								echo ""
-								Start-Sleep -Milliseconds 500
-								Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-								Write-Host " Неверно введена команда."
+								Start-Sleep -Milliseconds 1500
+								Write-Host " Cлужба:" -ForegroundColor Cyan -NoNewline
+								Write-Host " $($Service1C.Name)" -ForegroundColor Gray -NoNewline
+								Write-Host " Запущена" -ForegroundColor Green
 							}
 						}
+						# Остановка службы 1С.
+						elseif ($UserInput -eq 2) {
+							$CheckService1C = Get-Service -Name $Service1C.Name -ErrorAction Stop
+							if ($CheckService1C.Status -like 'Running') {
+								try {
+									Stop-Service $Service1C.Name -Force -ErrorAction Stop -WarningAction SilentlyContinue
+									Start-Sleep -Seconds 5
+									$GetStatus1C = Get-Service -Name $Service1C.Name -ErrorAction Stop
+									if ($GetStatus1C){
+										echo ""
+										Start-Sleep -Milliseconds 1500
+										Write-Host " Cлужба:" -ForegroundColor Cyan -NoNewline
+										Write-Host " $($Service1C.Name)" -ForegroundColor Gray -NoNewline
+										Write-Host " Остановлена" -ForegroundColor Red
+										Clear-Variable -Name "GetStatus1C"
+									}
+									Clear-Variable -Name "CheckService1C"
+								}
+								catch {
+									echo ""
+									Start-Sleep -Milliseconds 1500
+									Write-Host " Ошибка:" -ForegroundColor Red -NoNewline
+									Write-Host $Error[0]
+								}
+							}
+							else {
+								echo ""
+								Start-Sleep -Milliseconds 1500
+								Write-Host " Cлужба:" -ForegroundColor Cyan -NoNewline
+								Write-Host " $($Service1C.Name)" -ForegroundColor Gray -NoNewline
+								Write-Host " Остановлена" -ForegroundColor Red
+							}
+						}
+						# Перезапуск службы 1С.
+						elseif ($UserInput -eq 3) {
+							$CheckService1C = Get-Service -Name $Service1C.Name -ErrorAction Stop
+							if ($CheckService1C.Status -like 'Running') {
+								try {
+									echo ""
+									Restart-Service $Service1C.Name -Force -ErrorAction Sto
+									Start-Sleep -Seconds 5
+									$GetStatus1C = Get-Service -Name $Service1C.Name -ErrorAction Stop
+									if ($GetStatus1C){
+										echo ""
+										Start-Sleep -Milliseconds 1500
+										Write-Host " Cлужба:" -ForegroundColor Cyan -NoNewline
+										Write-Host " $($Service1C.Name)" -ForegroundColor Gray -NoNewline
+										Write-Host " Перезапущена" -ForegroundColor Green
+										Clear-Variable -Name "GetStatus1C"
+									}
+									Clear-Variable -Name "CheckService1C"
+								}
+								catch {
+									echo ""
+									Start-Sleep -Milliseconds 1500
+									Write-Host " Ошибка:" -ForegroundColor Red -NoNewline
+									Write-Host $Error[0]
+								}
+							}
+							else {
+								echo ""
+								Start-Sleep -Milliseconds 1500
+								Write-Host " Cлужба:" -ForegroundColor Cyan -NoNewline
+								Write-Host " $($Service1C.Name)" -ForegroundColor Gray -NoNewline
+								Write-Host " Перезапущена" -ForegroundColor Green
+							}
+						}
+						# Выход.
+						elseif ($UserInput -eq "exit") {
+							break
+						}
+						# Ошибка.
+						elseif ($UserInput -like $null){
+							echo ""
+							Start-Sleep -Milliseconds 500
+							Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+							Write-Host " Введено пустое значение."
+						}
+						# Ошибка.
+						else {
+							echo ""
+							Start-Sleep -Milliseconds 500
+							Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+							Write-Host " Неверно введена команда."
+						}
 					}
-					# Выход.
-					elseif ($UserInputService -like "exit") {
-						break
-					}
-					# Ошибка.
-					elseif ($UserInputService -like $null) {
-						echo ""
-						Start-Sleep -Milliseconds 500
-						Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-						Write-Host " Введено пустое значение."
-					}
-					# Ошибка.
-					else {
-						echo ""
-						Start-Sleep -Milliseconds 500
-						Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-						Write-Host " Неверно введена команда."
-					}
+				}
+				# Выход.
+				elseif ($UserInputService -like "exit") {
+					break
+				}
+				# Ошибка.
+				elseif ($UserInputService -like $null) {
+					echo ""
+					Start-Sleep -Milliseconds 500
+					Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+					Write-Host " Введено пустое значение."
+				}
+				# Ошибка.
+				else {
+					echo ""
+					Start-Sleep -Milliseconds 500
+					Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+					Write-Host " Неверно введена команда."
 				}
 			}
 		}
-		catch {
+		else {
 			echo ""
-			Write-Host " На сервере" -NoNewline
-			Write-Host " $($Server)" -ForegroundColor Gray -NoNewline
-			Write-Host " не установлен продукт 1С:Предприятие 8"
+			Write-Verbose "Не установлен продукт 1С:Предприятие 8" -Verbose
 		}
 	}
 	Clear-Variable -Name "Server"
@@ -520,104 +537,101 @@ function Job-ComObject1C() {
 	# Отправка скрипт-блока.
 	Invoke-Command -ComputerName $Server -ErrorAction Stop -ScriptBlock {
 
-		try {
-			if (Get-Service -ErrorAction Stop | Where-Object {($_.Name).StartsWith("1C")}) {
-				$ArrayServices1C		= [System.Collections.ArrayList]@()
-				$GetServices1C			= Get-Service -ErrorAction Stop | Where-Object {($_.Name).StartsWith("1C")} | ForEach-Object {$ArrayServices1C.Add($_.Name)}
-				$GetService1C			= ($ArrayServices1C | Measure-Object -Maximum).Maximum
-				$NameService1C			= Get-Service $GetService1C -ErrorAction Stop
-				$Service1C			= Get-WmiObject win32_service | Where-Object {$_.Name -like $NameService1C.Name} | Select Name, DisplayName, State, PathName | Where-Object {$_.PathName -Like "*ragent.exe*"}
-				$ServiceExecPath		= $Service1C.PathName
-				$ServiceExecPathRagent		= $Service1C.PathName.split('"')[1]
-				$ServiceDirectory		= [System.IO.Path]::GetDirectoryName($ServiceExecPathRagent)
-				$ComCntrPath			= "$ServiceDirectory\comcntr.dll"
-				$PlatformVersion		= [System.Diagnostics.FileVersionInfo]::GetVersionInfo($ServiceExecPathRagent).FileVersion
+		
+		if (Get-Service -ErrorAction Stop | Where-Object {($_.Name).StartsWith("1C")}) {
+			$ArrayServices1C		= [System.Collections.ArrayList]@()
+			$GetServices1C			= Get-Service -ErrorAction Stop | Where-Object {($_.Name).StartsWith("1C")} | ForEach-Object {$ArrayServices1C.Add($_.Name)}
+			$GetService1C			= ($ArrayServices1C | Measure-Object -Maximum).Maximum
+			$NameService1C			= Get-Service $GetService1C -ErrorAction Stop
+			$Service1C			= Get-WmiObject win32_service | Where-Object {$_.Name -like $NameService1C.Name} | Select Name, DisplayName, State, PathName | Where-Object {$_.PathName -Like "*ragent.exe*"}
+			$ServiceExecPath		= $Service1C.PathName
+			$ServiceExecPathRagent		= $Service1C.PathName.split('"')[1]
+			$ServiceDirectory		= [System.IO.Path]::GetDirectoryName($ServiceExecPathRagent)
+			$ComCntrPath			= "$ServiceDirectory\comcntr.dll"
+			$PlatformVersion		= [System.Diagnostics.FileVersionInfo]::GetVersionInfo($ServiceExecPathRagent).FileVersion
 
-				while ($true) {
+			while ($true) {
+				echo ""
+				Start-Sleep -Milliseconds 500
+				Write-Host " Компанента:" -ForegroundColor Cyan -NoNewline
+				Write-Host " $($NameService1C.Name)" -ForegroundColor Gray
+				Write-Host " 1." -ForegroundColor Cyan -NoNewline
+				Write-Host " Регистрация" -ForegroundColor Yellow
+				Write-Host " 2." -ForegroundColor Cyan -NoNewline
+				Write-Host " Отмена регистрации" -ForegroundColor Yellow
+				Write-Host " Для выход введите:" -ForegroundColor Yellow -NoNewline
+				Write-Host " Exit" -ForegroundColor Cyan
+				$UserInput = (Read-Host " Выбор").ToLower()
+
+				# Регистрации COM-объект.
+				if ($UserInput -eq 1) {
 					echo ""
-					Start-Sleep -Milliseconds 500
-					Write-Host " Компанента:" -ForegroundColor Cyan -NoNewline
-					Write-Host " $($NameService1C.Name)" -ForegroundColor Gray
-					Write-Host " 1." -ForegroundColor Cyan -NoNewline
-					Write-Host " Регистрация" -ForegroundColor Yellow
-					Write-Host " 2." -ForegroundColor Cyan -NoNewline
-					Write-Host " Отмена регистрации" -ForegroundColor Yellow
-					Write-Host " Для выход введите:" -ForegroundColor Yellow -NoNewline
-					Write-Host " Exit" -ForegroundColor Cyan
-					$UserInput = (Read-Host " Выбор").ToLower()
-
-					# Регистрации COM-объект.
-					if ($UserInput -eq 1) {
+					Write-Host " Начало регистрации COM-компоненты 1С:Предприятия"
+					Write-Host " Версия платформы: $PlatformVersion"
+					Write-Host " Путь к DLL: ""$ComCntrPath"""
+					Write-Host " Команда регистрации компоненты: ""$RegCommand"""
+					try {
+						cmd /c "regsvr32.exe /s ""$ComCntrPath"""
+						Start-Sleep -Milliseconds 500
 						echo ""
-						Write-Host " Начало регистрации COM-компоненты 1С:Предприятия"
-						Write-Host " Версия платформы: $PlatformVersion"
-						Write-Host " Путь к DLL: ""$ComCntrPath"""
-						Write-Host " Команда регистрации компоненты: ""$RegCommand"""
-						try {
-							cmd /c "regsvr32.exe /s ""$ComCntrPath"""
-							Start-Sleep -Milliseconds 500
-							echo ""
-							Write-Host " Компонента" -NoNewline
-							Write-Host " Зарегистрирована" -ForegroundColor Green
-							break
-						} 
-						catch {
-							echo ""
-							Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-							Write-Host " Компонента не зарегистрирована"
-							Write-Host " ПОДРОБНО:" -ForegroundColor Red -NoNewline
-							Write-Host $Error[0]
-						}
-					}
-					# Отмена регистрации COM-объект.
-					elseif ($UserInput -eq 2) {
+						Write-Host " Компонента" -NoNewline
+						Write-Host " Зарегистрирована" -ForegroundColor Green
+						break
+					} 
+					catch {
 						echo ""
-						Write-Host " Начало отмены регистрации COM-компоненты 1С:Предприятия"
-						Write-Host " Версия платформы: $PlatformVersion"
-						Write-Host " Путь к DLL: ""$ComCntrPath"""
-						Write-Host " Команда отмены регистрации компоненты: ""$RegCommand"""
-						try {
-							cmd /c "regsvr32.exe /u /s ""$comcntrPath"""
-							Start-Sleep -Milliseconds 500
-							echo ""
-							Write-Host " Регистрация компаненты" -NoNewline 
-							Write-Host " Отменена" -ForegroundColor Red
-							break
-						}
-						catch {
-							echo ""
-							Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-							Write-Host " Ошибка при отмене регистрации компоненты"
-							Write-Host " ПОДРОБНО:" -ForegroundColor Red -NoNewline
-							Write-Host $Error[0]
-						}
+						Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+						Write-Host " Компонента не зарегистрирована"
+						Write-Host " ПОДРОБНО:" -ForegroundColor Red -NoNewline
+						Write-Host $Error[0]
 					}
-					# Выход.
-					elseif ($UserInput -like "exit") {
+				}
+				# Отмена регистрации COM-объект.
+				elseif ($UserInput -eq 2) {
+					echo ""
+					Write-Host " Начало отмены регистрации COM-компоненты 1С:Предприятия"
+					Write-Host " Версия платформы: $PlatformVersion"
+					Write-Host " Путь к DLL: ""$ComCntrPath"""
+					Write-Host " Команда отмены регистрации компоненты: ""$RegCommand"""
+					try {
+						cmd /c "regsvr32.exe /u /s ""$comcntrPath"""
+						Start-Sleep -Milliseconds 500
+						echo ""
+						Write-Host " Регистрация компаненты" -NoNewline 
+						Write-Host " Отменена" -ForegroundColor Red
 						break
 					}
-					# Ошибка.
-					elseif ($UserInput -like $null) {
+					catch {
 						echo ""
-						Start-Sleep -Milliseconds 500
 						Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-						Write-Host " Введено пустое значение."
+						Write-Host " Ошибка при отмене регистрации компоненты"
+						Write-Host " ПОДРОБНО:" -ForegroundColor Red -NoNewline
+						Write-Host $Error[0]
 					}
-					# Ошибка.
-					else {
-						echo ""
-						Start-Sleep -Milliseconds 500
-						Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-						Write-Host " Неверно введена команда."
-					}
+				}
+				# Выход.
+				elseif ($UserInput -like "exit") {
+					break
+				}
+				# Ошибка.
+				elseif ($UserInput -like $null) {
+					echo ""
+					Start-Sleep -Milliseconds 500
+					Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+					Write-Host " Введено пустое значение."
+				}
+				# Ошибка.
+				else {
+					echo ""
+					Start-Sleep -Milliseconds 500
+					Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+					Write-Host " Неверно введена команда."
 				}
 			}
 		}
-		catch {
+		else {
 			echo ""
-			Write-Host " На сервере" -NoNewline
-			Write-Host " $($Server)" -ForegroundColor Gray -NoNewline
-			Write-Host " не установлен продукт 1С:Предприятие 8"
+			Write-Verbose "Не установлен продукт 1С:Предприятие 8" -Verbose
 		}
 	}
 	Clear-Variable -Name "Server"
@@ -637,193 +651,200 @@ function Disactivate-Session1C() {
 	# Отправка скрипт-блока.
 	Invoke-Command -ComputerName $Server -ErrorAction Stop -ScriptBlock {
 		
-		try {
-			if (Get-Service | Where-Object {($_.Name).StartsWith("1C")}) {
-				$PathLogFile = "C:\Users\Администратор\Documents\TempLog.txt"
-				# Условие проверки файла "log" в директории откуда запускается скрипт. Если файла нет, то он создается.
-				if (-Not (Test-Path $PathLogFile)) {
-					[void](New-Item -Path "C:\Users\Администратор\Documents\" -Name "TempLog.txt" -ItemType File)
-				}
+		if (Get-Service | Where-Object {($_.Name).StartsWith("1C")}) {
+			$PathLogFile = "C:\Users\Администратор\Documents\TempLog.txt"
+			# Условие проверки файла "log" в директории откуда запускается скрипт. Если файла нет, то он создается.
+			if (-Not (Test-Path $PathLogFile)) {
+				[void](New-Item -Path "C:\Users\Администратор\Documents\" -Name "TempLog.txt" -ItemType File)
+			}
 
-				# Ввод сервера 1С для подключения к кластеру.
-				while ($true) {
+			# Ввод сервера 1С для подключения к кластеру.
+			while ($true) {
+				echo ""
+				Write-Host " Введите имя сервера для подключения к кластеру 1С" -ForegroundColor Yellow
+				Write-Host " Пример:" -ForegroundColor Yellow -NoNewline
+				Write-Host " SRV-1C-01" -ForegroundColor Gray
+				Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
+				Write-Host " Exit" -ForegroundColor Cyan
+				[string]$InputServer1С = (Read-Host " Сервер").ToUpper()
+
+				# Контроль ввода сервера.
+				if ($InputServer1С -like $env:COMPUTERNAME) {
 					echo ""
-					Write-Host " Введите имя сервера для подключения к кластеру 1С" -ForegroundColor Yellow
-					Write-Host " Пример:" -ForegroundColor Yellow -NoNewline
-					Write-Host " SRV-1C-01" -ForegroundColor Gray
-					Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
-					Write-Host " Exit" -ForegroundColor Cyan
-					[string]$InputServer1С = (Read-Host " Сервер").ToUpper()
+					Start-Sleep -Milliseconds 500
+					Write-Host " ОК" -ForegroundColor Green
 
-					# Контроль ввода сервера.
-					if ($InputServer1С -like $env:COMPUTERNAME) {
+					# Выбор компаненты 1С.
+					while ($true) {
 						echo ""
-						Start-Sleep -Milliseconds 500
-						Write-Host " ОК" -ForegroundColor Green
+						Write-Host " Выберите компаненту 1С" -ForegroundColor Yellow
+						Write-Host " 1." -ForegroundColor Cyan -NoNewline
+						Write-Host " V82.COMConnector" -ForegroundColor Gray
+						Write-Host " 2." -ForegroundColor Cyan -NoNewline
+						Write-Host " V83.COMConnector" -ForegroundColor Gray
+						Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
+						Write-Host " Exit" -ForegroundColor Cyan
+						$InputCOM1С = Read-Host " Выбор"
 
-						# Выбор компаненты 1С.
-						while ($true) {
-							echo ""
-							Write-Host " Выберите компаненту 1С" -ForegroundColor Yellow
-							Write-Host " 1." -ForegroundColor Cyan -NoNewline
-							Write-Host " V82.COMConnector" -ForegroundColor Gray
-							Write-Host " 2." -ForegroundColor Cyan -NoNewline
-							Write-Host " V83.COMConnector" -ForegroundColor Gray
-							Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
-							Write-Host " Exit" -ForegroundColor Cyan
-							$InputCOM1С = Read-Host " Выбор"
-
-							try {
-								# Компанента V82.COMConnector.
-								if ($InputCOM1С -eq 1) {
-									# Создается COM-объект подключения к 1С.
-									$Connector = New-Object -Comobject "V82.COMConnector"
-									if ($Connector) {
-										echo ""
-										Start-Sleep -Milliseconds 500
-										Write-Host " ОК" -ForegroundColor Green
-										$Flag = 1
-										break
-									}
-								}
-								# Компанента V83.COMConnector.
-								elseif ($InputCOM1С -eq 2) {
-									# Создается COM-объект подключения к 1С.
-									$Connector = New-Object -Comobject "V83.COMConnector"
-									if ($Connector) {
-										echo ""
-										Start-Sleep -Milliseconds 500
-										Write-Host " ОК" -ForegroundColor Green
-										$Flag = 1
-										break
-									}
-								}
-								# Выход.
-								elseif ($InputCOM1С -like "exit"){
+						try {
+							# Компанента V82.COMConnector.
+							if ($InputCOM1С -eq 1) {
+								# Создается COM-объект подключения к 1С.
+								$Connector = New-Object -Comobject "V82.COMConnector"
+								if ($Connector) {
+									echo ""
+									Start-Sleep -Milliseconds 500
+									Write-Host " ОК" -ForegroundColor Green
+									$Flag = 1
 									break
 								}
-								# Ошибка.
-								elseif ($InputCOM1С -like $null){
+							}
+							# Компанента V83.COMConnector.
+							elseif ($InputCOM1С -eq 2) {
+								# Создается COM-объект подключения к 1С.
+								$Connector = New-Object -Comobject "V83.COMConnector"
+								if ($Connector) {
 									echo ""
 									Start-Sleep -Milliseconds 500
-									Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-									Write-Host " Введено пустое значение."
-								}
-								# Ошибка.
-								else {
-									echo ""
-									Start-Sleep -Milliseconds 500
-									Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-									Write-Host " Неверно введена команда."
+									Write-Host " ОК" -ForegroundColor Green
+									$Flag = 1
+									break
 								}
 							}
-							catch {
-								if ($InputCOM1С -eq 1) {
-									echo ""
-									Start-Sleep -Milliseconds 500
-									Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-									Write-Host " Компонента" -NoNewline
-									Write-Host " V82.COMConnector" -ForegroundColor Gray -NoNewline
-									Write-Host " Не зарегистрирована"
-								}
-								elseif ($InputCOM1С -eq 2) {
-									echo ""
-									Start-Sleep -Milliseconds 500
-									Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-									Write-Host " Компонента" -NoNewline
-									Write-Host " V83.COMConnector" -ForegroundColor Gray -NoNewline
-									Write-Host " Не зарегистрирована"
-								}
+							# Выход.
+							elseif ($InputCOM1С -like "exit"){
+								break
+							}
+							# Ошибка.
+							elseif ($InputCOM1С -like $null){
+								echo ""
+								Start-Sleep -Milliseconds 500
+								Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+								Write-Host " Введено пустое значение."
+							}
+							# Ошибка.
+							else {
+								echo ""
+								Start-Sleep -Milliseconds 500
+								Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+								Write-Host " Неверно введена команда."
 							}
 						}
-						Clear-Variable -Name "InputCOM1С"
-						break
+						catch {
+							if ($InputCOM1С -eq 1) {
+								echo ""
+								Start-Sleep -Milliseconds 500
+								Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+								Write-Host " Компонента" -NoNewline
+								Write-Host " V82.COMConnector" -ForegroundColor Gray -NoNewline
+								Write-Host " Не зарегистрирована"
+							}
+							elseif ($InputCOM1С -eq 2) {
+								echo ""
+								Start-Sleep -Milliseconds 500
+								Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+								Write-Host " Компонента" -NoNewline
+								Write-Host " V83.COMConnector" -ForegroundColor Gray -NoNewline
+								Write-Host " Не зарегистрирована"
+							}
+						}
 					}
+					Clear-Variable -Name "InputCOM1С"
+					break
+				}
+				# Выход.
+				elseif ($InputServer1С -like "exit") {
+					break
+				}
+				# Ошибка.
+				elseif ($InputServer1С -like $null) {
+					echo ""
+					Start-Sleep -Milliseconds 500
+					Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+					Write-Host " Введено пустое значение."
+				}
+				# Ошибка.
+				else {
+					echo ""
+					Start-Sleep -Milliseconds 500
+					Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+					Write-Host " Имя сервера 1С" -NoNewline
+					Write-Host " $InputServer1С" -ForegroundColor Gray -NoNewline
+					Write-Host " не соответствует имени сервера введённого для отправки скрипт-блока."
+				}
+			}
+
+			# Ввод порта сервера 1С для подключения к кластеру.
+			if ($Flag -eq 1) {
+				Clear-Variable -Name "Flag"
+				while ($true) {
+					echo ""
+					Write-Host " Введите порт сервера" -ForegroundColor Yellow
+					Write-Host " Пример:" -ForegroundColor Yellow -NoNewline
+					Write-Host " 1740" -ForegroundColor Gray
+					Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
+					Write-Host " Exit" -ForegroundColor Cyan
+					[string]$InputPort1C = (Read-Host " Порт").ToLower()
+
 					# Выход.
-					elseif ($InputServer1С -like "exit") {
+					if ($InputPort1C -like "exit") {
 						break
 					}
 					# Ошибка.
-					elseif ($InputServer1С -like $null) {
+					elseif ($InputPort1C -like $null) {
 						echo ""
 						Start-Sleep -Milliseconds 500
 						Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 						Write-Host " Введено пустое значение."
 					}
-					# Ошибка.
+					# Проверка порта.
 					else {
-						echo ""
-						Start-Sleep -Milliseconds 500
-						Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-						Write-Host " Имя сервера 1С" -NoNewline
-						Write-Host " $InputServer1С" -ForegroundColor Gray -NoNewline
-						Write-Host " не соответствует имени сервера введённого для отправки скрипт-блока."
-					}
-				}
-
-				# Ввод порта сервера 1С для подключения к кластеру.
-				if ($Flag -eq 1) {
-					Clear-Variable -Name "Flag"
-					while ($true) {
-						echo ""
-						Write-Host " Введите порт сервера" -ForegroundColor Yellow
-						Write-Host " Пример:" -ForegroundColor Yellow -NoNewline
-						Write-Host " 1740" -ForegroundColor Gray
-						Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
-						Write-Host " Exit" -ForegroundColor Cyan
-						[string]$InputPort1C = (Read-Host " Порт").ToLower()
-
-						# Выход.
-						if ($InputPort1C -like "exit") {
-							break
-						}
-						# Ошибка.
-						elseif ($InputPort1C -like $null) {
-							echo ""
-							Start-Sleep -Milliseconds 500
-							Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-							Write-Host " Введено пустое значение."
-						}
-						# Проверка порта.
-						else {
-							[int]$tmpInputPort = $InputPort1C
-							if (Get-NetTCPConnection | Where-Object {$_.Localport -eq $tmpInputPort}){
-								try {
-									$Server1C = $InputServer1С+":"+$InputPort1C
-									# Подключение к агенту на сервере.
-									$AgentConnection = $Connector.ConnectAgent($Server1C)
-									if ($AgentConnection) {
-										echo ""
-										Start-Sleep -Milliseconds 500
-										Write-Host " ОК" -ForegroundColor Green
-										$Flag = 2
-										break
-									}
-								}
-								catch {
+						[int]$tmpInputPort = $InputPort1C
+						if (Get-NetTCPConnection | Where-Object {$_.Localport -eq $tmpInputPort}){
+							try {
+								$Server1C = $InputServer1С+":"+$InputPort1C
+								# Подключение к агенту на сервере.
+								$AgentConnection = $Connector.ConnectAgent($Server1C)
+								if ($AgentConnection) {
 									echo ""
 									Start-Sleep -Milliseconds 500
-									Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-									Write-Host " $($Error[0])"
+									Write-Host " ОК" -ForegroundColor Green
+									$Flag = 2
+									break
 								}
 							}
-							else {
+							catch {
 								echo ""
 								Start-Sleep -Milliseconds 500
 								Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-								Write-Host " Порт" -NoNewline
-								Write-Host " $InputPort1C" -ForegroundColor Gray -NoNewline
-								Write-Host " не верный."
+								Write-Host " $($Error[0])"
 							}
+						}
+						else {
+							echo ""
+							Start-Sleep -Milliseconds 500
+							Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+							Write-Host " Порт" -NoNewline
+							Write-Host " $InputPort1C" -ForegroundColor Gray -NoNewline
+							Write-Host " не верный."
 						}
 					}
 				}
+			}
 
-				# Удаление активных сессий 1С.
-				if ($Flag -eq 2) {
-					echo ""
-					Start-Sleep -Milliseconds 500
+			# Удаление активных сессий 1С.
+			if ($Flag -eq 2) {
+				echo ""
+				Start-Sleep -Milliseconds 500
 
+				# Сейчас используется только один кластер, поэтому просто получаем единственный элемент.
+				$Cluster = $AgentConnection.GetClusters()[0]
+				# Авторизация.
+				$AgentConnection.Authenticate($Cluster,"","")
+				# Для заданного списка баз в цикле получаем списки сессий и обрабатываем их.
+				$Bases = $AgentConnection.GetInfoBases($Cluster)
+
+				if ($Bases.count -ne 0) {
 					$GetDate = (Get-Date).ToString()
 					Write-Host " Текущая дата:" -ForegroundColor Yellow -NoNewline
 					Write-Host ""$GetDate
@@ -831,10 +852,6 @@ function Disactivate-Session1C() {
 
 					# Если необходимо закрыть активные сеансы более 10 часов, то необходимо указать значение: -10
 					$TimeDelay = 0
-					# Сейчас используется только один кластер, поэтому просто получаем единственный элемент.
-					$Cluster = $AgentConnection.GetClusters()[0]
-					# Авторизация.
-					$AgentConnection.Authenticate($Cluster,"","")
 					# Всего активных сеансов пользователей во всех базах.
 					$Sessions1C = ($AgentConnection.GetSessions($Cluster) | Where-Object {$_.AppId -ne "SrvrConsole" -and $_.AppId -ne "BackgroundJob" })
 
@@ -907,128 +924,113 @@ function Disactivate-Session1C() {
 						Clear-Variable -Name "Flag"
 						Start-Sleep -Milliseconds 500
 
-						# Для заданного списка баз в цикле получаем списки сессий и обрабатываем их.
-						$Bases = $AgentConnection.GetInfoBases($Cluster)
-						
-						if ($Bases.count -ne 0) {
-							Write-Host " Вводите имя базы по одному" -ForegroundColor Yellow
-							Write-Host " Пример:" -ForegroundColor Yellow -NoNewline
-							Write-Host " Basatk_test" -ForegroundColor Gray
-							Write-Host " Для завершения введите:" -ForegroundColor Yellow -NoNewline
-							Write-Host " end" -ForegroundColor Gray
+						Write-Host " Вводите имя базы по одному" -ForegroundColor Yellow
+						Write-Host " Пример:" -ForegroundColor Yellow -NoNewline
+						Write-Host " Basatk_test" -ForegroundColor Gray
+						Write-Host " Для завершения введите:" -ForegroundColor Yellow -NoNewline
+						Write-Host " end" -ForegroundColor Gray
 
-							$Bases1C = [System.Collections.ArrayList]@() 
-							[string]$InputBase1C = ""
+						$Bases1C = [System.Collections.ArrayList]@() 
+						[string]$InputBase1C = ""
 
-							# Ввод баз 1С по одному.
-							while ($InputBase1C -notlike "end") {
-								[string]$InputBase1C = (Read-Host " База").ToLower()
+						# Ввод баз 1С по одному.
+						while ($InputBase1C -notlike "end") {
+							[string]$InputBase1C = (Read-Host " База").ToLower()
 
-								if ($InputBase1C -notlike "end") {
-									$Bases1C.Add($InputBase1C)
-								}
-								else {
-									[string]$InputBase1C = "end"
-									echo ""
-									Start-Sleep -Milliseconds 500
-									Write-Host " OK" -ForegroundColor Green
-									echo ""
-								}
+							if ($InputBase1C -notlike "end") {
+								$Bases1C.Add($InputBase1C)
 							}
-
-							Write-Host " Список введённых баз:" -ForegroundColor Yellow
-							foreach ($i in $Bases1C) {
-								Write-Host " "$i
+							else {
+								[string]$InputBase1C = "end"
+								echo ""
+								Start-Sleep -Milliseconds 500
+								Write-Host " OK" -ForegroundColor Green
+								echo ""
 							}
-
-							echo ""
-							Start-Sleep -Milliseconds 500
-
-							foreach ($Base in $Bases1C) {
-
-								$Sessions1CtoTerminate = ($AgentConnection.GetSessions($Cluster) | Where-Object {$_.Infobase.Name -eq $Base -and $_.AppId -ne "SrvrConsole" -and $_.AppId -ne "BackgroundJob" -and $_.StartedAt -lt ((Get-Date).AddHours($TimeDelay))})
-
-								foreach ($Session in $Sessions1CtoTerminate) {
-									Write-Host " Terminated Session " -ForegroundColor Red -NoNewline
-									Write-Host " "$Session.infoBase.Name.ToString() -ForegroundColor Yellow -NoNewline
-									Write-Host " "$Session.userName.ToString() -NoNewline 
-									Write-Host " "$Session.Host.ToString() -NoNewline
-									Write-Host " "$Session.AppID.ToString() -NoNewline
-									Write-Host " "$Session.StartedAt.ToString() -NoNewline
-									Write-Host " -"$Session.LastActiveAt.ToString() -NoNewline
-									Write-Host " has been terminated at"(Get-Date).ToString()
-
-									$SessionToKillMsg = "Terminated Session ‘" + $Session.infoBase.Name.ToString() + " — " + $Session.userName.ToString() + " — " + $Session.Host.ToString() + " — " + $Session.AppID.ToString() + " — " + $Session.StartedAt.ToString() + " — " + $Session.LastActiveAt.ToString() + "‘ has been terminated at "
-									Add-Content -Path $PathLogFile -Value ($SessionToKillMsg) -Encoding UTF8
-
-									# Отключаем сеансы которые "время начала" больше $TimeDelay часов.
-									$AgentConnection.TerminateSession($Cluster,$Session)
-								}
-							}
-							$Bases1C.Clear()
-							Clear-Variable -Name "SessionToKillMsg"
-							Clear-Variable -Name "InputBase1C"
-							Clear-Variable -Name "AllSession"
 						}
-						else {
-							echo ""
-							Write-Verbose "Нет активных сессий" -Verbose
+
+						Write-Host " Список введённых баз:" -ForegroundColor Yellow
+						foreach ($i in $Bases1C) {
+							Write-Host " "$i
 						}
-						Clear-Variable -Name "Bases"
+
+						echo ""
+						Start-Sleep -Milliseconds 500
+
+						foreach ($Base in $Bases1C) {
+
+							$Sessions1CtoTerminate = ($AgentConnection.GetSessions($Cluster) | Where-Object {$_.Infobase.Name -eq $Base -and $_.AppId -ne "SrvrConsole" -and $_.AppId -ne "BackgroundJob" -and $_.StartedAt -lt ((Get-Date).AddHours($TimeDelay))})
+
+							foreach ($Session in $Sessions1CtoTerminate) {
+								Write-Host " Terminated Session " -ForegroundColor Red -NoNewline
+								Write-Host " "$Session.infoBase.Name.ToString() -ForegroundColor Yellow -NoNewline
+								Write-Host " "$Session.userName.ToString() -NoNewline 
+								Write-Host " "$Session.Host.ToString() -NoNewline
+								Write-Host " "$Session.AppID.ToString() -NoNewline
+								Write-Host " "$Session.StartedAt.ToString() -NoNewline
+								Write-Host " -"$Session.LastActiveAt.ToString() -NoNewline
+								Write-Host " has been terminated at"(Get-Date).ToString()
+
+								$SessionToKillMsg = "Terminated Session ‘" + $Session.infoBase.Name.ToString() + " — " + $Session.userName.ToString() + " — " + $Session.Host.ToString() + " — " + $Session.AppID.ToString() + " — " + $Session.StartedAt.ToString() + " — " + $Session.LastActiveAt.ToString() + "‘ has been terminated at "
+								Add-Content -Path $PathLogFile -Value ($SessionToKillMsg) -Encoding UTF8
+
+								# Отключаем сеансы которые "время начала" больше $TimeDelay часов.
+								$AgentConnection.TerminateSession($Cluster,$Session)
+							}
+						}
+						$Bases1C.Clear()
+						Clear-Variable -Name "SessionToKillMsg"
+						Clear-Variable -Name "InputBase1C"
+						Clear-Variable -Name "AllSession"
+					
 					}
 					# Все сеансы.
 					elseif ($Flag -eq 4) {
 						Clear-Variable -Name "Flag"
 						Start-Sleep -Milliseconds 500
 
-						# Для заданного списка баз в цикле получаем списки сессий и обрабатываем их.
-						$Bases = $AgentConnection.GetInfoBases($Cluster)
+						foreach ($BaseAll in $Bases) {
+							$Base = $BaseAll.Name
+							$Sessions1CtoTerminate = ($AgentConnection.GetSessions($Cluster) | Where-Object {$_.Infobase.Name -eq $Base -and $_.AppId -ne "SrvrConsole" -and $_.AppId -ne "BackgroundJob" -and $_.StartedAt -lt ((Get-Date).AddHours($TimeDelay))})
 
-						if ($Bases.count -ne 0) {
-							foreach ($BaseAll in $Bases) {
-								$Base = $BaseAll.Name
-								$Sessions1CtoTerminate = ($AgentConnection.GetSessions($Cluster) | Where-Object {$_.Infobase.Name -eq $Base -and $_.AppId -ne "SrvrConsole" -and $_.AppId -ne "BackgroundJob" -and $_.StartedAt -lt ((Get-Date).AddHours($TimeDelay))})
+							foreach ($Session in $Sessions1CtoTerminate) {
+								Write-Host " Terminated Session " -ForegroundColor Red -NoNewline
+								Write-Host " "$Session.infoBase.Name.ToString() -ForegroundColor Yellow -NoNewline
+								Write-Host " "$Session.userName.ToString() -NoNewline 
+								Write-Host " "$Session.Host.ToString() -NoNewline
+								Write-Host " "$Session.AppID.ToString() -NoNewline
+								Write-Host " "$Session.StartedAt.ToString() -NoNewline
+								Write-Host " -"$Session.LastActiveAt.ToString() -NoNewline
+								Write-Host " has been terminated at"(Get-Date).ToString()
 
-								foreach ($Session in $Sessions1CtoTerminate) {
-									Write-Host " Terminated Session " -ForegroundColor Red -NoNewline
-									Write-Host " "$Session.infoBase.Name.ToString() -ForegroundColor Yellow -NoNewline
-									Write-Host " "$Session.userName.ToString() -NoNewline 
-									Write-Host " "$Session.Host.ToString() -NoNewline
-									Write-Host " "$Session.AppID.ToString() -NoNewline
-									Write-Host " "$Session.StartedAt.ToString() -NoNewline
-									Write-Host " -"$Session.LastActiveAt.ToString() -NoNewline
-									Write-Host " has been terminated at"(Get-Date).ToString()
+								$SessionToKillMsg = "Terminated Session ‘" + $Session.infoBase.Name.ToString() + " — " + $Session.userName.ToString() + " — " + $Session.Host.ToString() + " — " + $Session.AppID.ToString() + " — " + $Session.StartedAt.ToString() + " — " + $Session.LastActiveAt.ToString() + "‘ has been terminated at "
+								Add-Content -Path $PathLogFile -Value ($SessionToKillMsg) -Encoding UTF8
 
-									$SessionToKillMsg = "Terminated Session ‘" + $Session.infoBase.Name.ToString() + " — " + $Session.userName.ToString() + " — " + $Session.Host.ToString() + " — " + $Session.AppID.ToString() + " — " + $Session.StartedAt.ToString() + " — " + $Session.LastActiveAt.ToString() + "‘ has been terminated at "
-									Add-Content -Path $PathLogFile -Value ($SessionToKillMsg) -Encoding UTF8
-
-									# Отключаем сеансы которые "время начала" больше $TimeDelay часов.
-									$AgentConnection.TerminateSession($Cluster,$Session)
-								}
+								# Отключаем сеансы которые "время начала" больше $TimeDelay часов.
+								$AgentConnection.TerminateSession($Cluster,$Session)
 							}
-							Clear-Variable -Name "Base"
-							Clear-Variable -Name "SessionToKillMsg"
-							Clear-Variable -Name "AllSession"
 						}
-						else {
-							echo ""
-							Write-Verbose "Нет активных сессий" -Verbose
-						}
-						Clear-Variable -Name "Bases"
+						Clear-Variable -Name "Base"
+						Clear-Variable -Name "SessionToKillMsg"
+						Clear-Variable -Name "AllSession"
+					
 					}
 					Clear-Variable -Name "InputPort1C"
 					Clear-Variable -Name "GetDate"
 					Clear-Variable -Name "TimeDelay"
 					Clear-Variable -Name "IntUsersCount"
 				}
-				Clear-Variable -Name "InputServer1С"
+				else {
+					echo ""
+					Write-Verbose "Активных сессий нет" -Verbose
+				}
+				Clear-Variable -Name "Bases"
 			}
+			Clear-Variable -Name "InputServer1С"
 		}
-		catch {
+		else {
 			echo ""
-			Write-Host " На сервере" -NoNewline
-			Write-Host " $($Server)" -ForegroundColor Gray -NoNewline
-			Write-Host " не установлен продукт 1С:Предприятие 8"
+			Write-Verbose "Не установлен продукт 1С:Предприятие 8" -Verbose
 		}
 	}
 
@@ -1140,115 +1142,111 @@ function Remove-Server1C() {
 			}
 		}
 
-		try {
-			if (Get-Service | Where-Object {($_.Name).StartsWith("1C")}) {
+		if (Get-Service | Where-Object {($_.Name).StartsWith("1C")}) {
 
-				$ArrayProduct1C = [System.Collections.ArrayList]@()
-				$GetProduct1C	= Get-WmiObject Win32_Product | Where-Object {($_.Name).StartsWith("1С:Предприятие")} | ForEach-Object {$ArrayProduct1C.Add($_.Name)}
+			$ArrayProduct1C = [System.Collections.ArrayList]@()
+			$GetProduct1C	= Get-WmiObject Win32_Product | Where-Object {($_.Name).StartsWith("1С:Предприятие")} | ForEach-Object {$ArrayProduct1C.Add($_.Name)}
 
-				while ($true) {
+			while ($true) {
+				echo ""
+				Write-Host " Выберите продукт" -ForegroundColor Yellow
+				for ($i = 1; $i -lt $ArrayProduct1C.Count + 1; $i ++) {
+					Write-Host " $($i)." -ForegroundColor Cyan -NoNewline
+					Write-Host " $($ArrayProduct1C[$i-1])" -ForegroundColor Gray
+				}
+				Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
+				Write-Host " Exit" -ForegroundColor Cyan
+				$InputProduct = (Read-Host " Выбор").ToLower()
+
+				# Если продукт 1С.
+				if (($InputProduct -ge 1) -and ($InputProduct -le $ArrayProduct1C.Count)) {
 					echo ""
-					Write-Host " Выберите продукт" -ForegroundColor Yellow
-					for ($i = 1; $i -lt $ArrayProduct1C.Count + 1; $i ++) {
-						Write-Host " $($i)." -ForegroundColor Cyan -NoNewline
-						Write-Host " $($ArrayProduct1C[$i-1])" -ForegroundColor Gray
-					}
-					Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
-					Write-Host " Exit" -ForegroundColor Cyan
-					$InputProduct = (Read-Host " Выбор").ToLower()
+					Start-Sleep -Milliseconds 500
+					Write-Host " ОК" -ForegroundColor Green
 
-					# Если продукт 1С.
-					if (($InputProduct -ge 1) -and ($InputProduct -le $ArrayProduct1C.Count)) {
-						echo ""
-						Start-Sleep -Milliseconds 500
-						Write-Host " ОК" -ForegroundColor Green
+					[string]$NameProduct1C = Product-1C -Number $InputProduct
+					$SplitNameProduct1C = $NameProduct1C.Split(" ")
+					$ReplaceSplitNameProduct1C = $SplitNameProduct1C[3].Replace("(", "").Replace(")", "")
 
-						[string]$NameProduct1C = Product-1C -Number $InputProduct
-						$SplitNameProduct1C = $NameProduct1C.Split(" ")
-						$ReplaceSplitNameProduct1C = $SplitNameProduct1C[3].Replace("(", "").Replace(")", "")
+					$NameService1C = (Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C}).Name
 
-						$NameService1C = (Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C}).Name
+					Stop-Service $NameService1C -Force -ErrorAction Stop -WarningAction SilentlyContinue
 
-						Stop-Service $NameService1C -Force -ErrorAction Stop -WarningAction SilentlyContinue
+					$NameService1CStatus = (Get-Service $NameService1C).Status
+					while ($true) {
+						if ($NameService1CStatus -like "Stopped") {
+							# Удаление службы 1С.
+							if (Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C}) {
+								echo ""
+								Write-Verbose "Запущено удаление службы" -Verbose
+								Start-Sleep -Milliseconds 500
+								[void]((Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C}).delete())
 
-						$NameService1CStatus = (Get-Service $NameService1C).Status
-						while ($true) {
-							if ($NameService1CStatus -like "Stopped") {
-								# Удаление службы 1С.
-								if (Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C}) {
-									echo ""
-									Write-Verbose "Запущено удаление службы" -Verbose
-									Start-Sleep -Milliseconds 500
-									[void]((Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C}).delete())
-
-									$UninstallServiceStatus = [void](Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C})
-									while ($true) {
-										# Удаление продукта 1С.
-										if (-Not(Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C})) {
-											echo ""
-											Write-Host " Служба $($NameService1C)" -NoNewline
-											Write-Host " Удалёна" -ForegroundColor Green
+								$UninstallServiceStatus = [void](Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C})
+								while ($true) {
+									# Удаление продукта 1С.
+									if (-Not(Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C})) {
+										echo ""
+										Write-Host " Служба $($NameService1C)" -NoNewline
+										Write-Host " Удалёна" -ForegroundColor Green
 											
-											Start-Sleep -Milliseconds 500
+										Start-Sleep -Milliseconds 500
 
-											echo ""
-											Write-Verbose "Запущено удаление продукта" -Verbose
-											Start-Sleep -Milliseconds 500
-											[void]((Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'").Uninstall())
+										echo ""
+										Write-Verbose "Запущено удаление продукта" -Verbose
+										Start-Sleep -Milliseconds 500
+										[void]((Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'").Uninstall())
 
-											$UninstallProductStatus = [void](Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'")
-											while ($true) {
-												if (-Not(Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'")) {
-													echo ""
-													Write-Host " Продукт $($NameProduct1C)" -NoNewline
-													Write-Host " Удалён" -ForegroundColor Green
-													break
-												}
-												else {
-													$UninstallProductStatus = [void](Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'")
-												}
+										$UninstallProductStatus = [void](Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'")
+										while ($true) {
+											if (-Not(Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'")) {
+												echo ""
+												Write-Host " Продукт $($NameProduct1C)" -NoNewline
+												Write-Host " Удалён" -ForegroundColor Green
+												break
 											}
-											break
+											else {
+												$UninstallProductStatus = [void](Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'")
+											}
 										}
-										else {
-											$UninstallServiceStatus = [void](Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C})
-										}
+										break
 									}
-									break
+									else {
+										$UninstallServiceStatus = [void](Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C})
+									}
 								}
-							}
-							else {
-								$NameService1CStatus = (Get-Service $NameService1C).Status
+								break
 							}
 						}
-						break
+						else {
+							$NameService1CStatus = (Get-Service $NameService1C).Status
+						}
 					}
-					# Выход.
-					elseif ($InputProduct -like "exit") {
-						break
-					}
-					# Ошибка.
-					elseif ($InputProduct -like $null) {
-						echo ""
-						Start-Sleep -Milliseconds 500
-						Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-						Write-Host " Введено пустое значение."
-					}
-					# Ошибка.
-					else {
-						echo ""
-						Start-Sleep -Milliseconds 500
-						Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-						Write-Host " Неверно введена команда."
-					}
+					break
+				}
+				# Выход.
+				elseif ($InputProduct -like "exit") {
+					break
+				}
+				# Ошибка.
+				elseif ($InputProduct -like $null) {
+					echo ""
+					Start-Sleep -Milliseconds 500
+					Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+					Write-Host " Введено пустое значение."
+				}
+				# Ошибка.
+				else {
+					echo ""
+					Start-Sleep -Milliseconds 500
+					Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+					Write-Host " Неверно введена команда."
 				}
 			}
 		}
-		catch {
+		else {
 			echo ""
-			Write-Host " На сервере" -NoNewline
-			Write-Host " $($Server)" -ForegroundColor Gray -NoNewline
-			Write-Host " не установлен продукт 1С:Предприятие 8"
+			Write-Verbose "Не установлен продукт 1С:Предприятие 8" -Verbose
 		}
 	}
 	Clear-Variable -Name "Server"
@@ -1738,7 +1736,7 @@ function Install-Server1C() {
 							$PathToBin	 = "$($PackageSource)Bin\ragent.exe"
 							$Name		 = "1C:Enterprise $($SplitPackageSource1[0]).$($SplitPackageSource1[1]) Server Agent ($($InputPort))"
 							$ImagePath	 = "`"$PathToBin`" -srvc -agent -regport $InputRegPort -port $InputPort -range $InputRangePort -debug -d `"$HomeCat`""
-							$Desctiption 	 = "Агент сервера $($SplitPackageName[0]) $($SplitPackageSource1[0]).$($SplitPackageSource1[1]) ($($InputPort))"
+							$Desctiption	 = "Агент сервера $($SplitPackageName[0]) $($SplitPackageSource1[0]).$($SplitPackageSource1[1]) ($($InputPort))"
 							$Creds		 = New-Object System.Management.Automation.PSCredential -ArgumentList $InputUser, $InputPassword
 
 							echo ""
