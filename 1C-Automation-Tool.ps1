@@ -1625,7 +1625,7 @@ function Install-Server1C() {
 										Start-Sleep -Milliseconds 500
 										Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 										Write-Host " Учётная запись" -NoNewline
-										Write-Host " $($InputUser)" -ForegroundColor Gray -NoNewline
+										Write-Host " $($SplitInputUser[1])" -ForegroundColor Gray -NoNewline
 										Write-Host " не существует."
 									}
 								}
