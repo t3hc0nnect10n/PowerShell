@@ -846,7 +846,6 @@ function Disactivate-Session1C() {
 			# Удаление активных сессий 1С.
 			if ($Flag -eq 2) {
 				Start-Sleep -Milliseconds 500
-
 				# Сейчас используется только один кластер, поэтому просто получаем единственный элемент.
 				$Cluster = $AgentConnection.GetClusters()[0]
 				# Авторизация.
