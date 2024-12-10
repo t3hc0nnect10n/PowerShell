@@ -581,7 +581,7 @@ function Job-ComObject1C() {
 					Write-Host " Начало регистрации COM-компоненты 1С:Предприятия"
 					Write-Host " Версия платформы: $PlatformVersion"
 					Write-Host " Путь к DLL: ""$ComCntrPath"""
-					Write-Host " Команда регистрации компоненты: ""$RegCommand"""
+					Write-Host " Команда регистрации компоненты: regsvr32.exe /s $($ComCntrPath)"
 					try {
 						cmd /c "regsvr32.exe /s ""$ComCntrPath"""
 						Start-Sleep -Milliseconds 500
@@ -604,7 +604,7 @@ function Job-ComObject1C() {
 					Write-Host " Начало отмены регистрации COM-компоненты 1С:Предприятия"
 					Write-Host " Версия платформы: $PlatformVersion"
 					Write-Host " Путь к DLL: ""$ComCntrPath"""
-					Write-Host " Команда отмены регистрации компоненты: ""$RegCommand"""
+					Write-Host " Команда отмены регистрации компоненты: regsvr32.exe /u /s $($comcntrPath)"
 					try {
 						cmd /c "regsvr32.exe /u /s ""$comcntrPath"""
 						Start-Sleep -Milliseconds 500
