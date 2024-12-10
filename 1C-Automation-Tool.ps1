@@ -1513,7 +1513,7 @@ function Install-Server1C() {
 							Write-Host " 1760:1791" -ForegroundColor Gray
 							Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
 							Write-Host " Exit" -ForegroundColor Cyan
-							$InputRangePort = Read-Host " Диапазон портов"
+							$InputRangePort = (Read-Host " Диапазон портов").ToLower()
 							 
 							# Проверка диапазона портов для процессов.
 							if (($InputRangePort -notlike "exit") -and ($InputRangePort -notlike $null)) {
