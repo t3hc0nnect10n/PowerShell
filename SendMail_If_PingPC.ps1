@@ -76,7 +76,7 @@ while ($true) {
 
 				if ($CheckComp) { 
 
-					$GetIP = (Test-Connection $Comp -Count 1).IPV4Address.IPAddressToString
+					$GetIP    = (Test-Connection $Comp -Count 1).IPV4Address.IPAddressToString
 					$ChekName = [System.Net.Dns]::GetHostEntry($GetIP).HostName
 
 					if ($ChekName -match $Comp){
