@@ -54,13 +54,13 @@ while ($true) {
 $PathRoot = $MyInvocation.MyCommand.Path | Split-Path -parent
 [string]$Path = "$PathRoot"
 
-<# 
+<#
 	В директории, которой находится скрипт необходимо создать текстовый файл "PC.txt", в котором надо сохранить список имён ПК.
 	Например:
 		PC-001
 		PC-002
 		PC-003
-#> 
+#>
 $Computers = (Get-Content -Path "$($Path)\PC.txt").Trim()
 $ArrayComputers = [System.Collections.ArrayList]@()
 
@@ -80,13 +80,13 @@ while ($true) {
 					$ChekName = [System.Net.Dns]::GetHostEntry($GetIP).HostName
 
 					if ($ChekName -match $Comp){
-						
+
 						if (-Not($Comp -in $ArrayComputers)) {
-							
+
 							Write-Host " $($Comp)" -NoNewline
 							Write-Host " В сети" -ForegroundColor Green
 							[void]($ArrayComputers.Add($Comp))
-							
+
 							# Если в Active Directory записывается в атрибут "info" ФИО, кто логинился на ПК.
 							$GetUserName = (Get-ADUser -Filter * -Properties * | Where-Object {$_.info -match $Comp}).Name
 							
@@ -100,7 +100,7 @@ while ($true) {
 								UseSsl     = $false
 								Encoding   = “UTF8”
 							}
-							
+
 							# Отправка электронного письма.
 							Send-MailMessage @MailMessage
 							# В директории, в которой находится скрипт формируется лог-файл.
