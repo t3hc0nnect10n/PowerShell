@@ -1569,7 +1569,8 @@ function Install-Server1C() {
 
 								# Проверка диапазона портов для процессов.
 								if (($InputRangePort -notlike "exit") -and ($InputRangePort -notlike $null)) {  
-									if ($InputRangePort -match ":") {
+									
+	 								if ($InputRangePort -match ":") {
 										try {
 											$tmp = $InputRangePort.Split(":")
 
