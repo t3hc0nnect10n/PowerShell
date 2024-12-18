@@ -1,6 +1,6 @@
 <#
 Made by t3hc0nnect10n (c) 2024
-Version 1.0
+Version 2.0
 
 	Для работы сценария требуется настроенная служба - Windows Remote Management (WinRM).
 	https://learn.microsoft.com/en-us/windows/win32/winrm/portal
