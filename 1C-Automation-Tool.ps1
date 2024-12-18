@@ -248,7 +248,7 @@ function Get-Platform1C() {
 	Invoke-Command -ComputerName $Server -ErrorAction Stop -ScriptBlock {
 
 		$ArrayInstalledPlatform1C = [System.Collections.ArrayList]@()
-		
+
 		if (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object {($_.DisplayName -like "*1С:Предприятие*") -or ($_.DisplayName -like "*1С:Enterprise*")}) {
 			Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* |
 				Where-Object {($_.DisplayName -like "*1С:Предприятие*") -or ($_.DisplayName -like "*1С:Enterprise*")} |
@@ -385,7 +385,7 @@ function Job-Service1C() {
 						Write-Host " Остановка службы 1C" -ForegroundColor Yellow
 						Write-Host " 3." -ForegroundColor Cyan -NoNewline
 						Write-Host " Перезапуск службы 1C" -ForegroundColor Yellow
-						Write-Host " Для выход введите:" -ForegroundColor Yellow -NoNewline
+						Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
 						Write-Host " Exit" -ForegroundColor Cyan
 						$UserInput = (Read-Host " Выбор").ToLower()
 
@@ -1407,145 +1407,291 @@ function Install-Server1C() {
 
 						$FlagPorts = 0
 
-						# Ввод порта для сервера.
-						while ($true) {
-							echo ""
-							Write-Host " Введите порт для сервера" -ForegroundColor Yellow
-							Write-Host " Пример:" -ForegroundColor Yellow -NoNewline
-							Write-Host " 1740" -ForegroundColor Gray
-							Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
-							Write-Host " Exit" -ForegroundColor Cyan
-							$InputPort = (Read-Host " Порт сервера").ToLower()
+						$services1C = Get-WmiObject win32_service | Where-Object {$_.Name -like '*'} | Select PathName | Where-Object {$_.PathName -Like "*ragent.exe*"}
+						
+						if ($services1C) {
 
-							# Проверка порта для сервера.
-							if (($InputPort -notlike "exit") -and ($InputPort -notlike $null)) {
+							$ArrayPathName    = [System.Collections.ArrayList]@()
+							$ArrayRangePort_1 = [System.Collections.ArrayList]@()
+							$ArrayRangePort_2 = [System.Collections.ArrayList]@()
 
-								try {
-									[int]$tmpInputPort = $InputPort
-									if (-Not(Get-NetTCPConnection | Where-Object {$_.Localport -eq $tmpInputPort})){
-										echo ""
-										$FlagPorts ++
-										Start-Sleep -Milliseconds 500
-										Write-Host " OK" -ForegroundColor Green
-										break
-									}
-									else {
-										echo ""
-										Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-										Write-Host " Порт для сервера" -NoNewline
-										Write-Host " $($tmpInputPort)" -ForegroundColor Gray -NoNewline
-										Write-Host " занят."
-									}
-								}
-								catch {
-									echo ""
-									Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-									Write-Host " $($Error[0])"
-								}
-							}
-							# Выход.
-							elseif ($InputPort -like "exit") {
-								break
-							}
-							# Ошибка.
-							elseif ($InputPort -like $null) {
+							[void]($services1C | ForEach-Object {$ArrayPathName.Add(($_).PathName)})
+
+							# Ввод порта для сервера.
+							while ($true) {
 								echo ""
-								Start-Sleep -Milliseconds 500
-								Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-								Write-Host " Введено пустое значение."
-							}
-						}
+								Write-Host " Введите порт для сервера" -ForegroundColor Yellow
+								Write-Host " Пример:" -ForegroundColor Yellow -NoNewline
+								Write-Host " 1740" -ForegroundColor Gray
+								Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
+								Write-Host " Exit" -ForegroundColor Cyan
+								$InputPort = (Read-Host " Порт сервера").ToLower()
 
-						# Ввод порта для кластера.
-						while ($true) {
-							echo ""
-							Write-Host " Введите порт для кластера" -ForegroundColor Yellow
-							Write-Host " Пример:" -ForegroundColor Yellow -NoNewline
-							Write-Host " 1741" -ForegroundColor Gray
-							Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
-							Write-Host " Exit" -ForegroundColor Cyan
-							$InputRegPort = (Read-Host " Порт кластера").ToLower()
-
-							# Проверка порта для кластера.
-							if (($InputRegPort -notlike "exit") -and ($InputRegPort -notlike $null)) {
-
-								try {
-									[int]$tmpInputRegPort = $InputRegPort
-									if (-Not(Get-NetTCPConnection | Where-Object {$_.Localport -eq $tmpInputRegPort})){
-										echo ""
-										$FlagPorts ++
-										Start-Sleep -Milliseconds 500
-										Write-Host " OK" -ForegroundColor Green
-										break
-									}
-									else {
-										echo ""
-										Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-										Write-Host " Порт для кластера" -NoNewline
-										Write-Host " $($tmpInputRegPort)" -ForegroundColor Gray -NoNewline
-										Write-Host " занят."
-									}
-								}
-								catch {
-									echo ""
-									Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-									Write-Host " $($Error[0])"
-								}
-							}
-							# Выход.
-							elseif ($InputRegPort -like "exit") {
-								break
-							}
-							# Ошибка.
-							elseif ($InputRegPort -like $null) {
-								echo ""
-								Start-Sleep -Milliseconds 500
-								Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-								Write-Host " Введено пустое значение."
-							}
-						}
-
-						# Ввод диапазон портов для процессов.
-						while ($true) {
-							echo ""
-							Write-Host " Введите диапазон портов для процессов" -ForegroundColor Yellow
-							Write-Host " Пример:" -ForegroundColor Yellow -NoNewline
-							Write-Host " 1760:1791" -ForegroundColor Gray
-							Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
-							Write-Host " Exit" -ForegroundColor Cyan
-							$InputRangePort = (Read-Host " Диапазон портов").ToLower()
-							 
-							# Проверка диапазона портов для процессов.
-							if (($InputRangePort -notlike "exit") -and ($InputRangePort -notlike $null)) {
-								if ($InputRangePort -match ":") {
-									
-									$tmp = $InputRangePort.Split(":")
+								# Проверка порта для сервера.
+								if (($InputPort -notlike "exit") -and ($InputPort -notlike $null)) {
 
 									try {
-										[int]$tmp1 = $tmp[0]
-										[int]$tmp2 = $tmp[1]
-										$tmpRange  = $tmp1..$tmp2
+										[int]$tmpInputPort = $InputPort
+										if (-Not(Get-NetTCPConnection | Where-Object {$_.Localport -eq $tmpInputPort})){
 
-										$tmpCount = 0
-										foreach ($i in $tmpRange) {
+											$ArrayPort = [System.Collections.ArrayList]@()
 
-											if (-NOt(Get-NetTCPConnection | Where-Object {$_.Localport -eq $i})) {
-												$tmpCount ++
+											foreach ($PathNamePort in $ArrayPathName) {
+												[string]$strPathNamePort = $PathNamePort
+												$SplitPathNamePort = $strPathNamePort.Split("-")
+												$SplitPathNamePort = $SplitPathNamePort[4].Split(" ")
+												[void]($ArrayPort.Add($SplitPathNamePort[1]))
+											}
+
+											if (-Not($tmpInputPort -in $ArrayPort)) {
+												echo ""
+												$FlagPorts ++
+												Start-Sleep -Milliseconds 500
+												Write-Host " OK" -ForegroundColor Green
+												break
 											}
 											else {
 												echo ""
 												Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-												Write-Host " Порт для процессов" -NoNewline
-												Write-Host " $($i)" -ForegroundColor Gray -NoNewline
+												Write-Host " Порт для сервера" -NoNewline
+												Write-Host " $($tmpInputPort)" -ForegroundColor Gray -NoNewline
 												Write-Host " занят."
 											}
+											$ArrayPort.Clear()
+											Clear-Variable -Name "strPathNamePort"
 										}
-										if ($tmpRange.count -eq $tmpCount) {
+										else {
+											echo ""
+											Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+											Write-Host " Порт для сервера" -NoNewline
+											Write-Host " $($tmpInputPort)" -ForegroundColor Gray -NoNewline
+											Write-Host " занят."
+										}
+										Clear-Variable -Name "tmpInputPort"
+									}
+									catch {
+										echo ""
+										Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+										Write-Host " $($Error[0])"
+									}
+								}
+								# Выход.
+								elseif ($InputPort -like "exit") {
+									break
+								}
+								# Ошибка.
+								elseif ($InputPort -like $null) {
+									echo ""
+									Start-Sleep -Milliseconds 500
+									Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+									Write-Host " Введено пустое значение."
+								}
+							}
+							# Ввод порта для кластера.
+							while ($true) {
+								echo ""
+								Write-Host " Введите порт для кластера" -ForegroundColor Yellow
+								Write-Host " Пример:" -ForegroundColor Yellow -NoNewline
+								Write-Host " 1741" -ForegroundColor Gray
+								Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
+								Write-Host " Exit" -ForegroundColor Cyan
+								$InputRegPort = (Read-Host " Порт кластера").ToLower()
+
+								# Проверка порта для кластера.
+								if (($InputRegPort -notlike "exit") -and ($InputRegPort -notlike $null)) {
+
+									try {
+										[int]$tmpInputRegPort = $InputRegPort
+										if (-Not(Get-NetTCPConnection | Where-Object {$_.Localport -eq $tmpInputRegPort})){
+											
+											$ArrayRegPort = [System.Collections.ArrayList]@()
+											
+											foreach ($PathNameRegPort in $ArrayPathName) {
+												[string]$strPathNameRegPort = $PathNameRegPort
+												$SplitPathNameRegPort = $strPathNameRegPort.Split("-")
+												$SplitPathNameRegPort = $SplitPathNameRegPort[3].Split(" ")
+												[void]($ArrayRegPort.Add($SplitPathNameRegPort[1]))
+											}
+
+											if (-Not($tmpInputRegPort -in $ArrayRegPort)) {
+												echo ""
+												$FlagPorts ++
+												Start-Sleep -Milliseconds 500
+												Write-Host " OK" -ForegroundColor Green
+												break
+											}
+											else {
+												echo ""
+												Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+												Write-Host " Порт для кластера" -NoNewline
+												Write-Host " $($tmpInputRegPort)" -ForegroundColor Gray -NoNewline
+												Write-Host " занят."
+											}
+											$ArrayRegPort.Clear()
+											Clear-Variable -Name "strPathNameRegPort"
+										}
+										else {
+											echo ""
+											Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+											Write-Host " Порт для кластера" -NoNewline
+											Write-Host " $($tmpInputRegPort)" -ForegroundColor Gray -NoNewline
+											Write-Host " занят."
+										}
+										Clear-Variable -Name "tmpInputRegPort"
+									}
+									catch {
+										echo ""
+										Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+										Write-Host " $($Error[0])"
+									}
+								}
+								# Выход.
+								elseif ($InputRegPort -like "exit") {
+									break
+								}
+								# Ошибка.
+								elseif ($InputRegPort -like $null) {
+									echo ""
+									Start-Sleep -Milliseconds 500
+									Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+									Write-Host " Введено пустое значение."
+								}
+							}
+							# Ввод диапазон портов для процессов.
+							while ($true) {
+								echo ""
+								Write-Host " Введите диапазон портов для процессов" -ForegroundColor Yellow
+								Write-Host " Пример:" -ForegroundColor Yellow -NoNewline
+								Write-Host " 1760:1791" -ForegroundColor Gray
+								Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
+								Write-Host " Exit" -ForegroundColor Cyan
+								$InputRangePort = (Read-Host " Диапазон портов").ToLower()
+
+								# Проверка диапазона портов для процессов.
+								if (($InputRangePort -notlike "exit") -and ($InputRangePort -notlike $null)) {  
+									if ($InputRangePort -match ":") {
+										try {
+											$tmp = $InputRangePort.Split(":")
+
+											[int]$tmp_1 = $tmp[0]
+											[int]$tmp_2 = $tmp[1] 
+
+											foreach ($iPortRange in $tmp_1..$tmp_2) {
+												[void]($ArrayRangePort_1.Add($iPortRange))
+											}
+			  
+											foreach ($PathNameRangePort in $ArrayPathName) {
+												[string]$strPathNameRangePort = $PathNameRangePort
+												$SplitPathNameRangePort = $strPathNameRangePort.Split(" ")
+
+												foreach ($i in $SplitPathNameRangePort) {
+													if ($i -match ":" -and $i -notmatch '"' -and $i -notmatch '\\') {
+														[string]$tmp = $i
+														$Split_i = $tmp.Split(":")
+														[int]$tmp_3 = $Split_i[0]
+														[int]$tmp_4 = $Split_i[1]
+														foreach ($i in $tmp_3..$tmp_4) {
+															[void]($ArrayRangePort_2.Add($i))
+														}
+													}
+												}
+											}
+
+											$IntersectionRangePort = $ArrayRangePort_1 | Where-Object {$ArrayRangePort_2 -contains $_}
+											if ($IntersectionRangePort) {
+												$tmpIntersectionRangePort = [system.String]::Join(" ", $IntersectionRangePort)
+												echo ""
+												Start-Sleep -Milliseconds 500
+												Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+												Write-Host " Диапазон портов" -NoNewline
+												Write-Host " $($tmpIntersectionRangePort)" -ForegroundColor Gray -NoNewline
+												Write-Host " занят."
+												$ArrayRangePort_1.Clear()
+												$ArrayRangePort_2.Clear()
+											}
+											else {
+												$tmpCount = 0
+												foreach ($i in $tmp_1..$tmp_2) {
+													if (-NOt(Get-NetTCPConnection | Where-Object {$_.Localport -eq $i})) {
+														$tmpCount ++
+													}
+													else {
+														echo ""
+														Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+														Write-Host " Порт для процессов" -NoNewline
+														Write-Host " $($i)" -ForegroundColor Gray -NoNewline
+														Write-Host " занят."
+													}
+												}
+
+												if ($tmp_1..$tmp_2.count -eq $tmpCount) {
+													echo ""
+													$FlagPorts ++
+													Start-Sleep -Milliseconds 500
+													Write-Host " OK" -ForegroundColor Green
+													break
+												}
+											}
+										}
+										catch {
+											echo ""
+											Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+											Write-Host " $($Error[0])"
+										}
+									}
+									# Ошибка.
+									else {
+										echo ""
+										Start-Sleep -Milliseconds 500
+										Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+										Write-Host " Неверно указан диапазон. Смотри пример."
+									}
+								}
+								# Выход.
+								elseif ($InputRangePort -like "exit") {
+									break
+								}
+								# Ошибка.
+								elseif ($InputRangePort -like $null) {
+									echo ""
+									Start-Sleep -Milliseconds 500
+									Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+									Write-Host " Введено пустое значение."
+								}
+							}
+							$ArrayPathName.Clear()
+							$ArrayRangePort_1.Clear()
+							$ArrayRangePort_2.Clear()
+						}
+						else {
+							# Ввод порта для сервера.
+							while ($true) {
+								echo ""
+								Write-Host " Введите порт для сервера" -ForegroundColor Yellow
+								Write-Host " Пример:" -ForegroundColor Yellow -NoNewline
+								Write-Host " 1740" -ForegroundColor Gray
+								Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
+								Write-Host " Exit" -ForegroundColor Cyan
+								$InputPort = (Read-Host " Порт сервера").ToLower()
+
+								# Проверка порта для сервера.
+								if (($InputPort -notlike "exit") -and ($InputPort -notlike $null)) {
+
+									try {
+										[int]$tmpInputPort = $InputPort
+										if (-Not(Get-NetTCPConnection | Where-Object {$_.Localport -eq $tmpInputPort})){
 											echo ""
 											$FlagPorts ++
 											Start-Sleep -Milliseconds 500
 											Write-Host " OK" -ForegroundColor Green
 											break
+										}
+										else {
+											echo ""
+											Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+											Write-Host " Порт для сервера" -NoNewline
+											Write-Host " $($tmpInputPort)" -ForegroundColor Gray -NoNewline
+											Write-Host " занят."
 										}
 									}
 									catch {
@@ -1554,24 +1700,134 @@ function Install-Server1C() {
 										Write-Host " $($Error[0])"
 									}
 								}
+								# Выход.
+								elseif ($InputPort -like "exit") {
+									break
+								}
 								# Ошибка.
-								else {
+								elseif ($InputPort -like $null) {
 									echo ""
 									Start-Sleep -Milliseconds 500
 									Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-									Write-Host " Неверно указан диапазон. Смотри пример."
+									Write-Host " Введено пустое значение."
 								}
 							}
-							# Выход.
-							elseif ($InputRangePort -like "exit") {
-								break
-							}
-							# Ошибка.
-							elseif ($InputRangePort -like $null) {
+							# Ввод порта для кластера.
+							while ($true) {
 								echo ""
-								Start-Sleep -Milliseconds 500
-								Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-								Write-Host " Введено пустое значение."
+								Write-Host " Введите порт для кластера" -ForegroundColor Yellow
+								Write-Host " Пример:" -ForegroundColor Yellow -NoNewline
+								Write-Host " 1741" -ForegroundColor Gray
+								Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
+								Write-Host " Exit" -ForegroundColor Cyan
+								$InputRegPort = (Read-Host " Порт кластера").ToLower()
+
+								# Проверка порта для кластера.
+								if (($InputRegPort -notlike "exit") -and ($InputRegPort -notlike $null)) {
+
+									try {
+										[int]$tmpInputRegPort = $InputRegPort
+										if (-Not(Get-NetTCPConnection | Where-Object {$_.Localport -eq $tmpInputRegPort})){
+											echo ""
+											$FlagPorts ++
+											Start-Sleep -Milliseconds 500
+											Write-Host " OK" -ForegroundColor Green
+											break
+										}
+										else {
+											echo ""
+											Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+											Write-Host " Порт для кластера" -NoNewline
+											Write-Host " $($tmpInputRegPort)" -ForegroundColor Gray -NoNewline
+											Write-Host " занят."
+										}
+									}
+									catch {
+										echo ""
+										Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+										Write-Host " $($Error[0])"
+									}
+								}
+								# Выход.
+								elseif ($InputRegPort -like "exit") {
+									break
+								}
+								# Ошибка.
+								elseif ($InputRegPort -like $null) {
+									echo ""
+									Start-Sleep -Milliseconds 500
+									Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+									Write-Host " Введено пустое значение."
+								}
+							}
+							# Ввод диапазон портов для процессов.
+							while ($true) {
+								echo ""
+								Write-Host " Введите диапазон портов для процессов" -ForegroundColor Yellow
+								Write-Host " Пример:" -ForegroundColor Yellow -NoNewline
+								Write-Host " 1760:1791" -ForegroundColor Gray
+								Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
+								Write-Host " Exit" -ForegroundColor Cyan
+								$InputRangePort = (Read-Host " Диапазон портов").ToLower()
+
+								# Проверка диапазона портов для процессов.
+								if (($InputRangePort -notlike "exit") -and ($InputRangePort -notlike $null)) {
+									if ($InputRangePort -match ":") {
+
+										$tmp = $InputRangePort.Split(":")
+
+										try {
+											[int]$tmp1 = $tmp[0]
+											[int]$tmp2 = $tmp[1]
+											$tmpRange  = $tmp1..$tmp2
+
+											$tmpCount = 0
+											foreach ($i in $tmpRange) {
+
+												if (-NOt(Get-NetTCPConnection | Where-Object {$_.Localport -eq $i})) {
+													$tmpCount ++
+												}
+												else {
+													echo ""
+													Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+													Write-Host " Порт для процессов" -NoNewline
+													Write-Host " $($i)" -ForegroundColor Gray -NoNewline
+													Write-Host " занят."
+												}
+											}
+											if ($tmpRange.count -eq $tmpCount) {
+												echo ""
+												$FlagPorts ++
+												Start-Sleep -Milliseconds 500
+												Write-Host " OK" -ForegroundColor Green
+												break
+											}
+										}
+										catch {
+											echo ""
+											Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+											Write-Host " $($Error[0])"
+										}
+									}
+									# Ошибка.
+									else {
+										echo ""
+										Start-Sleep -Milliseconds 500
+										Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+										Write-Host " Неверно указан диапазон. Смотри пример."
+									}
+								}
+								# Выход.
+								elseif ($InputRangePort -like "exit") {
+									break
+								}
+								# Ошибка.
+								elseif ($InputRangePort -like $null) {
+									echo ""
+									Start-Sleep -Milliseconds 500
+									Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+									Write-Host " Введено пустое значение."
+								}
 							}
 						}
 
@@ -1869,7 +2125,7 @@ function Install-Server1C() {
 								Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
 								Write-Host " Exit" -ForegroundColor Cyan
 								$InputFileMsi1C = (Read-Host " Пакет установщика windows").ToLower()
-								
+
 								# Проверка формата файла пакета установщика windows.
 								if (($InputFileMsi1C).EndsWith(".msi")) {
 
@@ -2339,7 +2595,7 @@ while ($true) {
 		Write-Host " |" -ForegroundColor Magenta
 		Write-Host "  -----------------------" -ForegroundColor Magenta
 
-		Job-ComObject1C -Server $SetServer		
+		Job-ComObject1C -Server $SetServer
 	}
 
 	# Удаление активных сессий.
