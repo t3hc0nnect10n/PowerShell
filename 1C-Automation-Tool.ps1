@@ -8,7 +8,7 @@ Version 1.0
 	Сценарий предназначен для работы с серверной средой *ПО "1С:Предприятие".
 	Взаимодействует с сервером, с каталогом Active Directory, осуществляет контроль пользовательского ввода и выполняет функции:
 
-		0.Устанавливает подключение к серверу. 
+		0.Устанавливает подключение к серверу.
 		1.Вывод информации о кластере.
 		2.Вывод информации о COM-объекте.
 		3.Вывод информации о версиях платформы.
@@ -1503,9 +1503,9 @@ function Install-Server1C() {
 									try {
 										[int]$tmpInputRegPort = $InputRegPort
 										if (-Not(Get-NetTCPConnection | Where-Object {$_.Localport -eq $tmpInputRegPort})){
-											
+
 											$ArrayRegPort = [System.Collections.ArrayList]@()
-											
+
 											foreach ($PathNameRegPort in $ArrayPathName) {
 												[string]$strPathNameRegPort = $PathNameRegPort
 												$SplitPathNameRegPort = $strPathNameRegPort.Split("-")
@@ -1568,9 +1568,9 @@ function Install-Server1C() {
 								$InputRangePort = (Read-Host " Диапазон портов").ToLower()
 
 								# Проверка диапазона портов для процессов.
-								if (($InputRangePort -notlike "exit") -and ($InputRangePort -notlike $null)) {  
-									
-	 								if ($InputRangePort -match ":") {
+								if (($InputRangePort -notlike "exit") -and ($InputRangePort -notlike $null)) {
+
+									if ($InputRangePort -match ":") {
 										try {
 											$tmp = $InputRangePort.Split(":")
 
