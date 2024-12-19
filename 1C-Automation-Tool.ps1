@@ -1852,7 +1852,8 @@ function Install-Server1C() {
 										Start-Sleep -Milliseconds 500
 										$CredsAD = [void](Get-Credential)
 										$SplitInputUser = $InputUser.Split("\")
-										if (Get-ADUser $SplitInputUser[1] -Credential $CredsAD) { 
+										
+	  									if (Get-ADUser $SplitInputUser[1] -Credential $CredsAD) { 
 											echo ""
 											Start-Sleep -Milliseconds 500
 											Write-Host " OK" -ForegroundColor Green
@@ -2507,7 +2508,6 @@ Write-Host " # Hellow Senior System Administrator, Lets go! #" -ForegroundColor 
 Write-Host " ################################################" -ForegroundColor Magenta
 Write-Host " #               1C: Enterprise 8               #" -ForegroundColor Magenta
 Write-Host " ################################################" -ForegroundColor Magenta
-
 
 # Переменная $PathRoot получает полный путь директории из которой запускается скрипт.
 $PathRoot = $MyInvocation.MyCommand.Path | Split-Path -parent
