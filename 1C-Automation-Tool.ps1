@@ -192,7 +192,7 @@ function Get-Cluster1C {
 		}
 		else {
 			echo ""
-			Write-Verbose "Не установлен продукт 1С:Предприятие 8" -Verbose
+			Write-Verbose "Не установлена служба 1С:Предприятие 8" -Verbose
 		}
 	}
 	Clear-Variable -Name "Server"
@@ -305,8 +305,8 @@ function Get-Service1C() {
 	Invoke-Command -ComputerName $Server -ErrorAction Stop -ScriptBlock {
 
 		$services1C = Get-WmiObject win32_service | Where-Object {$_.Name -like '*'} |
-			Select Name, DisplayName, State, PathName |
-			Where-Object {$_.PathName -Like "*ragent.exe*"}
+			Select Name, DisplayName, State, PathName | Where-Object {$_.PathName -Like "*ragent.exe*"}
+
 		if ($services1C) {
 			$obj = [PSCustomObject] @{
 				data = @($services1C | % {
@@ -323,7 +323,7 @@ function Get-Service1C() {
 		}
 		else {
 			echo ""
-			Write-Verbose "Не установлен продукт 1С:Предприятие 8" -Verbose
+			Write-Verbose "Не установлена служба 1С:Предприятие 8" -Verbose
 		}
 	}
 	Clear-Variable -Name "Server"
@@ -356,7 +356,7 @@ function Job-Service1C() {
 
 		if (Get-Service | Where-Object {($_.Name).StartsWith("1C")}) {
 			$ArrayServices1C = [System.Collections.ArrayList]@()
-			$GetServices1C	 = Get-Service | Where-Object {($_.Name).StartsWith("1C")} | ForEach-Object {$ArrayServices1C.Add($_.Name)}
+			$GetServices1C   = Get-Service | Where-Object {($_.Name).StartsWith("1C")} | ForEach-Object {$ArrayServices1C.Add($_.Name)}
 
 			while ($true) {
 				echo ""
@@ -371,8 +371,8 @@ function Job-Service1C() {
 
 				# Если служба 1С.
 				if (($UserInputService -ge 1) -and ($UserInputService -le $ArrayServices1C.Count)) {
-					$NameService1C	= Service-1C -Number $UserInputService
-					$Service1C		= Get-Service -Name $NameService1C -ErrorAction Stop
+					$NameService1C = Service-1C -Number $UserInputService
+					$Service1C     = Get-Service -Name $NameService1C -ErrorAction Stop
 
 					while ($true) {
 						echo ""
@@ -532,7 +532,7 @@ function Job-Service1C() {
 		}
 		else {
 			echo ""
-			Write-Verbose "Не установлен продукт 1С:Предприятие 8" -Verbose
+			Write-Verbose "Не установлена служба 1С:Предприятие 8" -Verbose
 		}
 	}
 	Clear-Variable -Name "Server"
@@ -642,7 +642,7 @@ function Job-ComObject1C() {
 		}
 		else {
 			echo ""
-			Write-Verbose "Не установлен продукт 1С:Предприятие 8" -Verbose
+			Write-Verbose "Не установлена служба 1С:Предприятие 8" -Verbose
 		}
 	}
 	Clear-Variable -Name "Server"
@@ -1040,7 +1040,7 @@ function Disactivate-Session1C() {
 		}
 		else {
 			echo ""
-			Write-Verbose "Не установлен продукт 1С:Предприятие 8" -Verbose
+			Write-Verbose "Не установлена служба 1С:Предприятие 8" -Verbose
 		}
 	}
 
@@ -1157,7 +1157,7 @@ function Remove-Server1C() {
 			(Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object {($_.DisplayName -like "*1С:Предприятие*") -or ($_.DisplayName -like "*1С:Enterprise*")})) {
 
 			$ArrayProduct1C = [System.Collections.ArrayList]@()
-			$GetProduct1C	= Get-WmiObject Win32_Product | Where-Object {($_.Name).StartsWith("1С:Предприятие")} | ForEach-Object {$ArrayProduct1C.Add($_.Name)}
+			$GetProduct1C   = Get-WmiObject Win32_Product | Where-Object {($_.Name).StartsWith("1С:Предприятие")} | ForEach-Object {$ArrayProduct1C.Add($_.Name)}
 
 			while ($true) {
 				echo ""
