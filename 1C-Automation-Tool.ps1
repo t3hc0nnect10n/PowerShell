@@ -1181,60 +1181,83 @@ function Remove-Server1C() {
 					$ReplaceSplitNameProduct1C = $SplitNameProduct1C[3].Replace("(", "").Replace(")", "")
 
 					$NameService1C = (Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C}).Name
+					
+					if ($NameService1C) {
+						
+						Stop-Service $NameService1C -Force -ErrorAction Stop -WarningAction SilentlyContinue
 
-					Stop-Service $NameService1C -Force -ErrorAction Stop -WarningAction SilentlyContinue
+						$NameService1CStatus = (Get-Service $NameService1C).Status
+						while ($true) {
+							if ($NameService1CStatus -like "Stopped") {
+								# Удаление службы 1С.
+								if (Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C}) {
+									echo ""
+									Write-Verbose "Запущено удаление службы" -Verbose
+									Start-Sleep -Milliseconds 500
+									[void]((Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C}).delete())
 
-					$NameService1CStatus = (Get-Service $NameService1C).Status
-					while ($true) {
-						if ($NameService1CStatus -like "Stopped") {
-							# Удаление службы 1С.
-							if (Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C}) {
-								echo ""
-								Write-Verbose "Запущено удаление службы" -Verbose
-								Start-Sleep -Milliseconds 500
-								[void]((Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C}).delete())
+									$UninstallServiceStatus = [void](Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C})
+									while ($true) {
+										# Удаление продукта 1С.
+										if (-Not(Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C})) {
+											echo ""
+											Write-Host " Служба $($NameService1C)" -NoNewline
+											Write-Host " Удалёна" -ForegroundColor Green
 
-								$UninstallServiceStatus = [void](Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C})
-								while ($true) {
-									# Удаление продукта 1С.
-									if (-Not(Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C})) {
-										echo ""
-										Write-Host " Служба $($NameService1C)" -NoNewline
-										Write-Host " Удалёна" -ForegroundColor Green
+											Start-Sleep -Milliseconds 500
 
-										Start-Sleep -Milliseconds 500
+											echo ""
+											Write-Verbose "Запущено удаление продукта" -Verbose
+											Start-Sleep -Milliseconds 500
+											[void]((Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'").Uninstall())
 
-										echo ""
-										Write-Verbose "Запущено удаление продукта" -Verbose
-										Start-Sleep -Milliseconds 500
-										[void]((Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'").Uninstall())
-
-										$UninstallProductStatus = [void](Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'")
-										while ($true) {
-											if (-Not(Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'")) {
-												echo ""
-												Write-Host " Продукт $($NameProduct1C)" -NoNewline
-												Write-Host " Удалён" -ForegroundColor Green
-												break
+											$UninstallProductStatus = [void](Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'")
+											while ($true) {
+												if (-Not(Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'")) {
+													echo ""
+													Write-Host " Продукт $($NameProduct1C)" -NoNewline
+													Write-Host " Удалён" -ForegroundColor Green
+													break
+												}
+												else {
+													$UninstallProductStatus = [void](Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'")
+												}
 											}
-											else {
-												$UninstallProductStatus = [void](Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'")
-											}
+											break
 										}
-										break
+										else {
+											$UninstallServiceStatus = [void](Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C})
+										}
 									}
-									else {
-										$UninstallServiceStatus = [void](Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C})
-									}
+									break
 								}
-								break
+							}
+							else {
+								$NameService1CStatus = (Get-Service $NameService1C).Status
 							}
 						}
-						else {
-							$NameService1CStatus = (Get-Service $NameService1C).Status
-						}
+						break
 					}
-					break
+					else {
+						echo ""
+						Write-Verbose "Запущено удаление продукта" -Verbose
+						Start-Sleep -Milliseconds 500
+						[void]((Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'").Uninstall())
+
+						$UninstallProductStatus = [void](Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'")
+						while ($true) {
+							if (-Not(Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'")) {
+								echo ""
+								Write-Host " Продукт $($NameProduct1C)" -NoNewline
+								Write-Host " Удалён" -ForegroundColor Green
+								break
+							}
+							else {
+								$UninstallProductStatus = [void](Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'")
+							}
+						}
+						break
+					}
 				}
 				# Выход.
 				elseif ($InputProduct -like "exit") {
