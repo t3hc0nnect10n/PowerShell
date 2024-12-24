@@ -1152,7 +1152,9 @@ function Remove-Server1C() {
 			}
 		}
 
-		if (Get-Service | Where-Object {($_.Name).StartsWith("1C")}) {
+		if ((Get-Service | Where-Object {($_.Name).StartsWith("1C")}) -or
+			(Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object {($_.DisplayName -like "*1С:Предприятие*") -or ($_.DisplayName -like "*1С:Enterprise*")}) -or
+			(Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object {($_.DisplayName -like "*1С:Предприятие*") -or ($_.DisplayName -like "*1С:Enterprise*")})) {
 
 			$ArrayProduct1C = [System.Collections.ArrayList]@()
 			$GetProduct1C	= Get-WmiObject Win32_Product | Where-Object {($_.Name).StartsWith("1С:Предприятие")} | ForEach-Object {$ArrayProduct1C.Add($_.Name)}
@@ -1199,7 +1201,7 @@ function Remove-Server1C() {
 										echo ""
 										Write-Host " Служба $($NameService1C)" -NoNewline
 										Write-Host " Удалёна" -ForegroundColor Green
-											
+
 										Start-Sleep -Milliseconds 500
 
 										echo ""
@@ -1852,8 +1854,8 @@ function Install-Server1C() {
 										Start-Sleep -Milliseconds 500
 										$CredsAD = [void](Get-Credential)
 										$SplitInputUser = $InputUser.Split("\")
-										
-	  									if (Get-ADUser $SplitInputUser[1] -Credential $CredsAD) { 
+
+										if (Get-ADUser $SplitInputUser[1] -Credential $CredsAD) { 
 											echo ""
 											Start-Sleep -Milliseconds 500
 											Write-Host " OK" -ForegroundColor Green
