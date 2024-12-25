@@ -13,7 +13,7 @@ Version 2.0
 		2.Вывод информации о COM-объекте.
 		3.Вывод информации о версиях платформы.
 		4.Вывод информации о службе.
-		5.Выполняет работу со службой: 
+		5.Выполняет работу со службой:
 			- запуск;
 			- остановка;
 			- перезапуск.
@@ -21,7 +21,7 @@ Version 2.0
 			- регистрация;
 			- отмена регистрации.
 		7.Удаляет активные сессии:
-			- из определённых баз	 (формируется лог файл);
+			- из определённых баз    (формируется лог файл);
 			- все сессии на кластере (формируется лог файл).
 		8. Удаляет сервер и службу 1С.
 		9. Устанавливает сервер" и службу 1С.
@@ -380,11 +380,11 @@ function Job-Service1C() {
 						Write-Host " Служба:" -ForegroundColor Cyan -NoNewline
 						Write-Host " $($NameService1C)" -ForegroundColor Gray
 						Write-Host " 1." -ForegroundColor Cyan -NoNewline
-						Write-Host " Запуск службы 1C" -ForegroundColor Yellow
+						Write-Host " Запуск службы" -ForegroundColor Yellow
 						Write-Host " 2." -ForegroundColor Cyan -NoNewline
-						Write-Host " Остановка службы 1C" -ForegroundColor Yellow
+						Write-Host " Остановка службы" -ForegroundColor Yellow
 						Write-Host " 3." -ForegroundColor Cyan -NoNewline
-						Write-Host " Перезапуск службы 1C" -ForegroundColor Yellow
+						Write-Host " Перезапуск службы" -ForegroundColor Yellow
 						Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
 						Write-Host " Exit" -ForegroundColor Cyan
 						$UserInput = (Read-Host " Выбор").ToLower()
@@ -1152,12 +1152,17 @@ function Remove-Server1C() {
 			}
 		}
 
-		if ((Get-Service | Where-Object {($_.Name).StartsWith("1C")}) -or
-			(Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object {($_.DisplayName -like "*1С:Предприятие*") -or ($_.DisplayName -like "*1С:Enterprise*")}) -or
+		if ((Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object {($_.DisplayName -like "*1С:Предприятие*") -or ($_.DisplayName -like "*1С:Enterprise*")}) -or
 			(Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object {($_.DisplayName -like "*1С:Предприятие*") -or ($_.DisplayName -like "*1С:Enterprise*")})) {
 
 			$ArrayProduct1C = [System.Collections.ArrayList]@()
-			$GetProduct1C   = Get-WmiObject Win32_Product | Where-Object {($_.Name).StartsWith("1С:Предприятие")} | ForEach-Object {$ArrayProduct1C.Add($_.Name)}
+
+			$GetProduct = (Get-WmiObject Win32_Product).Name
+			foreach ($Product in $GetProduct) {
+				if (($Product -notlike $null) -and ($Product -match "1С:Предприятие") -or ($Product -match "1С:Enterprise")) {
+					[void]($ArrayProduct1C.Add($Product))
+				}
+			}
 
 			while ($true) {
 				echo ""
@@ -1181,9 +1186,9 @@ function Remove-Server1C() {
 					$ReplaceSplitNameProduct1C = $SplitNameProduct1C[3].Replace("(", "").Replace(")", "")
 
 					$NameService1C = (Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C}).Name
-					
+
 					if ($NameService1C) {
-						
+
 						Stop-Service $NameService1C -Force -ErrorAction Stop -WarningAction SilentlyContinue
 
 						$NameService1CStatus = (Get-Service $NameService1C).Status
@@ -1316,17 +1321,17 @@ function Install-Server1C() {
 		$RegexBytes = "(?<=\s+)\d+(?=\s+)"
 
 		# Robocopy параметры.
-		# /MIR	 - создать зеркало дерева папок.
-		# /NP	 - без хода процесса — не отображать число скопированных %.
-		# /NS	 - без размера — не заносить в журнал размер файлов.
-		# /NDL	 - без списка папок — не заносить в журнал имена папок.
-		# /Z	 – продолжит копирование файла при обрыве. Полезно при копировании больших файлов.
-		# /R:n	 - число повторных попыток для неудавшихся копий: по умолчанию — 1 миллион.
-		# /W:n	 - время ожидания между повторными попытками: по умолчанию — 30 секунд.
+		# /MIR   - создать зеркало дерева папок.
+		# /NP    - без хода процесса — не отображать число скопированных %.
+		# /NS    - без размера — не заносить в журнал размер файлов.
+		# /NDL   - без списка папок — не заносить в журнал имена папок.
+		# /Z     - продолжит копирование файла при обрыве. Полезно при копировании больших файлов.
+		# /R:n   - число повторных попыток для неудавшихся копий: по умолчанию — 1 миллион.
+		# /W:n   - время ожидания между повторными попытками: по умолчанию — 30 секунд.
 		# /BYTES - показывает размеры файлов в байтах.
-		# /NJH	 - без заголовка задания.
-		# /NJS	 - без сведений о задании.
-		# /TEE	 – разделение вывода работы команды и в лог файл, и в консоль.
+		# /NJH   - без заголовка задания.
+		# /NJS   - без сведений о задании.
+		# /TEE   - разделение вывода работы команды и в лог файл, и в консоль.
 		$CommonRobocopyParams = "/MIR /NP /NC /NDL /Z /R:3 /W:3 /BYTES /NJH /NJS /TEE"
 
 		# Установки Robocopy.
@@ -1532,7 +1537,7 @@ function Install-Server1C() {
 																					foreach ($iPortRange in $tmp_1..$tmp_2) {
 																						[void]($ArrayRangePort_1.Add($iPortRange))
 																					}
-			  
+
 																					foreach ($PathNameRangePort in $ArrayPathName) {
 																						[string]$strPathNameRangePort = $PathNameRangePort
 																						$SplitPathNameRangePort = $strPathNameRangePort.Split(" ")
@@ -2032,7 +2037,7 @@ function Install-Server1C() {
 																		Clear-Variable -Name "InputPassword"
 																		break
 
-																	} 
+																	}
 																	catch {
 																		echo ""
 																		Start-Sleep -Milliseconds 500
@@ -2667,7 +2672,7 @@ while ($true) {
 
 		Install-Server1C -Server $SetServer
 	}
-	
+
 	# Выход.
 	elseif ($UserInputMenu -like "exit") {
 		Start-Sleep -Milliseconds 500
