@@ -1468,7 +1468,7 @@ function Install-Server1C() {
 
 											if (-Not($tmpInputPort -in $ArrayPort)) {
 												echo ""
-												#$FlagPorts ++
+												$FlagPorts ++
 												Start-Sleep -Milliseconds 500
 												Write-Host " OK" -ForegroundColor Green
 
