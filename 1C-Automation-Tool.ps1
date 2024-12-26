@@ -1257,6 +1257,7 @@ function Remove-TempFiles1C() {
 											# Если имя папки с временными файлами начинается с "snccntx".
 											if ($tmpName.StartsWith("snccntx")) {
 												echo ""
+												Start-Sleep -Milliseconds 500
 												Write-Host " Обнаружена папка с временными файлами:" -ForegroundColor Yellow -NoNewline
 												Write-Host " $($PathName)\reg_$($RegPort)\$($tmpName)"
 												echo ""
