@@ -1267,7 +1267,6 @@ function Remove-TempFiles1C() {
 												Remove-Item -Path "$($PathName)\reg_$($RegPort)\$($tmpName)" -Force -Recurse
 												Start-Sleep -Milliseconds 500
 												Write-Verbose -Message "Удаление завершено" -Verbose
-												Start-Sleep -Milliseconds 500
 											}
 										}
 										# Запускаем службу.
