@@ -1,6 +1,6 @@
 <#
 Made by t3hc0nnect10n (c) 2024
-Version 2.0
+Version 3.0
 
 	Для работы сценария требуется настроенная служба - Windows Remote Management (WinRM).
 	https://learn.microsoft.com/en-us/windows/win32/winrm/portal
@@ -8,23 +8,24 @@ Version 2.0
 	Сценарий предназначен для работы с серверной средой *ПО "1С:Предприятие".
 	Взаимодействует с сервером, с каталогом Active Directory, осуществляет контроль пользовательского ввода и выполняет функции:
 
-		0.Устанавливает подключение к серверу.
-		1.Вывод информации о кластере.
-		2.Вывод информации о COM-объекте.
-		3.Вывод информации о версиях платформы.
-		4.Вывод информации о службе.
-		5.Выполняет работу со службой:
+		 0.Устанавливает подключение к серверу.
+		 1.Вывод информации о кластере.
+		 2.Вывод информации о COM-объекте.
+		 3.Вывод информации о версиях платформы.
+		 4.Вывод информации о службе.
+		 5.Выполняет работу со службой:
 			- запуск;
 			- остановка;
 			- перезапуск.
-		6.Выполняет работу с COM-объектом:
+		 6.Выполняет работу с COM-объектом:
 			- регистрация;
 			- отмена регистрации.
-		7.Удаляет активные сессии:
+		 7.Удаляет активные сессии:
 			- из определённых баз    (формируется лог файл);
 			- все сессии на кластере (формируется лог файл).
-		8. Удаляет сервер и службу 1С.
-		9. Устанавливает сервер" и службу 1С.
+		 8. Удаляет временные файлы.
+		 9. Удаляет сервер и службу 1С.
+		10. Устанавливает сервер и службу 1С.
 
 	*ПО - программное обеспечение.
 #>
@@ -34,48 +35,52 @@ function Loading-Menu() {
 
 	echo ""
 	Write-Host "  $SetServer" -ForegroundColor Cyan
-	Write-Host "  --------------- Меню --------------" -ForegroundColor Magenta
+	Write-Host "  --------------- Меню ---------------" -ForegroundColor Magenta
 	Write-Host " |" -ForegroundColor Magenta -NoNewline
-	Write-Host " 1."  -ForegroundColor Cyan -NoNewline
+	Write-Host "  1."  -ForegroundColor Cyan -NoNewline
 	Write-Host " Информация о кластере" -ForegroundColor Yellow -NoNewline
 	Write-Host "          |" -ForegroundColor Magenta
 	Write-Host " |" -ForegroundColor Magenta -NoNewline
-	Write-Host " 2." -ForegroundColor Cyan -NoNewline
+	Write-Host "  2." -ForegroundColor Cyan -NoNewline
 	Write-Host " Информация о COM-объекте" -ForegroundColor Yellow -NoNewline
 	Write-Host "       |" -ForegroundColor Magenta
 	Write-Host " |" -ForegroundColor Magenta -NoNewline
-	Write-Host " 3." -ForegroundColor Cyan -NoNewline
+	Write-Host "  3." -ForegroundColor Cyan -NoNewline
 	Write-Host " Информация о версиях платформы" -ForegroundColor Yellow -NoNewline
 	Write-Host " |" -ForegroundColor Magenta
 	Write-Host " |" -ForegroundColor Magenta -NoNewline	
-	Write-Host " 4." -ForegroundColor Cyan -NoNewline
+	Write-Host "  4." -ForegroundColor Cyan -NoNewline
 	Write-Host " Информация о службе" -ForegroundColor Yellow -NoNewline
 	Write-Host "            |" -ForegroundColor Magenta
 	Write-Host " |" -ForegroundColor Magenta -NoNewline
-	Write-Host " 5." -ForegroundColor Cyan -NoNewline
+	Write-Host "  5." -ForegroundColor Cyan -NoNewline
 	Write-Host " Работа со службой" -ForegroundColor Yellow -NoNewline
 	Write-Host "              |" -ForegroundColor Magenta
 	Write-Host " |" -ForegroundColor Magenta -NoNewline
-	Write-Host " 6." -ForegroundColor Cyan -NoNewline
+	Write-Host "  6." -ForegroundColor Cyan -NoNewline
 	Write-Host " Работа с COM-объектом" -ForegroundColor Yellow -NoNewline
 	Write-Host "          |" -ForegroundColor Magenta
 	Write-Host " |" -ForegroundColor Magenta -NoNewline
-	Write-Host " 7." -ForegroundColor Cyan -NoNewline
+	Write-Host "  7." -ForegroundColor Cyan -NoNewline
 	Write-Host " Удаление активных сессий" -ForegroundColor Yellow -NoNewline
 	Write-Host "       |" -ForegroundColor Magenta
 	Write-Host " |" -ForegroundColor Magenta -NoNewline
-	Write-Host " 8." -ForegroundColor Cyan -NoNewline
+	Write-Host "  8." -ForegroundColor Cyan -NoNewline
+	Write-Host " Удаление временных файлов" -ForegroundColor Yellow -NoNewline
+	Write-Host "      |" -ForegroundColor Magenta
+	Write-Host " |" -ForegroundColor Magenta -NoNewline
+	Write-Host "  9." -ForegroundColor Cyan -NoNewline
 	Write-Host " Удаление сервера" -ForegroundColor Yellow -NoNewline
 	Write-Host "               |" -ForegroundColor Magenta
 	Write-Host " |" -ForegroundColor Magenta -NoNewline
-	Write-Host " 9." -ForegroundColor Cyan -NoNewline
+	Write-Host " 10." -ForegroundColor Cyan -NoNewline
 	Write-Host " Установка сервера" -ForegroundColor Yellow -NoNewline
 	Write-Host "              |" -ForegroundColor Magenta
 	Write-Host " |" -ForegroundColor Magenta -NoNewline
 	Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
 	Write-Host " Exit" -ForegroundColor Cyan -NoNewline
-	Write-Host "          |" -ForegroundColor Magenta
-	Write-Host "  -----------------------------------" -ForegroundColor Magenta
+	Write-Host "           |" -ForegroundColor Magenta
+	Write-Host "  ------------------------------------" -ForegroundColor Magenta
 }
 
 # Функция 0. Установка подключения к серверу.
@@ -103,6 +108,7 @@ function Set-Server1C() {
 							break
 						}
 					}
+					# Ошибка.
 					catch {
 						echo ""
 						Start-Sleep -Milliseconds 500
@@ -113,6 +119,7 @@ function Set-Server1C() {
 					}
 				}
 			}
+			# Ошибка.
 			catch {
 				echo ""
 				Start-Sleep -Milliseconds 500
@@ -122,6 +129,7 @@ function Set-Server1C() {
 				Write-Host " не существует."
 			}
 		}
+		# Ошибка.
 		else {
 			echo ""
 			Start-Sleep -Milliseconds 500
@@ -192,6 +200,7 @@ function Get-Cluster1C {
 		}
 		else {
 			echo ""
+			Start-Sleep -Milliseconds 500
 			Write-Verbose "Не установлена служба 1С:Предприятие 8" -Verbose
 		}
 	}
@@ -212,11 +221,14 @@ function Get-ComObject1C() {
 		try {
 			$v83COMConnector = New-Object -COMObject "V82.COMConnector"
 			echo ""
+			Start-Sleep -Milliseconds 500
 			Write-Host " Компонента V82.COMConnector" -NoNewline
 			Write-Host " Зарегистрирована" -ForegroundColor Green
 		}
+		# Ошибка.
 		catch {
 			echo ""
+			Start-Sleep -Milliseconds 500
 			Write-Host " Компонента V82.COMConnector" -NoNewline
 			Write-Host " Не зарегистрирована" -ForegroundColor Red
 		}
@@ -224,11 +236,14 @@ function Get-ComObject1C() {
 		try {
 			$v83COMConnector = New-Object -COMObject "V83.COMConnector"
 			echo ""
+			Start-Sleep -Milliseconds 500
 			Write-Host " Компонента V83.COMConnector" -NoNewline
 			Write-Host " Зарегистрирована" -ForegroundColor Green
 		}
+		# Ошибка.
 		catch {
 			echo ""
+			Start-Sleep -Milliseconds 500
 			Write-Host " Компонента V83.COMConnector" -NoNewline
 			Write-Host " Не зарегистрирована" -ForegroundColor Red
 		}
@@ -287,6 +302,7 @@ function Get-Platform1C() {
 		}
 		else {
 			echo ""
+			Start-Sleep -Milliseconds 500
 			Write-Verbose "Не установлен продукт 1С:Предприятие 8" -Verbose
 		}
 	}
@@ -323,13 +339,14 @@ function Get-Service1C() {
 		}
 		else {
 			echo ""
+			Start-Sleep -Milliseconds 500
 			Write-Verbose "Не установлена служба 1С:Предприятие 8" -Verbose
 		}
 	}
 	Clear-Variable -Name "Server"
 }
 
-# Функция 5. Работа со службой 1С.
+# Функция 5. Работа со службой.
 function Job-Service1C() {
 	[CmdletBinding()]
 	param (
@@ -392,12 +409,12 @@ function Job-Service1C() {
 						# Запуск службы 1С.
 						if ($UserInput -eq 1) {
 							$CheckService1C = Get-Service -Name $Service1C.Name -ErrorAction Stop
-							if ($CheckService1C.Status -like 'Stopped') {
+							if ($CheckService1C.Status -like "Stopped") {
 								try {
-									Start-Service $Service1C.Name -ErrorAction Stop
+									Start-Service -Name $Service1C.Name -ErrorAction Stop
 									Start-Sleep -Seconds 5
 									$GetStatus1C = Get-Service -Name $Service1C.Name -ErrorAction Stop
-									if ($GetStatus1C){
+									if ($GetStatus1C.Status -like "Running") {
 										echo ""
 										Start-Sleep -Milliseconds 1500
 										Write-Host " Cлужба:" -ForegroundColor Cyan -NoNewline
@@ -407,17 +424,19 @@ function Job-Service1C() {
 									}
 									Clear-Variable -Name "CheckService1C"
 								}
+								# Ошибка.
 								catch {
 									echo ""
-									Start-Sleep -Milliseconds 1500
-									Write-Host " Ошибка:" -ForegroundColor Red -NoNewline
+									Start-Sleep -Milliseconds 500
+									Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 									Write-Host $Error[0]
 								}
 
 							}
+							# Ошибка.
 							else {
 								echo ""
-								Start-Sleep -Milliseconds 1500
+								Start-Sleep -Milliseconds 500
 								Write-Host " Cлужба:" -ForegroundColor Cyan -NoNewline
 								Write-Host " $($Service1C.Name)" -ForegroundColor Gray -NoNewline
 								Write-Host " Запущена" -ForegroundColor Green
@@ -426,12 +445,12 @@ function Job-Service1C() {
 						# Остановка службы 1С.
 						elseif ($UserInput -eq 2) {
 							$CheckService1C = Get-Service -Name $Service1C.Name -ErrorAction Stop
-							if ($CheckService1C.Status -like 'Running') {
+							if ($CheckService1C.Status -like "Running") {
 								try {
-									Stop-Service $Service1C.Name -Force -ErrorAction Stop -WarningAction SilentlyContinue
+									Stop-Service -Name $Service1C.Name -Force -ErrorAction Stop -WarningAction SilentlyContinue
 									Start-Sleep -Seconds 5
 									$GetStatus1C = Get-Service -Name $Service1C.Name -ErrorAction Stop
-									if ($GetStatus1C){
+									if ($GetStatus1C.Status -like "Stopped") {
 										echo ""
 										Start-Sleep -Milliseconds 1500
 										Write-Host " Cлужба:" -ForegroundColor Cyan -NoNewline
@@ -441,16 +460,18 @@ function Job-Service1C() {
 									}
 									Clear-Variable -Name "CheckService1C"
 								}
+								# Ошибка.
 								catch {
 									echo ""
-									Start-Sleep -Milliseconds 1500
-									Write-Host " Ошибка:" -ForegroundColor Red -NoNewline
+									Start-Sleep -Milliseconds 500
+									Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 									Write-Host $Error[0]
 								}
 							}
+							# Ошибка.
 							else {
 								echo ""
-								Start-Sleep -Milliseconds 1500
+								Start-Sleep -Milliseconds 500
 								Write-Host " Cлужба:" -ForegroundColor Cyan -NoNewline
 								Write-Host " $($Service1C.Name)" -ForegroundColor Gray -NoNewline
 								Write-Host " Остановлена" -ForegroundColor Red
@@ -459,13 +480,12 @@ function Job-Service1C() {
 						# Перезапуск службы 1С.
 						elseif ($UserInput -eq 3) {
 							$CheckService1C = Get-Service -Name $Service1C.Name -ErrorAction Stop
-							if ($CheckService1C.Status -like 'Running') {
+							if ($CheckService1C.Status -like "Running") {
 								try {
-									echo ""
-									Restart-Service $Service1C.Name -Force -ErrorAction Sto
+									Restart-Service -Name $Service1C.Name -Force -ErrorAction Stop -WarningAction SilentlyContinue
 									Start-Sleep -Seconds 5
 									$GetStatus1C = Get-Service -Name $Service1C.Name -ErrorAction Stop
-									if ($GetStatus1C){
+									if ($GetStatus1C.Status -like "Running") {
 										echo ""
 										Start-Sleep -Milliseconds 1500
 										Write-Host " Cлужба:" -ForegroundColor Cyan -NoNewline
@@ -475,19 +495,36 @@ function Job-Service1C() {
 									}
 									Clear-Variable -Name "CheckService1C"
 								}
+								# Ошибка.
 								catch {
 									echo ""
-									Start-Sleep -Milliseconds 1500
-									Write-Host " Ошибка:" -ForegroundColor Red -NoNewline
+									Start-Sleep -Milliseconds 500
+									Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 									Write-Host $Error[0]
 								}
 							}
-							else {
-								echo ""
-								Start-Sleep -Milliseconds 1500
-								Write-Host " Cлужба:" -ForegroundColor Cyan -NoNewline
-								Write-Host " $($Service1C.Name)" -ForegroundColor Gray -NoNewline
-								Write-Host " Перезапущена" -ForegroundColor Green
+							elseif ($CheckService1C.Status -like "Stopped") {
+								try {
+									Start-Service -Name $Service1C.Name -ErrorAction Stop
+									Start-Sleep -Seconds 5
+									$GetStatus1C = Get-Service -Name $Service1C.Name -ErrorAction Stop
+									if ($GetStatus1C.Status -like "Running") {
+										echo ""
+										Start-Sleep -Milliseconds 1500
+										Write-Host " Cлужба:" -ForegroundColor Cyan -NoNewline
+										Write-Host " $($Service1C.Name)" -ForegroundColor Gray -NoNewline
+										Write-Host " Перезапущена" -ForegroundColor Green
+										Clear-Variable -Name "GetStatus1C"
+									}
+									Clear-Variable -Name "CheckService1C"
+								}
+								# Ошибка.
+								catch {
+									echo ""
+									Start-Sleep -Milliseconds 500
+									Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+									Write-Host $Error[0]
+								}
 							}
 						}
 						# Выход.
@@ -532,6 +569,7 @@ function Job-Service1C() {
 		}
 		else {
 			echo ""
+			Start-Sleep -Milliseconds 500
 			Write-Verbose "Не установлена служба 1С:Предприятие 8" -Verbose
 		}
 	}
@@ -588,9 +626,11 @@ function Job-ComObject1C() {
 						Write-Host " Компонента" -NoNewline
 						Write-Host " Зарегистрирована" -ForegroundColor Green
 						break
-					} 
+					}
+					# Ошибка.
 					catch {
 						echo ""
+						Start-Sleep -Milliseconds 500
 						Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 						Write-Host " Компонента не зарегистрирована"
 						Write-Host " ПОДРОБНО:" -ForegroundColor Red -NoNewline
@@ -612,8 +652,10 @@ function Job-ComObject1C() {
 						Write-Host " Отменена" -ForegroundColor Red
 						break
 					}
+					# Ошибка.
 					catch {
 						echo ""
+						Start-Sleep -Milliseconds 500
 						Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 						Write-Host " Ошибка при отмене регистрации компоненты"
 						Write-Host " ПОДРОБНО:" -ForegroundColor Red -NoNewline
@@ -642,6 +684,7 @@ function Job-ComObject1C() {
 		}
 		else {
 			echo ""
+			Start-Sleep -Milliseconds 500
 			Write-Verbose "Не установлена служба 1С:Предприятие 8" -Verbose
 		}
 	}
@@ -741,6 +784,7 @@ function Disactivate-Session1C() {
 								Write-Host " Неверно введена команда."
 							}
 						}
+						# Ошибка.
 						catch {
 							if ($InputCOM1С -eq 1) {
 								echo ""
@@ -824,6 +868,7 @@ function Disactivate-Session1C() {
 									break
 								}
 							}
+							# Ошибка.
 							catch {
 								echo ""
 								Start-Sleep -Milliseconds 500
@@ -831,6 +876,7 @@ function Disactivate-Session1C() {
 								Write-Host " $($Error[0])"
 							}
 						}
+						# Ошибка.
 						else {
 							echo ""
 							Start-Sleep -Milliseconds 500
@@ -910,6 +956,7 @@ function Disactivate-Session1C() {
 						# Выход.
 						elseif ($InputSession -like "exit") {
 							echo ""
+							Start-Sleep -Milliseconds 500
 							Write-Verbose "Произведена запись в лог активных сессий" -Verbose
 							break
 						}
@@ -1032,6 +1079,7 @@ function Disactivate-Session1C() {
 				}
 				else {
 					echo ""
+					Start-Sleep -Milliseconds 500
 					Write-Verbose "Активных сессий нет" -Verbose
 				}
 				Clear-Variable -Name "Bases"
@@ -1040,6 +1088,7 @@ function Disactivate-Session1C() {
 		}
 		else {
 			echo ""
+			Start-Sleep -Milliseconds 500
 			Write-Verbose "Не установлена служба 1С:Предприятие 8" -Verbose
 		}
 	}
@@ -1127,7 +1176,200 @@ function Disactivate-Session1C() {
 	Clear-Variable -Name "Path"
 }
 
-# Функция 8. Удаление сервера и сужбы 1С.
+# Функция 8. Удаление временных файлов.
+function Remove-TempFiles1C() {
+	[CmdletBinding()]
+	param (
+		[Parameter(Mandatory = $true)]
+		[string] $Server
+	)
+
+	# Отправка скрипт-блока.
+	Invoke-Command -ComputerName $Server -ErrorAction Stop -ScriptBlock {
+
+		if (Get-Service -ErrorAction Stop | Where-Object {($_.Name).StartsWith("1C")}) {
+			
+			# Функция получения версии 1С.
+			function Version-1C() {
+				[CmdletBinding()]
+				param (
+					[Parameter(Mandatory = $true)]
+					[string] $Number
+				)
+
+				for ($a = 1; $a -lt $ArrayPackage1C.Count + 1; $a ++) {
+					if ($Number -eq $a) {
+						return $ArrayPackage1C[$a-1]
+					}
+				}
+			}
+
+			$ArrayPackage1C = [System.Collections.ArrayList]@()
+			# Получаем версии установленных продуктов 1С и добавляем в массив "$ArrayPackage1C".
+			$GetPackageSource = (Get-Package | Where-Object {($_.Name -match "1С:Предприятие 8") -and ($_.Source -notmatch "(x86)")}).Source |
+				ForEach-Object {
+					[string]$tmpPackage = $_
+					$tmpSplitPackage = $tmpPackage.Split("\")
+					$ArrayPackage1C.Add($tmpSplitPackage[3])
+			}
+
+			while ($true) {
+				echo ""
+				Write-Host " Выберите версию" -ForegroundColor Yellow
+				for ($i = 1; $i -lt $ArrayPackage1C.Count + 1; $i ++) {
+					Write-Host " $($i)." -ForegroundColor Cyan -NoNewline
+					Write-Host " $($ArrayPackage1C[$i-1])" -ForegroundColor Gray
+				}
+				Write-Host " Для выхода введите:" -ForegroundColor Yellow -NoNewline
+				Write-Host " Exit" -ForegroundColor Cyan
+				$UserInputPackage = (Read-Host " Выбор").ToLower()
+
+				if (($UserInputPackage -ge 1) -and ($UserInputPackage -le $ArrayPackage1C.Count)) {
+
+					$Package = Version-1C -Number $UserInputPackage
+					$PackageSource = (Get-Package | Where-Object {($_.Name -match "1С:Предприятие 8") -and ($_.Source -notmatch "(x86)") -and ($_.Source -match $Package)}).Source
+					$ServiceName = (Get-WmiObject win32_service | Where-Object {$_.PathName -Like "*$PackageSource*"}).Name
+					$CheckService1C = Get-Service -Name $ServiceName -ErrorAction Stop 
+
+					# Если служба выбранной версии продукта 1С запущена.
+					if ($CheckService1C.Status -like "Running") {
+
+						try {
+							# Останавливаем службу.
+							Stop-Service -Name $ServiceName -Force -ErrorAction Stop -WarningAction SilentlyContinue
+							Start-Sleep -Seconds 5
+							$GetStatus1C = Get-Service -Name $ServiceName -ErrorAction Stop
+
+							# Проверка, что служба остановлена.
+							if ($GetStatus1C.Status -like "Stopped") {
+								$ServicePathName = (Get-WmiObject win32_service | Where-Object {$_.Name -Like "*$ServiceName*"}).PathName
+								[string]$PathName = $ServicePathName.Split('"')[3]
+
+								if (Test-Path "$($PathName)" -ErrorAction Stop) {
+									# В переменную "$RegPort" получаем порт кластера сервера.
+									$RegPort = $PathName.Split("\").Split("_")[4].Replace("0", "1")
+									[string]$GetFolderCash1C = (Get-ChildItem "$($PathName)\reg_$($RegPort)").Name
+
+									# Если папка с временными фалами есть.
+									if ($GetFolderCash1C.StartsWith("snccntx")) {
+										$tmpFolderCash1C = (Get-ChildItem "$($PathName)\reg_$($RegPort)").Name
+										foreach ($tmpName in $tmpFolderCash1C) {
+											# Если имя папки с временными файлами начинается с "snccntx".
+											if ($tmpName.StartsWith("snccntx")) {
+												echo ""
+												Write-Host " Обнаружена папка с временными файлами:" -ForegroundColor Yellow -NoNewline
+												Write-Host " $($PathName)\reg_$($RegPort)\$($tmpName)"
+												echo ""
+												Start-Sleep -Milliseconds 500
+												Write-Verbose -Message "Запущено удаление" -Verbose
+												# Удаление папки с временными фалами.
+												Remove-Item -Path "$($PathName)\reg_$($RegPort)\$($tmpName)" -Force -Recurse
+												Start-Sleep -Milliseconds 500
+												Write-Verbose -Message "Удаление завершено" -Verbose
+												Start-Sleep -Milliseconds 500
+											}
+										}
+										# Запускаем службу.
+										Start-Service -Name $ServiceName -ErrorAction Stop
+										Clear-Variable -Name "tmpFolderCash1C"
+									}
+									# Если папки с временными файлами нет.
+									elseif (-Not($GetFolderCash1C.StartsWith("snccntx"))) {
+										echo ""
+										Start-Sleep -Milliseconds 500
+										Write-Host " Папка с временными файлами платформы" -NoNewline
+										Write-Host " $($Package)" -ForegroundColor Gray -NoNewline
+										Write-Host " Отсутствует" -ForegroundColor Red
+										# Запускаем службу.
+										Start-Service -Name $ServiceName -ErrorAction Stop
+									}
+									Clear-Variable -Name "GetFolderCash1C"
+									Clear-Variable -Name "RegPort"
+								}
+							}
+						}
+						# Ошибка.
+						catch {
+							echo ""
+							Start-Sleep -Milliseconds 1500
+							Write-Host " Ошибка:" -ForegroundColor Red -NoNewline
+							Write-Host $Error[0]
+						}
+					}
+					# Если служба выбранной версии продукта 1С остановлена.
+					elseif ($CheckService1C.Status -like "Stopped") {
+							$ServicePathName = (Get-WmiObject win32_service | Where-Object {$_.Name -Like "*$ServiceName*"}).PathName
+							[string]$PathName = $ServicePathName.Split('"')[3]
+
+							if (Test-Path "$($PathName)" -ErrorAction Stop) {
+								# В переменную "$RegPort" получаем порт кластера сервера.
+								$RegPort = $PathName.Split("\").Split("_")[4].Replace("0", "1") 
+								[string]$GetFolderCash1C = (Get-ChildItem "$($PathName)\reg_$($RegPort)").Name
+
+								# Если папка с временными фалами есть
+								if ($GetFolderCash1C.StartsWith("snccntx")) {
+									$tmpFolderCash1C = (Get-ChildItem "$($PathName)\reg_$($RegPort)").Name
+									foreach ($tmpName in $tmpFolderCash1C) {
+										# Если имя папки с временными файлами начинается с "snccntx".
+										if ($tmpName.StartsWith("snccntx")) {
+											echo ""
+											Write-Host " Обнаружена папка с временными файлами:" -ForegroundColor Yellow -NoNewline
+											Write-Host " $($PathName)\reg_$($RegPort)\$($tmpName)"
+											echo ""
+											Start-Sleep -Milliseconds 500
+											Write-Verbose -Message "Запущено удаление" -Verbose
+											# Удаление папки с временными фалами.
+											Remove-Item -Path "$($PathName)\reg_$($RegPort)\$($tmpName)" -Force -Recurse
+											Start-Sleep -Milliseconds 500
+											Write-Verbose -Message "Удаление завершено" -Verbose
+											Start-Sleep -Milliseconds 500
+										}
+									}
+									Clear-Variable -Name "tmpFolderCash1C"
+								}
+								# Если папки с временными файлами нет.
+								elseif (-Not($GetFolderCash1C.StartsWith("snccntx"))) {
+									echo ""
+									Start-Sleep -Milliseconds 500
+									Write-Host " Папка с временными файлами платформы" -NoNewline
+									Write-Host " $($Package)" -ForegroundColor Gray -NoNewline
+									Write-Host " Отсутствует" -ForegroundColor Red
+								}
+								Clear-Variable -Name "GetFolderCash1C"
+								Clear-Variable -Name "RegPort"
+							}
+						}
+				}
+				# Выход.
+				elseif ($UserInputPackage -like "exit") {
+					break
+				}
+				# Ошибка.
+				elseif ($UserInputPackage -like $null) {
+					echo ""
+					Start-Sleep -Milliseconds 500
+					Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+					Write-Host " Введено пустое значение."
+				}
+				# Ошибка.
+				else {
+					echo ""
+					Start-Sleep -Milliseconds 500
+					Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+					Write-Host " Неверно введена команда."
+				}
+			}
+		}
+		else {
+			echo ""
+			Start-Sleep -Milliseconds 500
+			Write-Verbose "Не установлена служба 1С:Предприятие 8" -Verbose
+		}
+	}
+	Clear-Variable -Name "Server"
+}
+
+# Функция 9. Удаление сервера и сужбы.
 function Remove-Server1C() {
 	[CmdletBinding()]
 	param (
@@ -1197,8 +1439,8 @@ function Remove-Server1C() {
 								# Удаление службы 1С.
 								if (Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C}) {
 									echo ""
-									Write-Verbose "Запущено удаление службы" -Verbose
 									Start-Sleep -Milliseconds 500
+									Write-Verbose "Запущено удаление службы" -Verbose
 									[void]((Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C}).delete())
 
 									$UninstallServiceStatus = [void](Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C})
@@ -1206,20 +1448,19 @@ function Remove-Server1C() {
 										# Удаление продукта 1С.
 										if (-Not(Get-WmiObject win32_service | Where-Object {$_.PathName -match $ReplaceSplitNameProduct1C})) {
 											echo ""
+											Start-Sleep -Milliseconds 500
 											Write-Host " Служба $($NameService1C)" -NoNewline
 											Write-Host " Удалёна" -ForegroundColor Green
-
-											Start-Sleep -Milliseconds 500
-
 											echo ""
-											Write-Verbose "Запущено удаление продукта" -Verbose
 											Start-Sleep -Milliseconds 500
+											Write-Verbose "Запущено удаление продукта" -Verbose
 											[void]((Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'").Uninstall())
 
 											$UninstallProductStatus = [void](Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'")
 											while ($true) {
 												if (-Not(Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'")) {
 													echo ""
+													Start-Sleep -Milliseconds 500
 													Write-Host " Продукт $($NameProduct1C)" -NoNewline
 													Write-Host " Удалён" -ForegroundColor Green
 													break
@@ -1245,14 +1486,15 @@ function Remove-Server1C() {
 					}
 					else {
 						echo ""
-						Write-Verbose "Запущено удаление продукта" -Verbose
 						Start-Sleep -Milliseconds 500
+						Write-Verbose "Запущено удаление продукта" -Verbose
 						[void]((Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'").Uninstall())
 
 						$UninstallProductStatus = [void](Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'")
 						while ($true) {
 							if (-Not(Get-WmiObject Win32_Product -Filter "Name ='$($NameProduct1C)'")) {
 								echo ""
+								Start-Sleep -Milliseconds 500
 								Write-Host " Продукт $($NameProduct1C)" -NoNewline
 								Write-Host " Удалён" -ForegroundColor Green
 								break
@@ -1286,13 +1528,14 @@ function Remove-Server1C() {
 		}
 		else {
 			echo ""
+			Start-Sleep -Milliseconds 500
 			Write-Verbose "Не установлен продукт 1С:Предприятие 8" -Verbose
 		}
 	}
 	Clear-Variable -Name "Server"
 }
 
-# Функция 9. Установка сервера и службы 1С.
+# Функция 10. Установка сервера и службы.
 function Install-Server1C() {
 	[CmdletBinding()]
 	param (
@@ -1436,14 +1679,13 @@ function Install-Server1C() {
 					if (($UserInputPackage -ge 1) -and ($UserInputPackage -le $ArrayPackage1C.Count)) {
 
 						$FlagPorts = 0
-
-						$services1C = Get-WmiObject win32_service | Where-Object {$_.Name -like '*'} | Select PathName | Where-Object {$_.PathName -Like "*ragent.exe*"}
+						
+						$services1C = (Get-WmiObject win32_service | Where-Object {$_.PathName -Like "*ragent.exe*"}).PathName
 
 						if ($services1C) {
 							
 							$ArrayPathName = [System.Collections.ArrayList]@()
-
-							[void]($services1C | ForEach-Object {$ArrayPathName.Add(($_).PathName)})
+							[void]($services1C | ForEach-Object {$ArrayPathName.Add($_)})
 
 							# Ввод порта для сервера.
 							while ($true) {
@@ -1497,10 +1739,7 @@ function Install-Server1C() {
 																$ArrayRegPort = [System.Collections.ArrayList]@()
 
 																foreach ($PathNameRegPort in $ArrayPathName) {
-																	[string]$strPathNameRegPort = $PathNameRegPort
-																	$SplitPathNameRegPort = $strPathNameRegPort.Split("-")
-																	$SplitPathNameRegPort = $SplitPathNameRegPort[3].Split(" ")
-																	[void]($ArrayRegPort.Add($SplitPathNameRegPort[1]))
+																	[void]($ArrayRegPort.Add([string]$PathNameRegPort.Split("-")[3].Split(" ")[1]))
 																}
 
 																if (-Not($tmpInputRegPort -in $ArrayRegPort)) {
@@ -1574,8 +1813,10 @@ function Install-Server1C() {
 																							if (-NOt(Get-NetTCPConnection | Where-Object {$_.Localport -eq $i})) {
 																								$tmpCount ++
 																							}
+																							# Ошибка.
 																							else {
 																								echo ""
+																								Start-Sleep -Milliseconds 500
 																								Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 																								Write-Host " Порт для процессов" -NoNewline
 																								Write-Host " $($i)" -ForegroundColor Gray -NoNewline
@@ -1592,8 +1833,10 @@ function Install-Server1C() {
 																						}
 																					}
 																				}
+																				# Ошибка.
 																				catch {
 																					echo ""
+																					Start-Sleep -Milliseconds 500
 																					Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 																					Write-Host " $($Error[0])"
 																				}
@@ -1620,8 +1863,10 @@ function Install-Server1C() {
 																	}
 																	break
 																}
+																# Ошибка.
 																else {
 																	echo ""
+																	Start-Sleep -Milliseconds 500
 																	Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 																	Write-Host " Порт для кластера" -NoNewline
 																	Write-Host " $($tmpInputRegPort)" -ForegroundColor Gray -NoNewline
@@ -1630,8 +1875,10 @@ function Install-Server1C() {
 																$ArrayRegPort.Clear()
 																Clear-Variable -Name "strPathNameRegPort"
 															}
+															# Ошибка.
 															else {
 																echo ""
+																Start-Sleep -Milliseconds 500
 																Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 																Write-Host " Порт для кластера" -NoNewline
 																Write-Host " $($tmpInputRegPort)" -ForegroundColor Gray -NoNewline
@@ -1639,8 +1886,10 @@ function Install-Server1C() {
 															}
 															Clear-Variable -Name "tmpInputRegPort"
 														}
+														# Ошибка.
 														catch {
 															echo ""
+															Start-Sleep -Milliseconds 500
 															Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 															Write-Host " $($Error[0])"
 														}
@@ -1659,8 +1908,10 @@ function Install-Server1C() {
 												}
 												break
 											}
+											# Ошибка.
 											else {
 												echo ""
+												Start-Sleep -Milliseconds 500
 												Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 												Write-Host " Порт для сервера" -NoNewline
 												Write-Host " $($tmpInputPort)" -ForegroundColor Gray -NoNewline
@@ -1669,8 +1920,10 @@ function Install-Server1C() {
 											$ArrayPort.Clear()
 											Clear-Variable -Name "strPathNamePort"
 										}
+										# Ошибка.
 										else {
 											echo ""
+											Start-Sleep -Milliseconds 500
 											Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 											Write-Host " Порт для сервера" -NoNewline
 											Write-Host " $($tmpInputPort)" -ForegroundColor Gray -NoNewline
@@ -1678,8 +1931,10 @@ function Install-Server1C() {
 										}
 										Clear-Variable -Name "tmpInputPort"
 									}
+									# Ошибка.
 									catch {
 										echo ""
+										Start-Sleep -Milliseconds 500
 										Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 										Write-Host " $($Error[0])"
 									}
@@ -1769,8 +2024,10 @@ function Install-Server1C() {
 																				if (-NOt(Get-NetTCPConnection | Where-Object {$_.Localport -eq $i})) {
 																					$tmpCount ++
 																				}
+																				# Ошибка.
 																				else {
 																					echo ""
+																					Start-Sleep -Milliseconds 500
 																					Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 																					Write-Host " Порт для процессов" -NoNewline
 																					Write-Host " $($i)" -ForegroundColor Gray -NoNewline
@@ -1785,8 +2042,10 @@ function Install-Server1C() {
 																				break
 																			}
 																		}
+																		# Ошибка.
 																		catch {
 																			echo ""
+																			Start-Sleep -Milliseconds 500
 																			Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 																			Write-Host " $($Error[0])"
 																		}
@@ -1813,16 +2072,20 @@ function Install-Server1C() {
 															}
 															break
 														}
+														# Ошибка.
 														else {
 															echo ""
+															Start-Sleep -Milliseconds 500
 															Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 															Write-Host " Порт для кластера" -NoNewline
 															Write-Host " $($tmpInputRegPort)" -ForegroundColor Gray -NoNewline
 															Write-Host " занят."
 														}
 													}
+													# Ошибка.
 													catch {
 														echo ""
+														Start-Sleep -Milliseconds 500
 														Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 														Write-Host " $($Error[0])"
 													}
@@ -1841,16 +2104,20 @@ function Install-Server1C() {
 											}
 											break
 										}
+										# Ошибка.
 										else {
 											echo ""
+											Start-Sleep -Milliseconds 500
 											Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 											Write-Host " Порт для сервера" -NoNewline
 											Write-Host " $($tmpInputPort)" -ForegroundColor Gray -NoNewline
 											Write-Host " занят."
 										}
 									}
+									# Ошибка.
 									catch {
 										echo ""
+										Start-Sleep -Milliseconds 500
 										Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 										Write-Host " $($Error[0])"
 									}
@@ -1906,8 +2173,8 @@ function Install-Server1C() {
 						if ($InputUser -match "\\") {
 							try {
 								echo ""
-								Write-Verbose "Введите учётную запись доменного администратора для соединения с Active Directory" -Verbose
 								Start-Sleep -Milliseconds 500
+								Write-Verbose "Введите учётную запись доменного администратора для соединения с Active Directory" -Verbose
 								$CredsAD = [void](Get-Credential)
 								$SplitInputUser = $InputUser.Split("\")
 
@@ -1941,46 +2208,61 @@ function Install-Server1C() {
 												# Проверка указанного пути для рабочих процессов.
 												if ($InputPathJobProcess -match ":"+"\\") {
 
-													try {
-														# Проверка наличия папки куда был скопирован дистрибутив 1С.
-														if (Test-Path "$($InputPathJobProcess)" -ErrorAction Stop) {
-															$AccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule($InputUser,"FullControl","ContainerInherit,ObjectInherit","None","Allow")
-															$parentACL  = Get-Acl -Path $InputPathJobProcess
-															$parentACL.SetAccessRule($AccessRule)
-															Set-Acl -Path $InputPathJobProcess -AclObject $parentACL
-															echo ""
-															Start-Sleep -Milliseconds 500
-															Write-Host " OK" -ForegroundColor Green
-															break
-														}
-														# Ошибка.
-														else {
-															[void](New-Item $InputPathJobProcess -ItemType Directory)
-															$AccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule($InputUser,"FullControl","ContainerInherit,ObjectInherit","None","Allow")
-															$parentACL  = Get-Acl -Path $InputPathJobProcess
-															$parentACL.SetAccessRule($AccessRule)
-															Set-Acl -Path $InputPathJobProcess -AclObject $parentACL
-															echo ""
-															Start-Sleep -Milliseconds 500
-															Write-Host " OK" -ForegroundColor Green
+													$GetNameServicePathName = Get-WmiObject win32_service | Where-Object {$_.PathName -Like "*$InputPathJobProcess*"}
+													# Ошибка.
+													if ($GetNameServicePathName) {
+														echo ""
+														Start-Sleep -Milliseconds 500
+														Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+														Write-Host " Папка для рабочих процессов задействована службой" -NoNewline
+														Write-Host " $($GetNameServicePathName.Name)" -ForegroundColor Gray
+													}
+													else {
+														try {
+															# Проверка наличия папки для рабочих процессов и предоставление полного доступа для доменной учётной записи указанной в переменной "$InputUser".
+															if (Test-Path "$($InputPathJobProcess)" -ErrorAction Stop) {
+																$AccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule($InputUser,"FullControl","ContainerInherit,ObjectInherit","None","Allow")
+																$parentACL  = Get-Acl -Path $InputPathJobProcess
+																$parentACL.SetAccessRule($AccessRule)
+																Set-Acl -Path $InputPathJobProcess -AclObject $parentACL
+																echo ""
+																Start-Sleep -Milliseconds 500
+																Write-Host " OK" -ForegroundColor Green
 
-															# Удаление кэш-папки рабочих процессов.
-															if (Test-Path "$($InputPathJobProcess)\reg_$($InputRegPort)" -ErrorAction Stop) {
-																$GetFolderCash1C = Get-ChildItem "$($InputPathJobProcess)\reg_$($InputRegPort)"
-																if ($GetFolderCash1C.Name.StartsWith("snccntx")) {
-																	$tmpName   = $GetFolderCash1C.Name.StartsWith("snccntx")
-																	$tmpFolder = Get-Item "$($InputPathJobProcess)\reg_$($InputRegPort)\$($tmpName)"
-																	$tmpFolder | Remove-Item -Force -Recurse
-																	$RemoveFolderStatus = Test-Path "$($InputPathJobProcess)\reg_$($InputRegPort)\$($tmpName)" -ErrorAction Stop
-																	while ($true) {
-																		if (-Not($RemoveFolderStatus)) {
-																			break
-																		}
-																		else {
-																			$RemoveFolderStatus = Test-Path "$($InputPathJobProcess)\reg_$($InputRegPort)\$($tmpName)" -ErrorAction Stop
+																 # Удаление кэш-папки рабочих процессов.
+																if (Test-Path "$($InputPathJobProcess)" -ErrorAction Stop) {
+																	$RegPort = $InputPathJobProcess.Split("\")[3].Split("_")[1].Replace("0", "1")
+																	$GetFolderCash1C = (Get-ChildItem "$($InputPathJobProcess)\reg_$($RegPort)").Name
+																	foreach ($tmpName in $GetFolderCash1C) {
+																		if ($tmpName.StartsWith("snccntx")) {
+																			echo ""
+																			Start-Sleep -Milliseconds 500
+																			Write-Host " Обнаружена папка с временными файлами:" -ForegroundColor Yellow -NoNewline
+																			Write-Host " $($InputPathJobProcess)\reg_$($RegPort)\$($tmpName)"
+																			echo ""
+																			Start-Sleep -Milliseconds 500
+																			Write-Verbose -Message "Запущено удаление" -Verbose
+																			Remove-Item -Path "$($InputPathJobProcess)\reg_$($RegPort)\$($tmpName)" -Force -Recurse
+																			Start-Sleep -Milliseconds 500
+																			Write-Verbose -Message "Удаление завершено" -Verbose
 																		}
 																	}
+																	Clear-Variable -Name "RegPort"
+																	echo ""
+																	Start-Sleep -Milliseconds 500
+																	Write-Host " OK" -ForegroundColor Green
 																}
+															}
+															# Предоставление полного доступа для доменной учётной записи указанной в переменной "$InputUser".
+															else {
+																[void](New-Item $InputPathJobProcess -ItemType Directory)
+																$AccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule($InputUser,"FullControl","ContainerInherit,ObjectInherit","None","Allow")
+																$parentACL  = Get-Acl -Path $InputPathJobProcess
+																$parentACL.SetAccessRule($AccessRule)
+																Set-Acl -Path $InputPathJobProcess -AclObject $parentACL
+																echo ""
+																Start-Sleep -Milliseconds 500
+																Write-Host " OK" -ForegroundColor Green
 															}
 
 															$Package = Version-1C -Number $UserInputPackage
@@ -2026,6 +2308,7 @@ function Install-Server1C() {
 																# Установка службы.
 																if ($InputUserCheck -eq 1) {
 																	echo ""
+																	Start-Sleep -Milliseconds 500
 																	Write-Verbose "Установка службы $($Name)" -Verbose
 																	try{
 																		echo ""
@@ -2038,6 +2321,7 @@ function Install-Server1C() {
 																		break
 
 																	}
+																	# Ошибка.
 																	catch {
 																		echo ""
 																		Start-Sleep -Milliseconds 500
@@ -2047,9 +2331,6 @@ function Install-Server1C() {
 																}
 																# Выход.
 																elseif ($InputUserCheck -eq 2) {
-																	echo ""
-																	Start-Sleep -Milliseconds 500
-																	Write-Host " Выход" -ForegroundColor Cyan
 																	break
 																}
 																# Ошибка.
@@ -2069,12 +2350,13 @@ function Install-Server1C() {
 															}
 															break
 														}
-													}
-													catch {
-														echo ""
-														Start-Sleep -Milliseconds 500
-														Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
-														Write-Host " $($Error[0])"
+														# Ошибка.
+														catch {
+															echo ""
+															Start-Sleep -Milliseconds 500
+															Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
+															Write-Host " $($Error[0])"
+														}
 													}
 												}
 												# Выход.
@@ -2102,14 +2384,15 @@ function Install-Server1C() {
 								}
 								break
 							}
+							# Ошибка.
 							catch {
 								echo " "
-								Clear-Variable -Name "InputUser"
 								Start-Sleep -Milliseconds 500
 								Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 								Write-Host " Учётная запись" -NoNewline
 								Write-Host " $($SplitInputUser[1])" -ForegroundColor Gray -NoNewline
 								Write-Host " не существует."
+								Clear-Variable -Name "InputUser"
 							}
 						}
 						# Выход.
@@ -2201,6 +2484,7 @@ function Install-Server1C() {
 												Write-Host " Установлен" -ForegroundColor Green
 
 												echo ""
+												Start-Sleep -Milliseconds 500
 												Write-Host " Запущена функция установки службы 1С" -ForegroundColor Cyan
 
 												Install-Service1C
@@ -2218,6 +2502,7 @@ function Install-Server1C() {
 												Write-Host " Установлены" -ForegroundColor Green
 
 												echo ""
+												Start-Sleep -Milliseconds 500
 												Write-Host " Запущена функция установки службы 1С" -ForegroundColor Cyan
 
 												Install-Service1C
@@ -2235,6 +2520,7 @@ function Install-Server1C() {
 												Write-Host " Установлены" -ForegroundColor Green
 
 												echo ""
+												Start-Sleep -Milliseconds 500
 												Write-Host " Запущена функция установки службы 1С" -ForegroundColor Cyan
 
 												Install-Service1C
@@ -2300,6 +2586,7 @@ function Install-Server1C() {
 							Write-Host " Путь не существует."
 						}
 					}
+					# Ошибка.
 					catch {
 						echo ""
 						Start-Sleep -Milliseconds 500
@@ -2417,6 +2704,7 @@ function Install-Server1C() {
 												# Ошибка.
 												else {
 													echo ""
+													Start-Sleep -Milliseconds 500
 													Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 													Write-Host " Папка " -NoNewline
 													Write-Host " $($InputNameFolder)" -ForegroundColor Gray -NoNewline
@@ -2429,6 +2717,7 @@ function Install-Server1C() {
 											elseif (($InputNameFolder -like "Exit") -or ($InputNameFolder -like "exit")) {
 												break
 											}
+											# Ошибка.
 											elseif ($InputNameFolder -like $null) {
 												echo ""
 												Start-Sleep -Milliseconds 500
@@ -2477,8 +2766,10 @@ function Install-Server1C() {
 							Write-Host " Путь не существует."
 						}
 					}
+					# Ошибка.
 					catch {
 						echo ""
+						Start-Sleep -Milliseconds 500
 						Write-Host " ОШИБКА:" -ForegroundColor Red -NoNewline
 						Write-Host " $($Error[0])"
 					}
@@ -2649,8 +2940,20 @@ while ($true) {
 		Disactivate-Session1C -Server $SetServer -Path $Path
 	}
 
-	# Удаление сервера.
+	# Удаление временных файлов.
 	elseif ($UserInputMenu -eq 8) {
+		echo ""
+		Write-Host "  ---------------------------" -ForegroundColor Magenta
+		Write-Host " |" -ForegroundColor Magenta -NoNewline
+		Write-Host " Удаление временных файлов" -ForegroundColor Magenta -NoNewline
+		Write-Host " |" -ForegroundColor Magenta
+		Write-Host "  ---------------------------" -ForegroundColor Magenta
+
+		Remove-TempFiles1C -Server $SetServer
+	}
+
+	# Удаление сервера.
+	elseif ($UserInputMenu -eq 9) {
 		echo ""
 		Write-Host "  ------------------" -ForegroundColor Magenta
 		Write-Host " |" -ForegroundColor Magenta -NoNewline
@@ -2662,7 +2965,7 @@ while ($true) {
 	}
 
 	# Установка сервера.
-	elseif ($UserInputMenu -eq 9) {
+	elseif ($UserInputMenu -eq 10) {
 		echo ""
 		Write-Host "  -------------------" -ForegroundColor Magenta
 		Write-Host " |" -ForegroundColor Magenta -NoNewline
