@@ -1248,10 +1248,10 @@ function Remove-TempFiles1C() {
 								if (Test-Path "$($PathName)" -ErrorAction Stop) {
 									# В переменную "$RegPort" получаем порт кластера сервера.
 									$RegPort = $PathName.Split("\").Split("_")[4].Replace("0", "1")
-									[string]$GetFolderCash1C = (Get-ChildItem "$($PathName)\reg_$($RegPort)").Name
+									$GetFolderCash1C = (Get-ChildItem "$($PathName)\reg_$($RegPort)").Name
 
 									# Если папка с временными фалами есть.
-									if ($GetFolderCash1C.StartsWith("snccntx")) {
+									if ($GetFolderCash1C -match "snccntx") {
 										$tmpFolderCash1C = (Get-ChildItem "$($PathName)\reg_$($RegPort)").Name
 										foreach ($tmpName in $tmpFolderCash1C) {
 											# Если имя папки с временными файлами начинается с "snccntx".
@@ -1260,11 +1260,14 @@ function Remove-TempFiles1C() {
 												Start-Sleep -Milliseconds 500
 												Write-Host " Обнаружена папка с временными файлами:" -ForegroundColor Yellow -NoNewline
 												Write-Host " $($PathName)\reg_$($RegPort)\$($tmpName)"
+
 												echo ""
 												Start-Sleep -Milliseconds 500
 												Write-Verbose -Message "Запущено удаление" -Verbose
+
 												# Удаление папки с временными фалами.
 												Remove-Item -Path "$($PathName)\reg_$($RegPort)\$($tmpName)" -Force -Recurse
+
 												Start-Sleep -Milliseconds 500
 												Write-Verbose -Message "Удаление завершено" -Verbose
 											}
@@ -1280,6 +1283,7 @@ function Remove-TempFiles1C() {
 										Write-Host " Папка с временными файлами платформы" -NoNewline
 										Write-Host " $($Package)" -ForegroundColor Gray -NoNewline
 										Write-Host " Отсутствует" -ForegroundColor Red
+
 										# Запускаем службу.
 										Start-Service -Name $ServiceName -ErrorAction Stop
 									}
@@ -1299,15 +1303,15 @@ function Remove-TempFiles1C() {
 					# Если служба выбранной версии продукта 1С остановлена.
 					elseif ($CheckService1C.Status -like "Stopped") {
 							$ServicePathName = (Get-WmiObject win32_service | Where-Object {$_.Name -Like "*$ServiceName*"}).PathName
-							[string]$PathName = $ServicePathName.Split('"')[3]
+							$PathName = $ServicePathName.Split('"')[3]
 
 							if (Test-Path "$($PathName)" -ErrorAction Stop) {
 								# В переменную "$RegPort" получаем порт кластера сервера.
-								$RegPort = $PathName.Split("\").Split("_")[4].Replace("0", "1") 
+								$RegPort = $PathName.Split("\").Split("_")[4].Replace("0", "1")
 								[string]$GetFolderCash1C = (Get-ChildItem "$($PathName)\reg_$($RegPort)").Name
 
 								# Если папка с временными фалами есть
-								if ($GetFolderCash1C.StartsWith("snccntx")) {
+								if ($GetFolderCash1C -match"snccntx") {
 									$tmpFolderCash1C = (Get-ChildItem "$($PathName)\reg_$($RegPort)").Name
 									foreach ($tmpName in $tmpFolderCash1C) {
 										# Если имя папки с временными файлами начинается с "snccntx".
@@ -1315,14 +1319,17 @@ function Remove-TempFiles1C() {
 											echo ""
 											Write-Host " Обнаружена папка с временными файлами:" -ForegroundColor Yellow -NoNewline
 											Write-Host " $($PathName)\reg_$($RegPort)\$($tmpName)"
+
 											echo ""
 											Start-Sleep -Milliseconds 500
 											Write-Verbose -Message "Запущено удаление" -Verbose
+
 											# Удаление папки с временными фалами.
 											Remove-Item -Path "$($PathName)\reg_$($RegPort)\$($tmpName)" -Force -Recurse
+
 											Start-Sleep -Milliseconds 500
 											Write-Verbose -Message "Удаление завершено" -Verbose
-											Start-Sleep -Milliseconds 500
+
 										}
 									}
 									Clear-Variable -Name "tmpFolderCash1C"
