@@ -1303,12 +1303,12 @@ function Remove-TempFiles1C() {
 					# Если служба выбранной версии продукта 1С остановлена.
 					elseif ($CheckService1C.Status -like "Stopped") {
 							$ServicePathName = (Get-WmiObject win32_service | Where-Object {$_.Name -Like "*$ServiceName*"}).PathName
-							$PathName = $ServicePathName.Split('"')[3]
+							[string]$PathName = $ServicePathName.Split('"')[3]
 
 							if (Test-Path "$($PathName)" -ErrorAction Stop) {
 								# В переменную "$RegPort" получаем порт кластера сервера.
 								$RegPort = $PathName.Split("\").Split("_")[4].Replace("0", "1")
-								[string]$GetFolderCash1C = (Get-ChildItem "$($PathName)\reg_$($RegPort)").Name
+								$GetFolderCash1C = (Get-ChildItem "$($PathName)\reg_$($RegPort)").Name
 
 								# Если папка с временными фалами есть
 								if ($GetFolderCash1C -match"snccntx") {
