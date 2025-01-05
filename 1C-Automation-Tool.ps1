@@ -1242,12 +1242,12 @@ function Remove-TempFiles1C() {
 
 							# Проверка, что служба остановлена.
 							if ($GetStatus1C.Status -like "Stopped") {
-								$ServicePathName = (Get-WmiObject win32_service | Where-Object {$_.Name -Like "*$ServiceName*"}).PathName
-								[string]$PathName = $ServicePathName.Split('"')[3]
+								[string]$ServicePathName = (Get-WmiObject win32_service | Where-Object {$_.Name -Like "*$ServiceName*"}).PathName
+								$PathName = $ServicePathName.Split('"')[3]
 
 								if (Test-Path "$($PathName)" -ErrorAction Stop) {
 									# В переменную "$RegPort" получаем порт кластера сервера.
-									$RegPort = $PathName.Split("\").Split("_")[4].Replace("0", "1")
+									[string]$RegPort = $ServicePathName.Split('"').Split(" ")[7]
 									$GetFolderCash1C = (Get-ChildItem "$($PathName)\reg_$($RegPort)").Name
 
 									# Если папка с временными фалами есть.
@@ -1259,7 +1259,7 @@ function Remove-TempFiles1C() {
 												echo ""
 												Start-Sleep -Milliseconds 500
 												Write-Host " Обнаружена папка с временными файлами:" -ForegroundColor Yellow -NoNewline
-												Write-Host " $($PathName)\reg_$($RegPort)\$($tmpName)"
+												Write-Host " $($PathName)reg_$($RegPort)\$($tmpName)"
 
 												echo ""
 												Start-Sleep -Milliseconds 500
@@ -1302,12 +1302,12 @@ function Remove-TempFiles1C() {
 					}
 					# Если служба выбранной версии продукта 1С остановлена.
 					elseif ($CheckService1C.Status -like "Stopped") {
-							$ServicePathName = (Get-WmiObject win32_service | Where-Object {$_.Name -Like "*$ServiceName*"}).PathName
-							[string]$PathName = $ServicePathName.Split('"')[3]
+							[string]$ServicePathName = (Get-WmiObject win32_service | Where-Object {$_.Name -Like "*$ServiceName*"}).PathName
+							$PathName = $ServicePathName.Split('"')[3]
 
 							if (Test-Path "$($PathName)" -ErrorAction Stop) {
 								# В переменную "$RegPort" получаем порт кластера сервера.
-								$RegPort = $PathName.Split("\").Split("_")[4].Replace("0", "1")
+								[string]$RegPort = $ServicePathName.Split('"').Split(" ")[7]
 								$GetFolderCash1C = (Get-ChildItem "$($PathName)\reg_$($RegPort)").Name
 
 								# Если папка с временными фалами есть
@@ -1318,7 +1318,7 @@ function Remove-TempFiles1C() {
 										if ($tmpName.StartsWith("snccntx")) {
 											echo ""
 											Write-Host " Обнаружена папка с временными файлами:" -ForegroundColor Yellow -NoNewline
-											Write-Host " $($PathName)\reg_$($RegPort)\$($tmpName)"
+											Write-Host " $($PathName)reg_$($RegPort)\$($tmpName)"
 
 											echo ""
 											Start-Sleep -Milliseconds 500
