@@ -58,16 +58,17 @@ $TestPath_7 = Test-Path $RegKey_7
 if (-Not($TestPath_1) -or -Not($TestPath_2) -or -Not($TestPath_3) -or -Not($TestPath_4) -or -Not($TestPath_5) -or -Not($TestPath_6) -or -Not($TestPath_7)) {
 
 	$ArrayList = [System.Collections.ArrayList]@()
+
+	# Если ветки в реестре нет, то она создастся с присвоенным классом устройства "RemovableStorageDevices".
 	if (-Not($TestPath_1)) {
-		# Если ветки в реестре нет, то она создастся с присвоенным классом устройства "RemovableStorageDevices".
 		New-Item -Path $RegKey_0 -Name "RemovableStorageDevices" -Force | Out-Null
 		New-ItemProperty -Path $RegKey_1 -Name "Deny_All" -Value $Value -PropertyType 'DWord' -Force | Out-Null
 		New-ItemProperty -Path $RegKey_1 -Name "AllowRemoteDASD" -Value $Value -PropertyType 'DWord' -Force | Out-Null
 		[void]($ArrayList.Add($RegKey_1))
 	}
 
+	# Если ветки в реестре нет, то она создастся с присвоенным классом устройства "{53f56308-b6bf-11d0-94f2-00a0c91efb8b}".
 	if (-Not($TestPath_2)) {
-		# Если ветки в реестре нет, то она создастся с присвоенным классом устройства "{53f56308-b6bf-11d0-94f2-00a0c91efb8b}".
 		New-Item -Path $RegKey_1 -Name "{53f56308-b6bf-11d0-94f2-00a0c91efb8b}" -Force | Out-Null
 		New-ItemProperty -Path $RegKey_2 -Name "Deny_Read" -Value $Value -PropertyType 'DWord' -Force | Out-Null
 		New-ItemProperty -Path $RegKey_2 -Name "Deny_Write" -Value $Value -PropertyType 'DWord' -Force | Out-Null
@@ -75,8 +76,8 @@ if (-Not($TestPath_1) -or -Not($TestPath_2) -or -Not($TestPath_3) -or -Not($Test
 		[void]($ArrayList.Add($RegKey_2))
 	}
 
+	# Если ветки в реестре нет, то она создастся с присвоенным классом устройства "{53f5630b-b6bf-11d0-94f2-00a0c91efb8b}".
 	if (-Not($TestPath_3)) {
-		# Если ветки в реестре нет, то она создастся с присвоенным классом устройства "{53f5630b-b6bf-11d0-94f2-00a0c91efb8b}".
 		New-Item -Path $RegKey_1 -Name "{53f5630b-b6bf-11d0-94f2-00a0c91efb8b}" -Force | Out-Null
 		New-ItemProperty -Path $RegKey_3 -Name "Deny_Read" -Value $Value -PropertyType 'DWord' -Force | Out-Null
 		New-ItemProperty -Path $RegKey_3 -Name "Deny_Write" -Value $Value -PropertyType 'DWord' -Force | Out-Null
@@ -84,8 +85,8 @@ if (-Not($TestPath_1) -or -Not($TestPath_2) -or -Not($TestPath_3) -or -Not($Test
 		[void]($ArrayList.Add($RegKey_3))
 	}
 
+	# Если ветки в реестре нет, то она создастся с присвоенным классом устройства "{53f5630d-b6bf-11d0-94f2-00a0c91efb8b}".
 	if (-Not($TestPath_4)) {
-		# Если ветки в реестре нет, то она создастся с присвоенным классом устройства "{53f5630d-b6bf-11d0-94f2-00a0c91efb8b}".
 		New-Item -Path $RegKey_1 -Name "{53f5630d-b6bf-11d0-94f2-00a0c91efb8b}" -Force | Out-Null
 		New-ItemProperty -Path $RegKey_4 -Name "Deny_Read" -Value $Value -PropertyType 'DWord' -Force | Out-Null
 		New-ItemProperty -Path $RegKey_4 -Name "Deny_Write" -Value $Value -PropertyType 'DWord' -Force | Out-Null
@@ -93,8 +94,8 @@ if (-Not($TestPath_1) -or -Not($TestPath_2) -or -Not($TestPath_3) -or -Not($Test
 		[void]($ArrayList.Add($RegKey_4))
 	}
 
+	# Если ветки в реестре нет, то она создастся с присвоенным классом устройства "{53f56311-b6bf-11d0-94f2-00a0c91efb8b}".
 	if (-Not($TestPath_5)) {
-		# Если ветки в реестре нет, то она создастся с присвоенным классом устройства "{53f56311-b6bf-11d0-94f2-00a0c91efb8b}".
 		New-Item -Path $RegKey_1 -Name "{53f56311-b6bf-11d0-94f2-00a0c91efb8b}" -Force | Out-Null
 		New-ItemProperty -Path $RegKey_5 -Name "Deny_Read" -Value $Value -PropertyType 'DWord' -Force | Out-Null
 		New-ItemProperty -Path $RegKey_5 -Name "Deny_Write" -Value $Value -PropertyType 'DWord' -Force | Out-Null
@@ -102,8 +103,8 @@ if (-Not($TestPath_1) -or -Not($TestPath_2) -or -Not($TestPath_3) -or -Not($Test
 		[void]($ArrayList.Add($RegKey_5))
 	}
 
+	# Если ветки в реестре нет, то она создастся с присвоенным классом устройства "{6AC27878-A6FA-4155-BA85-F98F491D4F33}".
 	if (-Not($TestPath_6)) {
-		# Если ветки в реестре нет, то она создастся с присвоенным классом устройства "{6AC27878-A6FA-4155-BA85-F98F491D4F33}".
 		New-Item -Path $RegKey_1 -Name "{6AC27878-A6FA-4155-BA85-F98F491D4F33}" -Force | Out-Null
 		New-ItemProperty -Path $RegKey_6 -Name "Deny_Read" -Value $Value -PropertyType 'DWord' -Force | Out-Null
 		New-ItemProperty -Path $RegKey_6 -Name "Deny_Write" -Value $Value -PropertyType 'DWord' -Force | Out-Null
@@ -111,8 +112,8 @@ if (-Not($TestPath_1) -or -Not($TestPath_2) -or -Not($TestPath_3) -or -Not($Test
 		[void]($ArrayList.Add($RegKey_6))
 	}
 
+	# Если ветки в реестре нет, то она создастся с присвоенным классом устройства "{F33FDC04-D1AC-4E8E-9A30-19BBD4B108AE}".
 	if (-Not($TestPath_7)) {
-		# Если ветки в реестре нет, то она создастся с присвоенным классом устройства "{F33FDC04-D1AC-4E8E-9A30-19BBD4B108AE}".
 		New-Item -Path $RegKey_1 -Name "{F33FDC04-D1AC-4E8E-9A30-19BBD4B108AE}" -Force | Out-Null
 		New-ItemProperty -Path $RegKey_7 -Name "Deny_Read" -Value $Value -PropertyType 'DWord' -Force | Out-Null
 		New-ItemProperty -Path $RegKey_7 -Name "Deny_Write" -Value $Value -PropertyType 'DWord' -Force | Out-Null
