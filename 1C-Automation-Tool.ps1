@@ -1376,7 +1376,7 @@ function Remove-TempFiles1C() {
 	Clear-Variable -Name "Server"
 }
 
-# Функция 9. Удаление сервера и сужбы.
+# Функция 9. Удаление сервера и службы.
 function Remove-Server1C() {
 	[CmdletBinding()]
 	param (
