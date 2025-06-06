@@ -47,7 +47,7 @@ $Alphabet_Uppper = [char[]]([char]"A"..[char]"Z") -join " "
 # Английский алфавит строчных букв.
 $Alphabet_Lower  = [char[]]([char]"a"..[char]"z") -join " "
 
-# Цыфры.
+# Цифры.
 $Integer         = [char[]]([char]"0"..[char]"9") -join " "
 
 # Специальные символы.
