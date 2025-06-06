@@ -74,7 +74,7 @@ $Form.BackColor        = [System.Drawing.ColorTranslator]::FromHtml("#8dbbf3")
 # Полный путь к изображению.
 $ImagePath             = "<Укажите полный путь к логотипу компании>" # Формат изображения png, jpg, jpeg.
 
-# Параметры изображения.
+# Параметры изображения в форме.
 $Image                 = [System.Drawing.Image]::FromFile($ImagePath)
 $PictureBox            = New-Object System.Windows.Forms.PictureBox
 $PictureBox.Size       = New-Object System.Drawing.Size(200, 150)
