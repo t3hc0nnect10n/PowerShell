@@ -33,13 +33,13 @@ $Version = "1.0"
 
 # Список плохихих паролей.
 $Array_Bad_Password = [System.Collections.ArrayList]@("qwerty","qwerty123","qwerty1234","qwerty123!","qwerty1234!","qwerty123#","qwerty1234#",
-													  "Qwerty","Qwerty123","Qwerty1234","Qwerty123!","Qwerty1234!","Qwerty123#","Qwerty1234#",
-													  "QWERTY","QWERTY123","QWERTY1234","QWERTY123!","QWERTY1234!","QWERTY123#","QWERTY1234#",
-													  "1q2w3e","1q2w3e4r","1q2w3e!","1q2w3e#","1Q2W3E","1Q2W3E!","1Q2W3E#","1Q2W3E4R","1Q2W3E4R!","1Q2W3E4R#",
-													  "!qaz@wsx","123QWEasd","!@#123QWEqweASDasd","!@#123qweQWEasdASD","1qaz2wsx",
-													  "Passw0rd","P@$$W)rd","P@$$Word","P@ssword","P@ssw0rd","PASSWORD",
-													  "Passw0rd123","P@$$W)rd123","P@$$Word123","P@ssword123","P@ssw0rd123","PASSWORD123",
-													  "Passw0rd1234","P@$$W)rd1234","P@$$Word1234","P@ssword1234","P@ssw0rd1234","PASSWORD1234")
+						      "Qwerty","Qwerty123","Qwerty1234","Qwerty123!","Qwerty1234!","Qwerty123#","Qwerty1234#",
+						      "QWERTY","QWERTY123","QWERTY1234","QWERTY123!","QWERTY1234!","QWERTY123#","QWERTY1234#",
+						      "1q2w3e","1q2w3e4r","1q2w3e!","1q2w3e#","1Q2W3E","1Q2W3E!","1Q2W3E#","1Q2W3E4R","1Q2W3E4R!","1Q2W3E4R#",
+						      "!qaz@wsx","123QWEasd","!@#123QWEqweASDasd","!@#123qweQWEasdASD","1qaz2wsx",
+						      "Passw0rd","P@$$W)rd","P@$$Word","P@ssword","P@ssw0rd","PASSWORD",
+						      "Passw0rd123","P@$$W)rd123","P@$$Word123","P@ssword123","P@ssw0rd123","PASSWORD123",
+						      "Passw0rd1234","P@$$W)rd1234","P@$$Word1234","P@ssword1234","P@ssw0rd1234","PASSWORD1234")
 
 # Английский алфавит заглавных букв.
 $Alphabet_Uppper = [char[]]([char]"A"..[char]"Z") -join " "
