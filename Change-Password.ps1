@@ -33,13 +33,13 @@ $Version = "1.0"
 
 # Список плохихих паролей.
 $Array_Bad_Password = [System.Collections.ArrayList]@("qwerty","qwerty123","qwerty1234","qwerty123!","qwerty1234!","qwerty123#","qwerty1234#",
-													  "Qwerty","Qwerty123","Qwerty1234","Qwerty123!","Qwerty1234!","Qwerty123#","Qwerty1234#",
-													  "QWERTY","QWERTY123","QWERTY1234","QWERTY123!","QWERTY1234!","QWERTY123#","QWERTY1234#",
-													  "1q2w3e","1q2w3e4r","1q2w3e!","1q2w3e#","1Q2W3E","1Q2W3E!","1Q2W3E#","1Q2W3E4R","1Q2W3E4R!","1Q2W3E4R#",
-													  "!qaz@wsx","123QWEasd","!@#123QWEqweASDasd","!@#123qweQWEasdASD","1qaz2wsx",
-													  "Passw0rd","P@$$W)rd","P@$$Word","P@ssword","P@ssw0rd","PASSWORD",
-													  "Passw0rd123","P@$$W)rd123","P@$$Word123","P@ssword123","P@ssw0rd123","PASSWORD123",
-													  "Passw0rd1234","P@$$W)rd1234","P@$$Word1234","P@ssword1234","P@ssw0rd1234","PASSWORD1234")
+						      "Qwerty","Qwerty123","Qwerty1234","Qwerty123!","Qwerty1234!","Qwerty123#","Qwerty1234#",
+						      "QWERTY","QWERTY123","QWERTY1234","QWERTY123!","QWERTY1234!","QWERTY123#","QWERTY1234#",
+						      "1q2w3e","1q2w3e4r","1q2w3e!","1q2w3e#","1Q2W3E","1Q2W3E!","1Q2W3E#","1Q2W3E4R","1Q2W3E4R!","1Q2W3E4R#",
+						      "!qaz@wsx","123QWEasd","!@#123QWEqweASDasd","!@#123qweQWEasdASD","1qaz2wsx",
+						      "Passw0rd","P@$$W)rd","P@$$Word","P@ssword","P@ssw0rd","PASSWORD",
+						      "Passw0rd123","P@$$W)rd123","P@$$Word123","P@ssword123","P@ssw0rd123","PASSWORD123",
+						      "Passw0rd1234","P@$$W)rd1234","P@$$Word1234","P@ssword1234","P@ssw0rd1234","PASSWORD1234")
 
 # Английский алфавит заглавных букв.
 $Alphabet_Uppper = [char[]]([char]"A"..[char]"Z") -join " "
@@ -52,8 +52,8 @@ $Integer         = [char[]]([char]"0"..[char]"9") -join " "
 
 # Специальные символы.
 $Symbol = [char]33+" "+[char]34+" "+[char]35+" "+[char]36+" "+[char]37+" "+[char]38+" "+[char]39+" "+[char]40+" "+[char]41+" "+[char]42+" "+`
-		  [char]43+" "+[char]44+" "+[char]45+" "+[char]46+" "+[char]47+" "+[char]58+" "+[char]59+" "+[char]60+" "+[char]61+" "+[char]62+" "+`
-		  [char]63+" "+[char]64+" "+[char]91+" "+[char]92+" "+[char]93+" "+[char]124+" "+[char]94+" "+[char]123+" "+[char]125+" "+[char]126
+	  [char]43+" "+[char]44+" "+[char]45+" "+[char]46+" "+[char]47+" "+[char]58+" "+[char]59+" "+[char]60+" "+[char]61+" "+[char]62+" "+`
+	  [char]63+" "+[char]64+" "+[char]91+" "+[char]92+" "+[char]93+" "+[char]124+" "+[char]94+" "+[char]123+" "+[char]125+" "+[char]126
 
 # Добавляем класс пользовательского интерфейса. https://learn.microsoft.com/ru-ru/dotnet/desktop/winforms/overview/
 Add-Type -AssemblyName System.Windows.Forms
@@ -84,17 +84,17 @@ $PictureBox.Image      = $Image
 # Параметры текста в форме.
 $Label_                = New-Object system.Windows.Forms.Label
 $Label_.text           = "Новый пароль должен отвечать требованиям сложности.`n" +`
-						 "Не содержать имени учётной записи.`n" +`
-						 "Иметь длину не менее 8 знаков.`n" +`
-						 "Содержать знаки из четырёх перечисленных ниже категорий:`n" +`
-						 "`n1. Латинские заглавные буквы:`n" +`
-						 "     $($Alphabet_Uppper)`n" +`
-						 "`n2. Латинские строчные буквы:`n" +`
-						 "     $($Alphabet_Lower)`n" +`
-						 "`n3. Цифры:`n" +`
-						 "     $($Integer)`n" +`
-						 "`n4. Специальные символы:`n" +`
-						 "      $($Symbol)"
+			 "Не содержать имени учётной записи.`n" +`
+			 "Иметь длину не менее 8 знаков.`n" +`
+			 "Содержать знаки из четырёх перечисленных ниже категорий:`n" +`
+			 "`n1. Латинские заглавные буквы:`n" +`
+			 "     $($Alphabet_Uppper)`n" +`
+			 "`n2. Латинские строчные буквы:`n" +`
+			 "     $($Alphabet_Lower)`n" +`
+			 "`n3. Цифры:`n" +`
+			 "     $($Integer)`n" +`
+			 "`n4. Специальные символы:`n" +`
+			 "      $($Symbol)"
 $Label_.AutoSize       = $True
 $Label_.location       = New-Object System.Drawing.Point(10,70)
 $Label_.Font           = New-Object System.Drawing.Font('Microsoft Sans Serif',10)
