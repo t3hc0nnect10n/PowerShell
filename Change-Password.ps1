@@ -177,7 +177,7 @@ $StatusLabel2.Size      = New-Object System.Drawing.Size(235, 250)
 $StatusLabel2.Font      = New-Object System.Drawing.Font('Microsoft Sans Serif',10,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
 $StatusLabel2.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#FF228B22") # ForestGreen
 
-# Активная форма в форме.
+# Активная кнопка в форме.
 $Button                = New-Object System.Windows.Forms.Button
 $Button.Text           = "OK"
 $Button.AutoSize       = $True
