@@ -33,13 +33,13 @@ $Version = "1.0"
 
 # Список плохихих паролей.
 $Array_Bad_Password = [System.Collections.ArrayList]@("qwerty","qwerty123","qwerty1234","qwerty123!","qwerty1234!","qwerty123#","qwerty1234#",
-						      "Qwerty","Qwerty123","Qwerty1234","Qwerty123!","Qwerty1234!","Qwerty123#","Qwerty1234#",
-						      "QWERTY","QWERTY123","QWERTY1234","QWERTY123!","QWERTY1234!","QWERTY123#","QWERTY1234#",
-						      "1q2w3e","1q2w3e4r","1q2w3e!","1q2w3e#","1Q2W3E","1Q2W3E!","1Q2W3E#","1Q2W3E4R","1Q2W3E4R!","1Q2W3E4R#",
-						      "!qaz@wsx","123QWEasd","!@#123QWEqweASDasd","!@#123qweQWEasdASD","1qaz2wsx",
-						      "Passw0rd","P@$$W)rd","P@$$Word","P@ssword","P@ssw0rd","PASSWORD",
-						      "Passw0rd123","P@$$W)rd123","P@$$Word123","P@ssword123","P@ssw0rd123","PASSWORD123",
-						      "Passw0rd1234","P@$$W)rd1234","P@$$Word1234","P@ssword1234","P@ssw0rd1234","PASSWORD1234")
+													  "Qwerty","Qwerty123","Qwerty1234","Qwerty123!","Qwerty1234!","Qwerty123#","Qwerty1234#",
+													  "QWERTY","QWERTY123","QWERTY1234","QWERTY123!","QWERTY1234!","QWERTY123#","QWERTY1234#",
+													  "1q2w3e","1q2w3e4r","1q2w3e!","1q2w3e#","1Q2W3E","1Q2W3E!","1Q2W3E#","1Q2W3E4R","1Q2W3E4R!","1Q2W3E4R#",
+													  "!qaz@wsx","123QWEasd","!@#123QWEqweASDasd","!@#123qweQWEasdASD","1qaz2wsx",
+													  "Passw0rd","P@$$W)rd","P@$$Word","P@ssword","P@ssw0rd","PASSWORD",
+													  "Passw0rd123","P@$$W)rd123","P@$$Word123","P@ssword123","P@ssw0rd123","PASSWORD123",
+													  "Passw0rd1234","P@$$W)rd1234","P@$$Word1234","P@ssword1234","P@ssw0rd1234","PASSWORD1234")
 
 # Английский алфавит заглавных букв.
 $Alphabet_Uppper = [char[]]([char]"A"..[char]"Z") -join " "
@@ -52,8 +52,8 @@ $Integer         = [char[]]([char]"0"..[char]"9") -join " "
 
 # Специальные символы.
 $Symbol = [char]33+" "+[char]34+" "+[char]35+" "+[char]36+" "+[char]37+" "+[char]38+" "+[char]39+" "+[char]40+" "+[char]41+" "+[char]42+" "+`
-	  [char]43+" "+[char]44+" "+[char]45+" "+[char]46+" "+[char]47+" "+[char]58+" "+[char]59+" "+[char]60+" "+[char]61+" "+[char]62+" "+`
-	  [char]63+" "+[char]64+" "+[char]91+" "+[char]92+" "+[char]93+" "+[char]124+" "+[char]94+" "+[char]123+" "+[char]125+" "+[char]126
+		  [char]43+" "+[char]44+" "+[char]45+" "+[char]46+" "+[char]47+" "+[char]58+" "+[char]59+" "+[char]60+" "+[char]61+" "+[char]62+" "+`
+		  [char]63+" "+[char]64+" "+[char]91+" "+[char]92+" "+[char]93+" "+[char]124+" "+[char]94+" "+[char]123+" "+[char]125+" "+[char]126
 
 # Добавляем класс пользовательского интерфейса. https://learn.microsoft.com/ru-ru/dotnet/desktop/winforms/overview/
 Add-Type -AssemblyName System.Windows.Forms
@@ -84,17 +84,17 @@ $PictureBox.Image      = $Image
 # Параметры текста в форме.
 $Label_                = New-Object system.Windows.Forms.Label
 $Label_.text           = "Новый пароль должен отвечать требованиям сложности.`n" +`
-			 "Не содержать имени учётной записи.`n" +`
-			 "Иметь длину не менее 8 знаков.`n" +`
-			 "Содержать знаки из четырёх перечисленных ниже категорий:`n" +`
-			 "`n1. Латинские заглавные буквы:`n" +`
-			 "     $($Alphabet_Uppper)`n" +`
-			 "`n2. Латинские строчные буквы:`n" +`
-			 "     $($Alphabet_Lower)`n" +`
-			 "`n3. Цифры:`n" +`
-			 "     $($Integer)`n" +`
-			 "`n4. Специальные символы:`n" +`
-			 "      $($Symbol)"
+						 "Не содержать имени учётной записи.`n" +`
+						 "Иметь длину не менее 8 знаков.`n" +`
+						 "Содержать знаки из четырёх перечисленных ниже категорий:`n" +`
+						 "`n1. Латинские заглавные буквы:`n" +`
+						 "     $($Alphabet_Uppper)`n" +`
+						 "`n2. Латинские строчные буквы:`n" +`
+						 "     $($Alphabet_Lower)`n" +`
+						 "`n3. Цифры:`n" +`
+						 "     $($Integer)`n" +`
+						 "`n4. Специальные символы:`n" +`
+						 "      $($Symbol)"
 $Label_.AutoSize       = $True
 $Label_.location       = New-Object System.Drawing.Point(10,70)
 $Label_.Font           = New-Object System.Drawing.Font('Microsoft Sans Serif',10)
@@ -254,9 +254,9 @@ function Password-Bad() {
 			$Date = Get-Date -Format "yyyy.MM.dd hh:mm:ss"
 
 			Add-Content -Path $Log_File -Value ("[$($Date)][$($env:USERNAME)] $((ConvertTo-UnsecureString $Password))")
-			
-   			Clear-Variable -Name "Date"
-  		}
+
+			Clear-Variable -Name "Date"
+		}
 
 		return "BadВведен ненадёжный пароль"
 
@@ -453,57 +453,23 @@ $Button.add_click({
 	$Labelp.text = "$(Generate-Password -PasswordLength (Get-Random -Minimum 8 -Maximum 14))"
 
 	# Очистка уведомление в интерфейсе программы.
-	if ($StatusLabel1.Text) { 
+	if ($StatusLabel1.Text) {
 
-		$StatusLabel1.Text = "" 
+		$StatusLabel1.Text = ""
 	}
-	elseif ($StatusLabel2.Text) { 
-		
+	elseif ($StatusLabel2.Text) {
+
 		$StatusLabel2.Text = "" 
 	}
- 
-	# Если введен старый пароль.
-	if ($TextBox1.Text | ConvertTo-SecureString -AsPlainText -Force -ErrorAction SilentlyContinue) {
 
-		# Если введен новый пароль.
-		if ($TextBox2.Text | ConvertTo-SecureString -AsPlainText -Force -ErrorAction SilentlyContinue) {
-
-			$Flag_Bad_Pass = $true 
-		}
-		else {
-
-			$StatusLabel1.Text = "Не введён новый пароль"
-		}
-	}
-	else {
-
-		$StatusLabel1.Text = "Не введён старый пароль"
-	}
-
-	# Проверка ввода плохого пароля.
-	if ($Flag_Bad_Pass) {
-
-		$Flag_Bad_Pass = $false
-
-		if((Password-Bad -Password $($TextBox2.Text | ConvertTo-SecureString -AsPlainText -Force)) -like $true){
-
-			$Flag_Check_Pass = $true
-
-		}
-		elseif ($Bad_Pass.StartsWith("Bad")) {
-
-			$StatusLabel1.Text = (Password-Bad -Password $($TextBox2.Text | ConvertTo-SecureString -AsPlainText -Force)).Replace("Bad", "")
-		}
-	}
-
-	# Проверка ввода надежного пароля.
+	 # Проверка ввода надежного пароля.
 	if ($Flag_Check_Pass) {
 
-		$Flag_Check_Pass = $false
+		$Flag_Check_Pass = $true
 
 		if ((Password-Check -Password $($TextBox2.Text | ConvertTo-SecureString -AsPlainText -Force)) -like $true) {
 
-			$Flag_Password_Change = $true
+			$Flag_Bad_Pass = $true
 		}
 		elseif ((Password-Check -Password $($TextBox2.Text | ConvertTo-SecureString -AsPlainText -Force)).StartsWith("Rus")) {
 
@@ -528,6 +494,27 @@ $Button.add_click({
 		elseif ((Password-Check -Password $($TextBox2.Text | ConvertTo-SecureString -AsPlainText -Force)).StartsWith("Symbol")) {
 
 			$StatusLabel1.Text = "$((Password-Check -Password $($TextBox2.Text | ConvertTo-SecureString -AsPlainText -Force)).Replace('Symbol', ''))`n$($Symbol)"
+		}
+	}
+
+	# Проверка ввода плохого пароля.
+	if ($Flag_Bad_Pass) {
+
+		$Flag_Bad_Pass = $false
+
+		$Bad_Pass = Password-Bad -Password ($TextBox2.Text | ConvertTo-SecureString -AsPlainText -Force)
+
+		if($Bad_Pass -like $true){
+
+			$Flag_Password_Change = $true
+
+			Clear-Variable -Name "Bad_Pass"  
+		}
+		elseif ($Bad_Pass.StartsWith("Bad")) {
+
+			$StatusLabel1.Text = $Bad_Pass.Replace("Bad", "")
+
+			Clear-Variable -Name "Bad_Pass"
 		}
 	}
 
@@ -558,7 +545,7 @@ $Button.add_click({
 		$TextBox2.Text = ""
 	}
 
-	# Очистка формы повторно введённого нового пароля.
+	# Очистка формы повторно введенного нового пароля.
 	if ($TextBox3.Text) {
 
 		$TextBox3.Text = ""
