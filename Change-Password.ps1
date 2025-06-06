@@ -254,12 +254,13 @@ function Password-Bad() {
 			$Date = Get-Date -Format "yyyy.MM.dd hh:mm:ss"
 
 			Add-Content -Path $Log_File -Value ("[$($Date)][$($env:USERNAME)] $((ConvertTo-UnsecureString $Password))")
-		}
+			
+   			Clear-Variable -Name "Date"
+  		}
 
 		return "BadВведен ненадёжный пароль"
 
 		Clear-Variable -Name "Password"
-		Clear-Variable -Name "Date"
 	}
 	else {
 		
