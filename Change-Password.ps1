@@ -69,7 +69,7 @@ Add-Type -AssemblyName System.DirectoryServices.AccountManagement
 
 # Параметры формы.
 $Form                  = New-Object system.Windows.Forms.Form
-$Form.ClientSize       = New-Object System.Drawing.Point(420,590)
+$Form.ClientSize       = New-Object System.Drawing.Point(420, 590)
 $Form.text             = "Смена пароля. Версия $($Version)"
 $Form.TopMost          = $True
 $Form.BackColor        = [System.Drawing.ColorTranslator]::FromHtml("#8dbbf3")
@@ -103,30 +103,30 @@ $Label_.text           = "Новый пароль должен отвечать 
 			 "`n4. Специальные символы:`n" +`
 			 "      $($Symbol)"
 $Label_.AutoSize       = $True
-$Label_.location       = New-Object System.Drawing.Point(10,70)
-$Label_.Font           = New-Object System.Drawing.Font('Microsoft Sans Serif',10)
+$Label_.location       = New-Object System.Drawing.Point(10, 70)
+$Label_.Font           = New-Object System.Drawing.Font('Microsoft Sans Serif', 10)
 
 # Параметры текста в форме. 
 $Label0                = New-Object system.Windows.Forms.Label
 $Label0.text           = "Пример надёжного пароля:"
 $Label0.AutoSize       = $True
-$Label0.location       = New-Object System.Drawing.Point(10,320)
-$Label0.Font           = New-Object System.Drawing.Font('Microsoft Sans Serif',10)
+$Label0.location       = New-Object System.Drawing.Point(10, 320)
+$Label0.Font           = New-Object System.Drawing.Font('Microsoft Sans Serif', 10)
 
 # Параметры текста в форме. 
 $Labelp                = New-Object system.Windows.Forms.Label
 $Labelp.text           = ".g1zz]%M2Ops"
 $Labelp.AutoSize       = $True
-$Labelp.location       = New-Object System.Drawing.Point(190,320)
-$Labelp.Font           = New-Object System.Drawing.Font('Microsoft Sans Serif',10,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
+$Labelp.location       = New-Object System.Drawing.Point(190, 320)
+$Labelp.Font           = New-Object System.Drawing.Font('Microsoft Sans Serif', 10, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
 $Labelp.ForeColor      = [System.Drawing.ColorTranslator]::FromHtml("#FFA0522D") # Sienna
 
 # Параметры текста в форме. 
 $Label1                = New-Object system.Windows.Forms.Label
 $Label1.text           = "Введите cтарый пароль"
 $Label1.AutoSize       = $True
-$Label1.location       = New-Object System.Drawing.Point(10,345)
-$Label1.Font           = New-Object System.Drawing.Font('Microsoft Sans Serif',10,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
+$Label1.location       = New-Object System.Drawing.Point(10, 345)
+$Label1.Font           = New-Object System.Drawing.Font('Microsoft Sans Serif', 10, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
 
 # Параметры окна для пользовательского ввода старого пароля.
 $TextBox1              = New-Object system.Windows.Forms.MaskedTextBox
@@ -134,15 +134,15 @@ $TextBox1.AutoSize     = $True
 $TextBox1.PasswordChar = '*'
 $TextBox1.width        = 400
 $TextBox1.height       = 25
-$TextBox1.location     = New-Object System.Drawing.Point(10,365)
-$TextBox1.Font         = New-Object System.Drawing.Font('Microsoft Sans Serif',10)
+$TextBox1.location     = New-Object System.Drawing.Point(10, 365)
+$TextBox1.Font         = New-Object System.Drawing.Font('Microsoft Sans Serif', 10)
 
 # Параметры текста в форме. 
 $Label2                = New-Object system.Windows.Forms.Label
 $Label2.text           = "Введите новый пароль"
 $Label2.AutoSize       = $True
-$Label2.location       = New-Object System.Drawing.Point(10,395)
-$Label2.Font           = New-Object System.Drawing.Font('Microsoft Sans Serif',10,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
+$Label2.location       = New-Object System.Drawing.Point(10, 395)
+$Label2.Font           = New-Object System.Drawing.Font('Microsoft Sans Serif', 10, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
 
 # Параметры окна для пользовательского ввода нового пароля.
 $TextBox2              = New-Object system.Windows.Forms.MaskedTextBox
@@ -150,15 +150,15 @@ $TextBox2.AutoSize     = $True
 $TextBox2.PasswordChar = '*'
 $TextBox2.width        = 400
 $TextBox2.height       = 25
-$TextBox2.location     = New-Object System.Drawing.Point(10,415)
-$TextBox2.Font         = New-Object System.Drawing.Font('Microsoft Sans Serif',10)
+$TextBox2.location     = New-Object System.Drawing.Point(10, 415)
+$TextBox2.Font         = New-Object System.Drawing.Font('Microsoft Sans Serif', 10)
 
 # Параметры текста в форме. 
 $Label3                = New-Object system.Windows.Forms.Label
 $Label3.text           = "Повторите новый пароль"
 $Label3.AutoSize       = $True
-$Label3.location       = New-Object System.Drawing.Point(10,445)
-$Label3.Font           = New-Object System.Drawing.Font('Microsoft Sans Serif',10,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
+$Label3.location       = New-Object System.Drawing.Point(10, 445)
+$Label3.Font           = New-Object System.Drawing.Font('Microsoft Sans Serif', 10, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
 
 # Параметры окна для пользовательского повторного ввода нового пароля.
 $TextBox3              = New-Object system.Windows.Forms.MaskedTextBox
@@ -166,15 +166,15 @@ $TextBox3.AutoSize     = $True
 $TextBox3.PasswordChar = '*'
 $TextBox3.width        = 400
 $TextBox3.height       = 25
-$TextBox3.location     = New-Object System.Drawing.Point(10,465)
-$TextBox3.Font         = New-Object System.Drawing.Font('Microsoft Sans Serif',10)
+$TextBox3.location     = New-Object System.Drawing.Point(10, 465)
+$TextBox3.Font         = New-Object System.Drawing.Font('Microsoft Sans Serif', 10)
 
 # Параметры уведомления в форме в виде красного крестика.
 $StatusLabel0           = New-Object System.Windows.Forms.Label
 $StatusLabel0.AutoSize  = $True
 $StatusLabel0.Location  = New-Object System.Drawing.Point(10, 550)
 $StatusLabel0.Size      = New-Object System.Drawing.Size(235, 250)
-$StatusLabel0.Font      = New-Object System.Drawing.Font('Microsoft Sans Serif',10,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
+$StatusLabel0.Font      = New-Object System.Drawing.Font('Microsoft Sans Serif', 10, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
 $StatusLabel0.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#FFDC143C") # Crimson
 
 # Параметры уведомления в форме о несоответсвии с установленными требованиями к смене пароля.
@@ -182,14 +182,14 @@ $StatusLabel1           = New-Object System.Windows.Forms.Label
 $StatusLabel1.AutoSize  = $True
 $StatusLabel1.Location  = New-Object System.Drawing.Point(30, 550)
 $StatusLabel1.Size      = New-Object System.Drawing.Size(235, 250)
-$StatusLabel1.Font      = New-Object System.Drawing.Font('Microsoft Sans Serif',10,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
+$StatusLabel1.Font      = New-Object System.Drawing.Font('Microsoft Sans Serif', 10, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
 
 # Уведомление в форме об успешной смене пароля.
 $StatusLabel2           = New-Object System.Windows.Forms.Label
 $StatusLabel2.AutoSize  = $True
 $StatusLabel2.Location  = New-Object System.Drawing.Point(10, 550)
 $StatusLabel2.Size      = New-Object System.Drawing.Size(235, 250)
-$StatusLabel2.Font      = New-Object System.Drawing.Font('Microsoft Sans Serif',10,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
+$StatusLabel2.Font      = New-Object System.Drawing.Font('Microsoft Sans Serif', 10, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
 $StatusLabel2.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#FF228B22") # ForestGreen
 
 # Активная кнопка в форме.
@@ -197,7 +197,7 @@ $Button                = New-Object System.Windows.Forms.Button
 $Button.Text           = "OK"
 $Button.AutoSize       = $True
 $Button.Location       = New-Object System.Drawing.Point(165, 505)
-$Button.Font           = New-Object System.Drawing.Font('Microsoft Sans Serif',14)
+$Button.Font           = New-Object System.Drawing.Font('Microsoft Sans Serif', 14)
 $Button.BackColor      = [System.Drawing.ColorTranslator]::FromHtml("#FFE6E6FA") # Lavender
 
 # Если изображение по указанному полному пути в переменной $ImagePath существует.
