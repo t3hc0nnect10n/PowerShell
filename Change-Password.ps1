@@ -309,7 +309,7 @@ function Password-Check(){
 		}
 
 		# Длина.
-		if($Flag_Length) {
+		if ($Flag_Length) {
 
 			$Flag_Length = $false
 
@@ -546,7 +546,7 @@ $Button.add_click({
 
 		$Bad_Pass = Password-Bad -Password ($TextBox2.Text | ConvertTo-SecureString -AsPlainText -Force)
 
-		if($Bad_Pass -like $true){
+		if ($Bad_Pass -like $true){
 
 			$Flag_Password_Change = $true
 
@@ -562,7 +562,7 @@ $Button.add_click({
 	}
 
 	# Установка нового пароля.
-	if($Flag_Password_Change) {
+	if ($Flag_Password_Change) {
 
 		$Flag_Password_Change = $false
 
