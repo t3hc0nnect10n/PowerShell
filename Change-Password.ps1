@@ -263,7 +263,7 @@ function Password-Bad() {
 
 	if ($Array_Bad_Password.Contains((ConvertTo-UnsecureString $Password))) {
 
-		$Log_File = "<Укажите полный путь к Log-файлу воода плохих паролей>" # Формат Log-файла txt.
+		$Log_File = "<Укажите полный путь к Log-файлу ввода плохих паролей>" # Формат Log-файла txt.
 
 		if (Test-Path -Path $Log_File -ErrorAction SilentlyContinue) {
 
@@ -274,7 +274,7 @@ function Password-Bad() {
 			Clear-Variable -Name "Date"
 		}
 
-		return "BadВведен ненадёжный пароль"
+		return "BadВведён ненадёжный пароль"
 
 		Clear-Variable -Name "Password"
 	}
